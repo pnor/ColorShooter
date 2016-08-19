@@ -14,6 +14,7 @@ import com.colorshooter.game.systems.*;
 
 import static com.colorshooter.game.EntityConstructors.*;
 import static com.colorshooter.game.Mappers.hm;
+import static com.colorshooter.game.Mappers.pom;
 
 /**
  * Created by pnore_000 on 7/11/2016.
@@ -48,7 +49,7 @@ public class EnemyTest extends GameScreen implements Screen{
         GameEntity enemy2 = generateEnemyShipRed(800,200);
         GameEntity turret = generateTurret(500, 500);
 
-        GameEntity spawn = generateRandomItemSpawnPoint(350,350,5f,  getEngine());
+        GameEntity spawn = generateItemSpawnPoint(350,350, "SuperShootUp", 5f,  getEngine());
         GameEntity power = generateRandomPowerUp(700, 350, 3f, getEngine());
 
         GameEntity poisoner = generateFloatingPoison(500, 500, 40f, 40f);
@@ -119,6 +120,8 @@ public class EnemyTest extends GameScreen implements Screen{
         getEngine().update(delta);
         for (Entity e : getEngine().getEntities()) {
             if (((GameEntity) e).getDisposed()) {
+                if (pom.has(e))
+                    incrementPoints(pom.get(e).points);
                 if (((GameEntity) e).dispose())
                     getEngine().removeEntity(e);
             }

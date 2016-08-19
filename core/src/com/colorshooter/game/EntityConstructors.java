@@ -97,10 +97,13 @@ public class EntityConstructors {
         heal.invinciblityDuration = 0.6f;
         heal.isAlive = true;
         heal.tag = 'p';
-        heal.deathAction = 1;
+        heal.deathAction = 3;
 
         ShootComponent sho = shm.get(player);
         sho.attackDelay = 0.2f;
+
+        player.add(new PointsComponent());
+        pom.get(player).points = -1000;
 
         return player;
     }
@@ -368,6 +371,59 @@ public class EntityConstructors {
 
         DamageComponent dam = dm.get(explosion);
         dam.damage = 25;
+        dam.tag = 'n';
+
+        LifetimeComponent life = lfm.get(explosion);
+        life.endTime = 1f;
+
+        EventComponent ev = em.get(explosion);
+        ev.targetTime = 0.1f;
+        ev.event = new GameEvent() {
+            @Override
+            public void event(GameEntity e, Engine engine) {
+                if ( dm.get(e).damage >= 5)
+                    dm.get(e).damage -= 5;
+            }
+        };
+
+        return explosion;
+    }
+
+    public static GameEntity generatePlayerExplosion(float x, float y) {
+        GameEntity explosion = new GameEntity("player explosion");
+
+        explosion.add(new PositionComponent());
+        explosion.add(new ImageComponent());
+        explosion.add(new AnimationComponent());
+        explosion.add(new DamageComponent());
+        explosion.add(new LifetimeComponent());
+        explosion.add(new EventComponent());
+
+        ImageComponent img = im.get(explosion);
+        img.texRegion = ImageComponent.atlas.findRegion("PlayerExplosion");
+
+        AnimationComponent anim = am.get(explosion);
+        anim.animate = true;
+        anim.repeat = true;
+        anim.animations.add(new ArrayList<TextureRegion>());
+        anim.baseTextureRegion = ImageComponent.atlas.findRegion("PlayerExplosion");
+        anim.animations.get(0).add(ImageComponent.atlas.findRegion("PlayerExplosion"));
+        anim.animations.get(0).add(ImageComponent.atlas.findRegion("PlayerExplosion2"));
+        anim.animations.get(0).add(ImageComponent.atlas.findRegion("PlayerExplosion3"));
+        anim.currentAnimation = 0;
+        anim.currentIndex = 0;
+        anim.animationTime = 0.2f;
+
+        PositionComponent pos = pm.get(explosion);
+        pos.x = x;
+        pos.y = y;
+        pos.width = img.texRegion.getRegionWidth();
+        pos.height = img.texRegion.getRegionHeight();
+        PositionSystem.setOrigins(pos);
+        pos.rotation = 0f;
+
+        DamageComponent dam = dm.get(explosion);
+        dam.damage = 10;
         dam.tag = 'n';
 
         LifetimeComponent life = lfm.get(explosion);
@@ -1221,7 +1277,7 @@ public class EntityConstructors {
                 pos.x, pos.y + pos.height
         });
         col.boundingBox.setOrigin(col.boundingBox.getBoundingRectangle().getWidth() / 2f, col.boundingBox.getBoundingRectangle().getHeight() / 2f);
-        col.collisionReaction = 5;
+        col.collisionReaction = 0;
         col.rotateBox = true;
 
         MovementComponent move = mm.get(missile);
@@ -1303,7 +1359,7 @@ public class EntityConstructors {
 
                     DamageComponent dam = dm.get(e);
                     dam.damage = 23;
-                    dam.tag = 'n';
+                    dam.tag = 'p';
 
                     em.get(e).targetTime = 0.1f;
                     em.get(e).event = new GameEvent() {
@@ -1318,6 +1374,9 @@ public class EntityConstructors {
                 }
             }
         };
+
+        missile.add(new PointsComponent());
+        pom.get(missile).points = 50;
 
         return missile;
     }
@@ -1419,6 +1478,9 @@ public class EntityConstructors {
                 }
             }
         };
+
+        laser.add(new PointsComponent());
+        pom.get(laser).points = 10;
 
         return laser;
     }
@@ -1654,6 +1716,9 @@ public class EntityConstructors {
 
         bm.get(enemy).bounceDuration = 2f;
 
+        enemy.add(new PointsComponent());
+        pom.get(enemy).points = 100;
+
         return enemy;
     }
 
@@ -1729,6 +1794,9 @@ public class EntityConstructors {
 
         bm.get(enemy).bounceDuration = 3.5f;
 
+        enemy.add(new PointsComponent());
+        pom.get(enemy).points = 250;
+
         return enemy;
     }
 
@@ -1803,6 +1871,9 @@ public class EntityConstructors {
         shoot.attackDelay = 0.8f;
 
         bm.get(enemy).bounceDuration = 2f;
+
+        enemy.add(new PointsComponent());
+        pom.get(enemy).points = 200;
 
         return enemy;
     }
@@ -1892,6 +1963,9 @@ public class EntityConstructors {
 
         bm.get(enemy).bounceDuration = 1.5f;
 
+        enemy.add(new PointsComponent());
+        pom.get(enemy).points = 300;
+
         return enemy;
     }
 
@@ -1967,6 +2041,9 @@ public class EntityConstructors {
 
         bm.get(enemy).bounceDuration = 0.7f;
 
+        enemy.add(new PointsComponent());
+        pom.get(enemy).points = 450;
+
         return enemy;
     }
 
@@ -2017,6 +2094,9 @@ public class EntityConstructors {
 
         bm.get(enemy).bounceDuration = 2f;
 
+        enemy.add(new PointsComponent());
+        pom.get(enemy).points = 400;
+
         return enemy;
     }
 
@@ -2063,6 +2143,9 @@ public class EntityConstructors {
         DamageComponent dam = dm.get(enemy);
         dam.damage = 20;
         dam.tag = 'p';
+
+        enemy.add(new PointsComponent());
+        pom.get(enemy).points = 100;
 
         return enemy;
     }
@@ -2122,6 +2205,9 @@ public class EntityConstructors {
         DamageComponent dam = dm.get(enemy);
         dam.damage = 8;
         dam.tag = 'p';
+
+        enemy.add(new PointsComponent());
+        pom.get(enemy).points = 200;
 
         return enemy;
     }
@@ -2209,6 +2295,9 @@ public class EntityConstructors {
             }
         };
 
+        enemy.add(new PointsComponent());
+        pom.get(enemy).points = 550;
+
         return enemy;
     }
 
@@ -2290,6 +2379,9 @@ public class EntityConstructors {
                 }
             }
         };
+
+        enemy.add(new PointsComponent());
+        pom.get(enemy).points = 2500;
 
         return enemy;
     }
@@ -2435,6 +2527,9 @@ public class EntityConstructors {
             }
         };
 
+        enemy.add(new PointsComponent());
+        pom.get(enemy).points = 5000;
+
         return enemy;
     }
 
@@ -2499,6 +2594,9 @@ public class EntityConstructors {
         shoot.attackDelay = 0.9f;
 
         bm.get(enemy).bounceDuration = 0.6f;
+
+        enemy.add(new PointsComponent());
+        pom.get(enemy).points = 600;
 
         return enemy;
     }
@@ -2565,6 +2663,9 @@ public class EntityConstructors {
 
         bm.get(enemy).bounceDuration = 4f;
 
+        enemy.add(new PointsComponent());
+        pom.get(enemy).points = 600;
+
         return enemy;
     }
 
@@ -2621,6 +2722,8 @@ public class EntityConstructors {
         ShootComponent shoot = shm.get(enemy);
         shoot.attackDelay = 0.3f;
 
+        enemy.add(new PointsComponent());
+        pom.get(enemy).points = 300;
 
         return enemy;
     }
@@ -2699,6 +2802,8 @@ public class EntityConstructors {
             }
         };
 
+        enemy.add(new PointsComponent());
+        pom.get(enemy).points = 300;
 
         return enemy;
     }
@@ -2798,6 +2903,53 @@ public class EntityConstructors {
         };
 
         return healer;
+    }
+
+    public static GameEntity generateSuperShootUp(float x, float y) {
+        GameEntity shot = new GameEntity("super shoot up");
+
+        shot.add(new PositionComponent());
+        shot.add(new ItemComponent());
+        shot.add(new ImageComponent());
+        shot.add(new AnimationComponent());
+        shot.add(new LifetimeComponent());
+
+        ImageComponent img = im.get(shot);
+        img.texRegion = ImageComponent.atlas.findRegion("SuperShootUp");
+
+        AnimationComponent anim = am.get(shot);
+        anim.animate = true;
+        anim.repeat = true;
+        anim.animations.add(new ArrayList<TextureRegion>());
+        anim.baseTextureRegion = ImageComponent.atlas.findRegion("SuperShootUp");
+        anim.animations.get(0).add(ImageComponent.atlas.findRegion("SuperShootUp"));
+        anim.animations.get(0).add(ImageComponent.atlas.findRegion("SuperShootUp2"));
+        anim.currentAnimation = 0;
+        anim.currentIndex = 0;
+        anim.animationTime = 0.2f;
+
+        PositionComponent pos = pm.get(shot);
+        pos.x = x;
+        pos.y = y;
+        pos.width = img.texRegion.getRegionWidth();
+        pos.height = img.texRegion.getRegionHeight();
+        pos.rotation = 0f;
+        PositionSystem.setOrigins(pos);
+        pos.drawable = true;
+
+        LifetimeComponent life = lfm.get(shot);
+        life.endTime = 6f;
+
+        ItemComponent item = itm.get(shot);
+        item.event = new GameEvent() {
+            @Override
+            public void event(GameEntity e, Engine engine) {
+                if (shm.get(e).attackDelay >= 0.2f)
+                    shm.get(e).attackDelay -= 0.12f;
+            }
+        };
+
+        return shot;
     }
 
     public static GameEntity generateShootUp(float x, float y) {
@@ -3531,6 +3683,22 @@ public class EntityConstructors {
                 public void event(GameEntity e, Engine engine) {
                     PositionComponent p = pm.get(e);
                     engine.addEntity(generateColorPowerUp(p.x, p.y, "Purple"));
+                }
+            };
+        } else if (spawned.equals("SuperShootUp")) {
+            event.event = new GameEvent() {
+                @Override
+                public void event(GameEntity e, Engine engine) {
+                    PositionComponent p = pm.get(e);
+                    engine.addEntity(generateSuperShootUp(p.x, p.y));
+                }
+            };
+        } else if (spawned.equals("ShootUp")) {
+            event.event = new GameEvent() {
+                @Override
+                public void event(GameEntity e, Engine engine) {
+                    PositionComponent p = pm.get(e);
+                    engine.addEntity(generateShootUp(p.x, p.y));
                 }
             };
         }

@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -17,8 +18,7 @@ import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.HUDActor;
 import com.colorshooter.game.components.ImageComponent;
 
-import static com.colorshooter.game.Mappers.hm;
-import static com.colorshooter.game.Mappers.im;
+import static com.colorshooter.game.Mappers.*;
 
 /**
  * Created by pnore_000 on 7/4/2016.
@@ -41,10 +41,13 @@ public class GameScreen implements Screen {
     private Label life;
     private Label lifeCount;
     private HUDActor icon;
+    private Label pointID;
+    private Label pointNum;
 
     private static GameEntity player;
 
     private static int lives = 5;
+    private static int points;
     private float currentRespawnTime;
     private float endRespawnTime;
 
@@ -135,6 +138,10 @@ public class GameScreen implements Screen {
         levelNum = new Label("1", skin);
         life = new Label("Lives:", skin);
         lifeCount = new Label("-", skin);
+        pointID = new Label("Points:", skin);
+        pointID.setFontScale(0.8f);
+        pointNum = new Label("0", skin);
+        pointNum.setFontScale(0.8f);
 
         table.top().left();
         table.pad(40);
@@ -144,6 +151,11 @@ public class GameScreen implements Screen {
         table.add(levelNum);
         table.add(life).pad(5);
         table.add(lifeCount);
+        table.row();
+        table.add();
+        table.add();
+        table.add(pointID).pad(5);
+        table.add(pointNum);
 
         table.debug();
     }
@@ -164,10 +176,27 @@ public class GameScreen implements Screen {
             if (!lifeCount.textEquals(Integer.toString(lives))) {
                 lifeCount.setText(Integer.toString(lives));
             }
+
+            if (poim.get(player).isPoisoned)
+                colorHUD(Color.GREEN);
+            else if (fm.get(player).isFrozen)
+                colorHUD(Color.CYAN);
+            else if (bm.get(player).isBouncing)
+                colorHUD(Color.PINK);
+            else
+                colorHUD(Color.WHITE);
+
+            pointNum.setText(Integer.toString(points));
         }
+
 
         healthLabel.toFront();
         icon.toFront();
+    }
+
+    public void colorHUD(Color color) {
+        if (!color.equals(healthLabel.getColor()))
+            healthLabel.setColor(color);
     }
 
     public String toString() {
@@ -239,6 +268,14 @@ public class GameScreen implements Screen {
 
     public boolean getReset() {
         return reset;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void incrementPoints(int p) {
+        points += p;
     }
 
 

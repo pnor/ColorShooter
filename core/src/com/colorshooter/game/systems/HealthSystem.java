@@ -72,6 +72,14 @@ public class HealthSystem extends EntitySystem{
                     }
                     ((GameEntity) e).setDisposed(true);
                 }
+
+                if (health.deathAction == 3) {
+                    if (pm.has(e)) {
+                        PositionComponent pos = pm.get(e);
+                        getEngine().addEntity(EntityConstructors.generatePlayerExplosion(pos.originX + pos.x - 36, pos.originY + pos.y - 36));
+                    }
+                    ((GameEntity) e).setDisposed(true);
+                }
             }
 
         }

@@ -43,4 +43,6 @@ public class Mappers {
     public static ComponentMapper<ItemComponent> itm = ComponentMapper.getFor(ItemComponent.class);
     //Color
     public static ComponentMapper<ColorComponent> colm = ComponentMapper.getFor(ColorComponent.class);
+    //Points
+    public static ComponentMapper<PointsComponent> pom = ComponentMapper.getFor(PointsComponent.class);
 }

@@ -10,9 +10,7 @@ import com.colorshooter.game.components.ItemComponent;
 import com.colorshooter.game.components.PlayerInputComponent;
 import com.colorshooter.game.components.PositionComponent;
 
-import static com.colorshooter.game.Mappers.cm;
-import static com.colorshooter.game.Mappers.itm;
-import static com.colorshooter.game.Mappers.pm;
+import static com.colorshooter.game.Mappers.*;
 
 /**
  * Created by pnore_000 on 8/2/2016.
@@ -59,11 +57,6 @@ public class ItemSystem extends EntitySystem{
                                     pos.x + pos.width, pos.y,
                                     pos.x + pos.width, pos.y + pos.height,
                                     pos.x, pos.y + pos.height },
-                            /*new float[] {
-                                    pos2.x + pos.originX / 4, pos2.y + pos.originY / 4,
-                                    pos2.x + pos2.width / 1.5f, pos2.y + pos.originY / 4,
-                                    pos2.x + pos2.width / 1.5f, pos2.y + pos2.height / 1.5f ,
-                                    pos2.x + pos.originX / 4, pos2.y + pos2.height / 1.5f} ); */
                             new float[] {
                                     pos2.x, pos2.y,
                                     pos2.x + pos2.width, pos2.y,

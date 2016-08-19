@@ -16,6 +16,7 @@ public class HealthComponent implements Component{
     0 : does nothing special
     1 : explosion
     2 : big explosion
+    3 : player's explosion
      */
 
     public float invinciblityDuration;
