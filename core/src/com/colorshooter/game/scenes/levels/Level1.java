@@ -1,26 +1,22 @@
-package com.colorshooter.game.scenes;
+package com.colorshooter.game.scenes.levels;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Texture;
 import com.colorshooter.game.GameEntity;
-import com.colorshooter.game.components.AIComponent;
-import com.colorshooter.game.components.FrozenComponent;
+import com.colorshooter.game.GameTimer;
 import com.colorshooter.game.components.ImageComponent;
+import com.colorshooter.game.scenes.tests.GameScreen;
 import com.colorshooter.game.systems.*;
 
 import static com.colorshooter.game.EntityConstructors.*;
-import static com.colorshooter.game.Mappers.hm;
-import static com.colorshooter.game.Mappers.pom;
+import static com.colorshooter.game.EntityConstructors.generateRandomUFOSpawnPoint;
+import static com.colorshooter.game.Mappers.*;
 
 /**
- * Created by pnore_000 on 7/11/2016.
+ * Created by pnore_000 on 8/20/2016.
  */
-public class EnemyTest extends GameScreen implements Screen{
-
+public class Level1 extends GameScreen implements Screen {
     private MovementSystem movementSystem;
     private CollisionSystem collisionSystem;
     private PlayerInputSystem playerInputSystem;
@@ -37,37 +33,35 @@ public class EnemyTest extends GameScreen implements Screen{
     private PoisonSystem poisSystem;
     private FrozenSystem frozenSystem;
 
+    public Level1() {
+        super(1);
+    }
+
     @Override
     public void show() {
         super.show();
+        setTimer(new GameTimer());
+        getTimer().setTime(90f);
 
         setBackground(ImageComponent.atlas.findRegion("Space1"));
 
-        setPlayer(generatePlayer(10, 10));
+        setPlayer(generatePlayer(678, 414));
+        cm.get(getPlayer()).boundingBox.setOrigin(pm.get(getPlayer()).x + pm.get(getPlayer()).originX, pm.get(getPlayer()).y + pm.get(getPlayer()).originY);
 
-        GameEntity enemy = generateEnemy(200,200);
-        GameEntity enemy2 = generateEnemyShipRed(800,200);
-        GameEntity turret = generateTurret(500, 500);
+        GameEntity enemySpawn = generateEnemySpawnPoint(1000,900, "UFO", 12f,  getEngine());
+        em.get(enemySpawn).currentTime = 3f;
+        GameEntity enemySpawn2 = generateEnemySpawnPoint(100,900, "UFO", 12f,  getEngine());
+        em.get(enemySpawn2).currentTime = 9f;
+        GameEntity enemySpawn3 = generateEnemySpawnPoint(0, 0, "UFO", 12f,  getEngine());
+        GameEntity enemySpawn4 = generateEnemySpawnPoint(1000, 0, "UFO", 12f,  getEngine());
 
-        GameEntity spawn = generateItemSpawnPoint(350,350, "SuperShootUp", 5f,  getEngine());
-        GameEntity power = generateRandomPowerUp(700, 350, 3f, getEngine());
-
-        GameEntity poisoner = generateFloatingPoison(500, 500, 40f, 40f);
-        GameEntity shocker = generateFloatingShock(900, 900, 80f, 80f, 2);
-
-
-        GameEntity enemySpawn = generateEnemySpawnPoint(900,700, "EnemyShipBlue", 8f,  getEngine());
-        GameEntity enemySpawn2 = generateRandomEnemySpawnPoint(700,700, 6f,  getEngine());
-        GameEntity enemySpawn3 = generateRandomShipSpawnPoint(900,700, 9f,  getEngine());
-        GameEntity enemySpawn4 = generateRandomWispSpawnPoint(800,700,  9f, true, getEngine());
-        GameEntity enemySpawn5 = generateRandomUFOSpawnPoint(100, 900,  8f, true, getEngine());
-
+        GameEntity powerUps = generateItemSpawnPoint(650, 600, "Health", 10f,  getEngine());
 
         movementSystem = new MovementSystem(1);
         collisionSystem = new CollisionSystem(7);
         playerInputSystem = new PlayerInputSystem(this, 2);
         shootingSystem = new ShootingSystem(4);
-        drawingSystem = new DrawingSystem(5);
+        drawingSystem = new DrawingSystem(5, getBatch(), getShapes());
         healthSystem = new HealthSystem(ImageComponent.atlas, 3);
         damageSystem = new DamageSystem(6);
         aiSystem = new AISystem(this, new GameEntity[] {getPlayer()}, 8);
@@ -95,29 +89,27 @@ public class EnemyTest extends GameScreen implements Screen{
         getEngine().addSystem(poisSystem);
         getEngine().addSystem(frozenSystem);
 
-        getEngine().addEntity(enemy);
-        getEngine().addEntity(enemy2);
+        getEngine().addEntity(powerUps);
         getEngine().addEntity(getPlayer());
-        getEngine().addEntity(turret);
-
-        getEngine().addEntity(spawn);
-        getEngine().addEntity(power);
-
-        getEngine().addEntity(poisoner);
-        getEngine().addEntity(shocker);
-
         getEngine().addEntity(enemySpawn);
         getEngine().addEntity(enemySpawn2);
         getEngine().addEntity(enemySpawn3);
         getEngine().addEntity(enemySpawn4);
-        getEngine().addEntity(enemySpawn5);
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
+        if (getVictory()) {
+            showVictoryHUD();
+            return;
+        }
 
         getEngine().update(delta);
+        getBatch().begin();
+        drawHUD();
+        getBatch().end();
+
         for (Entity e : getEngine().getEntities()) {
             if (((GameEntity) e).getDisposed()) {
                 if (pom.has(e))
@@ -152,5 +144,7 @@ public class EnemyTest extends GameScreen implements Screen{
         poisSystem = null;
         frozenSystem = null;
 
+        this.dispose();
     }
+
 }

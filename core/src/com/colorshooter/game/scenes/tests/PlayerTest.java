@@ -1,7 +1,8 @@
-package com.colorshooter.game.scenes;
+package com.colorshooter.game.scenes.tests;
 
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Screen;
+import com.colorshooter.game.GameTimer;
 import com.colorshooter.game.systems.DrawingSystem;
 import com.colorshooter.game.systems.MovementSystem;
 import com.colorshooter.game.systems.PlayerInputSystem;
@@ -17,15 +18,21 @@ public class PlayerTest extends GameScreen implements Screen{
     private PlayerInputSystem playerInputSystem;
     private DrawingSystem drawingSystem;
 
+    public PlayerTest(int i) {
+        super(i);
+    }
+
     @Override
     public void show() {
         super.show();
+        setTimer(new GameTimer());
+        getTimer().setTime(300f);
 
         setPlayer(generatePlayer(10, 10));
 
         movementSystem = new MovementSystem(1);
         playerInputSystem = new PlayerInputSystem(this, 2);
-        drawingSystem = new DrawingSystem(3);
+        drawingSystem = new DrawingSystem(3, getBatch(), getShapes());
 
         getEngine().addSystem(movementSystem);
         getEngine().addSystem(playerInputSystem);

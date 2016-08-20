@@ -1,33 +1,20 @@
-package com.colorshooter.game.scenes;
+package com.colorshooter.game.scenes.tests;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.Screen;
 import com.colorshooter.game.GameEntity;
-import com.colorshooter.game.HUDActor;
+import com.colorshooter.game.GameTimer;
 import com.colorshooter.game.components.ImageComponent;
 import com.colorshooter.game.systems.*;
 
 import static com.colorshooter.game.EntityConstructors.*;
-import static com.colorshooter.game.EntityConstructors.generateEnemySpawnPoint;
-import static com.colorshooter.game.Mappers.hm;
-import static com.colorshooter.game.Mappers.im;
+import static com.colorshooter.game.Mappers.pom;
 
 /**
- * Created by pnore_000 on 8/8/2016.
+ * Created by pnore_000 on 7/11/2016.
  */
-public class HUDTest extends GameScreen{
+public class EnemyTest extends GameScreen implements Screen{
 
     private MovementSystem movementSystem;
     private CollisionSystem collisionSystem;
@@ -45,48 +32,44 @@ public class HUDTest extends GameScreen{
     private PoisonSystem poisSystem;
     private FrozenSystem frozenSystem;
 
+    public EnemyTest(int i) {
+        super(i);
+    }
+
     @Override
     public void show() {
         super.show();
-        setBackground(ImageComponent.atlas.findRegion("RedSpace1"));
+        setTimer(new GameTimer());
+        getTimer().setTime(90f);
+
+        setBackground(ImageComponent.atlas.findRegion("Space1"));
 
         setPlayer(generatePlayer(10, 10));
 
-        GameEntity enemy = generateBossUFO(400,400);
-        GameEntity spawn = generateRandomItemSpawnPoint(350,350,5f,  getEngine());
-        GameEntity power = generateRandomPowerUp(500, 500, 3f, getEngine());
-        GameEntity power2 = generateRandomPowerUp(700, 350, 3f, getEngine());
-        GameEntity power3 = generateRandomPowerUp(1000, 350, 3f, getEngine());
+        GameEntity enemy = generateEnemy(500,200);
+        GameEntity enemy2 = generateEnemyShipRed(800,200);
+        GameEntity turret = generateFasterEnemy(500, 500);
 
-        setUpSystems();
+        GameEntity spawn = generateItemSpawnPoint(350,350, "SuperShootUp", 3f,  getEngine());
+        GameEntity power = generateRandomPowerUp(700, 350, 3f, getEngine());
+        GameEntity color = generateRandomColorSpawnPoint(500, 500, 3f, getEngine());
 
-        getEngine().addEntity(enemy);
-        getEngine().addEntity(getPlayer());
-        getEngine().addEntity(spawn);
-        getEngine().addEntity(power);
-        getEngine().addEntity(power2);
-        getEngine().addEntity(power3);
-    }
+        GameEntity poisoner = generateFloatingPoison(500, 500, 40f, 40f);
+        GameEntity shocker = generateFloatingShock(900, 900, 80f, 80f, 2);
 
-    @Override
-    public void render(float delta) {
-        super.render(delta);
 
-        getEngine().update(delta);
-        for (Entity e : getEngine().getEntities()) {
-            if (((GameEntity) e).getDisposed()) {
-                ((GameEntity) e).dispose();
-                getEngine().removeEntity(e);
-            }
-        }
-    }
+        GameEntity enemySpawn = generateEnemySpawnPoint(900,700, "EnemyShipBlue", 8f,  getEngine());
+        GameEntity enemySpawn2 = generateRandomEnemySpawnPoint(700,700, 8f,  getEngine());
+        GameEntity enemySpawn3 = generateRandomShipSpawnPoint(900,700, 9f,  getEngine());
+        GameEntity enemySpawn4 = generateRandomWispSpawnPoint(800,700,  11f, true, getEngine());
+        GameEntity enemySpawn5 = generateRandomUFOSpawnPoint(100, 900,  9f, true, getEngine());
 
-    private void setUpSystems() {
+
         movementSystem = new MovementSystem(1);
         collisionSystem = new CollisionSystem(7);
         playerInputSystem = new PlayerInputSystem(this, 2);
         shootingSystem = new ShootingSystem(4);
-        drawingSystem = new DrawingSystem(5);
+        drawingSystem = new DrawingSystem(5, getBatch(), getShapes());
         healthSystem = new HealthSystem(ImageComponent.atlas, 3);
         damageSystem = new DamageSystem(6);
         aiSystem = new AISystem(this, new GameEntity[] {getPlayer()}, 8);
@@ -113,6 +96,47 @@ public class HUDTest extends GameScreen{
         getEngine().addSystem(bounceSystem);
         getEngine().addSystem(poisSystem);
         getEngine().addSystem(frozenSystem);
+
+        getEngine().addEntity(enemy);
+        getEngine().addEntity(enemy2);
+        getEngine().addEntity(getPlayer());
+        getEngine().addEntity(turret);
+
+        getEngine().addEntity(spawn);
+        getEngine().addEntity(power);
+        getEngine().addEntity(color);
+
+        getEngine().addEntity(poisoner);
+        getEngine().addEntity(shocker);
+
+        getEngine().addEntity(enemySpawn);
+        getEngine().addEntity(enemySpawn2);
+        getEngine().addEntity(enemySpawn3);
+        getEngine().addEntity(enemySpawn4);
+        getEngine().addEntity(enemySpawn5);
+    }
+
+    @Override
+    public void render(float delta) {
+        super.render(delta);
+        if (getVictory()) {
+            showVictoryHUD();
+            return;
+        }
+
+        getEngine().update(delta);
+        getBatch().begin();
+        drawHUD();
+        getBatch().end();
+
+        for (Entity e : getEngine().getEntities()) {
+            if (((GameEntity) e).getDisposed()) {
+                if (pom.has(e))
+                    incrementPoints(pom.get(e).points);
+                if (((GameEntity) e).dispose())
+                    getEngine().removeEntity(e);
+            }
+        }
     }
 
     @Override
@@ -139,7 +163,6 @@ public class HUDTest extends GameScreen{
         poisSystem = null;
         frozenSystem = null;
 
+        this.dispose();
     }
-
-
 }

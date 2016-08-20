@@ -1,8 +1,9 @@
-package com.colorshooter.game.scenes;
+package com.colorshooter.game.scenes.tests;
 
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Screen;
 import com.colorshooter.game.GameEntity;
+import com.colorshooter.game.GameTimer;
 import com.colorshooter.game.components.ImageComponent;
 import com.colorshooter.game.systems.*;
 
@@ -21,9 +22,15 @@ public class ShootingTest extends GameScreen implements Screen{
     private HealthSystem healthSystem;
     private DamageSystem damageSystem;
 
+    public ShootingTest(int i) {
+        super(i);
+    }
+
     @Override
     public void show() {
         super.show();
+        setTimer(new GameTimer());
+        getTimer().setTime(300f);
 
         setBackground(ImageComponent.atlas.findRegion("GraySpace1"));
 
@@ -36,7 +43,7 @@ public class ShootingTest extends GameScreen implements Screen{
         collisionSystem = new CollisionSystem(1);
         playerInputSystem = new PlayerInputSystem(this, 2);
         shootingSystem = new ShootingSystem(4);
-        drawingSystem = new DrawingSystem(5);
+        drawingSystem = new DrawingSystem(5, getBatch(), getShapes());
         healthSystem = new HealthSystem(ImageComponent.atlas, 7);
         damageSystem = new DamageSystem(6);
 

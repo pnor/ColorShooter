@@ -5,15 +5,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Vector2;
-import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.components.*;
-import com.colorshooter.game.scenes.GameScreen;
-
-import java.awt.geom.Point2D;
 
 import static com.colorshooter.game.Mappers.*;
 

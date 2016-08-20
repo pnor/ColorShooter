@@ -2,17 +2,26 @@ package com.colorshooter.game;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
-import com.colorshooter.game.scenes.*;
+import com.colorshooter.game.scenes.levels.Level1;
+import com.colorshooter.game.scenes.levels.Level2;
+import com.colorshooter.game.scenes.tests.*;
 
 public class ColorShooter extends Game {
+	/* test screens
+	private final Screen[] SCREENS = {
+			new PlayerTest(0),
+			new WallTest(0),
+			new ShootingTest(0),
+			new EnemyTest(0),
+			new HUDTest(0)
+	};
+	*/
 
 	private final Screen[] SCREENS = {
-			new PlayerTest(),
-			new WallTest(),
-			new ShootingTest(),
-			new EnemyTest(),
-			new HUDTest()
+			new Level1(),
+			new Level2()
 	};
+
 	private int index;
 
 	public void create() {

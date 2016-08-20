@@ -7,6 +7,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.colorshooter.game.components.ImageComponent;
@@ -20,19 +21,19 @@ import static com.colorshooter.game.Mappers.*;
 public class DrawingSystem extends EntitySystem{
     private Family family;
     private ImmutableArray<Entity> entities;
-    SpriteBatch batch;
+    Batch batch;
     ShapeRenderer shapes;
 
-    public DrawingSystem(int priority) {
+    public DrawingSystem(int priority, Batch b, ShapeRenderer s) {
         super(priority);
+        batch = b;
+        shapes = s;
     }
 
     @Override
     public void addedToEngine(Engine engine) {
         family = Family.all(PositionComponent.class).get();
         entities = engine.getEntitiesFor(family);
-        batch = new SpriteBatch();
-        shapes = new ShapeRenderer();
     }
 
     @Override
@@ -43,6 +44,7 @@ public class DrawingSystem extends EntitySystem{
         for (Entity e : entities) {
             pos = pm.get(e);
             //debug box---
+            /*
             if (cm.has(e)) {
                 shapes.begin(ShapeRenderer.ShapeType.Line);
                 shapes.setColor(Color.BLUE);
@@ -57,6 +59,7 @@ public class DrawingSystem extends EntitySystem{
                 shapes.polygon(cm.get(e).boundingBox.getTransformedVertices());
                 shapes.end();
             }
+            */
             //---
             if (!pos.drawable)
                 continue;
@@ -97,10 +100,10 @@ public class DrawingSystem extends EntitySystem{
                         batch.draw(img.texRegion, pos.x, pos.y, pos.originX, pos.originY, pos.width, pos.height, 1, 1, 0);
                 }
                 batch.end();
-                //System.out.println("not yet implemented");
             }
 
         }
+
     }
 
     public Family getFamily() {

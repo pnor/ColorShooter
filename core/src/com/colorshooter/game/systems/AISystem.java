@@ -8,7 +8,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.colorshooter.game.EntityConstructors;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.components.*;
-import com.colorshooter.game.scenes.GameScreen;
+import com.colorshooter.game.scenes.tests.GameScreen;
 
 import static com.colorshooter.game.Mappers.*;
 
@@ -126,6 +126,19 @@ public class AISystem extends EntitySystem{
                 }
             }
 
+            if (ai.AIType == 'x') {
+                if ((ai.currenttime == 0 || ai.currenttime >= ai.targetTime) && MovementSystem.getDistance(pos, (pm.get(closestPlayer)).x + (pm.get(closestPlayer)).originX, (pm.get(closestPlayer)).y + (pm.get(closestPlayer)).originY) <= ai.awarenessRadius) {
+                    PositionSystem.lookAt(pos, playerPos.x + playerPos.originX, playerPos.y + playerPos.originY, cm.get(closestPlayer));
+                    if (shm.has(e))
+                        shootProjectile(e);
+                    ai.currenttime = 0;
+                    pos.rotation +=180;
+                } else {
+                    PositionSystem.lookAt(pos, playerPos.x + playerPos.originX, playerPos.y + playerPos.originY, cm.get(closestPlayer));
+                    ai.currenttime += dt;
+                }
+            }
+
             if (ai.AIType == 'f') {
                 PositionSystem.lookAt(pos, playerPos.x + playerPos.originX, playerPos.y + playerPos.originY, cm.get(closestPlayer));
                 if (shm.has(e) && MovementSystem.getDistance(pos, (pm.get(closestPlayer)).x + (pm.get(closestPlayer)).originX, (pm.get(closestPlayer)).y + (pm.get(closestPlayer)).originY) <= ai.awarenessRadius) {
@@ -226,5 +239,7 @@ public class AISystem extends EntitySystem{
             ShootingSystem.shoot(getEngine(), EntityConstructors.generateFireLaser(0, 0, pm.get(e).rotation), pm.get(e), shm.get(e));
         else if (aim.get(e).projectileType == 'c')
             ShootingSystem.shoot(getEngine(), EntityConstructors.generateIceLaser(0, 0, pm.get(e).rotation, 1), pm.get(e), shm.get(e));
+        else if (aim.get(e).projectileType == 't')
+            ShootingSystem.shoot(getEngine(), EntityConstructors.generateThunderLaser(0, 0, pm.get(e).rotation, 1), pm.get(e), shm.get(e));
     }
 }

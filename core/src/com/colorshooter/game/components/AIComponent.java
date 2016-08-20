@@ -16,6 +16,8 @@ public class AIComponent implements Component{
     l : escapes player at double speed, and wanders randomly when player is outside
     a : follows player but escapes when they get within awareness radius
     w : Moves randomly, always shooting
+    x : follows player but escapes when they get within awareness radius (uses target time to control turning. better for
+        rotating images
      */
     public int AIState;
     //tells what state the enemy is in, whether it be turning, following, etc.
@@ -46,6 +48,7 @@ public class AIComponent implements Component{
     b : bubble attack
     f : fire laser
     c : ice laser
+    t : thunder laser
      */
     public boolean gradualTurning = true;
 

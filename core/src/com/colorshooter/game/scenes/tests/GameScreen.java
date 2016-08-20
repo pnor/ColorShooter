@@ -1,12 +1,12 @@
-package com.colorshooter.game.scenes;
+package com.colorshooter.game.scenes.tests;
 
 import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -15,8 +15,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.colorshooter.game.GameEntity;
+import com.colorshooter.game.GameTimer;
 import com.colorshooter.game.HUDActor;
+import com.colorshooter.game.components.AIComponent;
 import com.colorshooter.game.components.ImageComponent;
+import com.colorshooter.game.components.PositionComponent;
 
 import static com.colorshooter.game.Mappers.*;
 
@@ -26,7 +29,7 @@ import static com.colorshooter.game.Mappers.*;
 public class GameScreen implements Screen {
 
     private Stage stage;
-    private SpriteBatch batch;
+    //private SpriteBatch batch;
     private ShapeRenderer shapes;
     private Engine engine;
 
@@ -36,30 +39,40 @@ public class GameScreen implements Screen {
     private TextureAtlas uiatlas;
     private Skin skin;
     private Label healthLabel;
-    private Label level;
+    private Label levelLabel;
     private Label levelNum;
     private Label life;
     private Label lifeCount;
     private HUDActor icon;
     private Label pointID;
     private Label pointNum;
+    private Label timeLabel;
 
     private static GameEntity player;
 
+    private int level;
     private static int lives = 5;
-    private static int points;
     private float currentRespawnTime;
     private float endRespawnTime;
+    private static int points;
+    private GameTimer timer;
+    private boolean victory;
+    private float currentVictoryTime;
+    private float victoryEndTime = 3f;
 
     private boolean reset;
 
     private int lastHealth;
     private int lastMax;
 
+    public GameScreen(int i) {
+        super();
+        level = i;
+    }
+
     @Override
     public void show() {
         stage = new Stage();
-        batch = new SpriteBatch();
         shapes = new ShapeRenderer();
         engine = new Engine();
 
@@ -83,18 +96,21 @@ public class GameScreen implements Screen {
             Gdx.app.exit();
 
         if (background != null) {
-            batch.begin();
-            batch.draw(background, 0, 0, stage.getWidth(), stage.getHeight());
-            batch.end();
+           stage.getBatch().begin();
+           if (victory)
+               stage.getBatch().setColor(Color.DARK_GRAY);
+            stage.getBatch().draw(background, 0, 0, stage.getWidth(), stage.getHeight());
+            stage.getBatch().end();
         }
+        if (victory)
+            return;
 
+        checkVictory(delta);
         checkDeath(delta);
-
+        if (timer != null)
+            timer.decreaseTimer(delta);
         updateHUD();
 
-        getBatch().begin();
-        table.draw(getBatch(), 1);
-        getBatch().end();
     }
 
     @Override
@@ -116,7 +132,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-        batch.dispose();
         stage.dispose();
     }
 
@@ -134,34 +149,39 @@ public class GameScreen implements Screen {
 
         healthLabel = new Label("Health : 150 / 150", skin);
         healthLabel.setFontScale(1.25f, 1.25f);
-        level = new Label("Level:", skin);
-        levelNum = new Label("1", skin);
+        levelLabel = new Label("Level:", skin);
+        levelNum = new Label("" + level, skin);
         life = new Label("Lives:", skin);
         lifeCount = new Label("-", skin);
         pointID = new Label("Points:", skin);
         pointID.setFontScale(0.8f);
         pointNum = new Label("0", skin);
         pointNum.setFontScale(0.8f);
+        if (timer != null)
+            timeLabel = new Label(timer.toString(), skin);
+        else
+            timeLabel = new Label("-:--", skin);
 
         table.top().left();
-        table.pad(40);
+        table.pad(20);
         table.add(icon);
-        table.add(healthLabel).pad(10);
-        table.add(level).pad(5);
-        table.add(levelNum);
-        table.add(life).pad(5);
-        table.add(lifeCount);
+        table.add(healthLabel).padLeft(10);
+        table.add(levelLabel).padLeft(400);
+        table.add(levelNum).padLeft(10);
+        table.add().padLeft(600);
+        table.add(life).padLeft(5);
+        table.add(lifeCount).padLeft(10);
         table.row();
-        table.add();
-        table.add();
-        table.add(pointID).pad(5);
+        table.add(pointID).padLeft(5);
         table.add(pointNum);
+        table.add(timeLabel).padLeft(400);
 
         table.debug();
     }
 
     private void updateHUD() {
         if (!player.getDisposed()) {
+
             if (lastHealth != hm.get(player).health) {
                 lastHealth = hm.get(player).health;
                 healthLabel.setText("Health : " + lastHealth + " / " + lastMax);
@@ -187,11 +207,35 @@ public class GameScreen implements Screen {
                 colorHUD(Color.WHITE);
 
             pointNum.setText(Integer.toString(points));
+            if (timer != null)
+                timeLabel.setText(timer.toString());
+            else
+                timeLabel.setText("-:--");
         }
 
 
         healthLabel.toFront();
         icon.toFront();
+    }
+
+    public void drawHUD() {
+        table.draw(stage.getBatch(), 1);
+    }
+
+    public void showVictoryHUD() {
+        Label victoryText = new Label("Victory!", skin);
+        victoryText.setFontScale(1.25f);
+        table.clearChildren();
+        table.center();
+        table.add(victoryText).padBottom(100f);
+        table.row();
+        table.add(icon).padBottom(50f);
+        table.row();
+        table.add("" + points);
+        stage.getBatch().begin();
+        stage.getBatch().setColor(Color.WHITE);
+        table.draw(stage.getBatch(), 1);
+        stage.getBatch().end();
     }
 
     public void colorHUD(Color color) {
@@ -215,8 +259,8 @@ public class GameScreen implements Screen {
         return engine;
     }
 
-    public SpriteBatch getBatch() {
-        return batch;
+    public Batch getBatch() {
+        return stage.getBatch();
     }
 
     public ShapeRenderer getShapes() {
@@ -242,6 +286,19 @@ public class GameScreen implements Screen {
             return true;
         }
         return false;
+    }
+
+    public void checkVictory(float dt) {
+        if (timer != null) {
+            if (timer.checkIfFinished())
+                victory = true;
+        } else if (timer == null) {
+            if (engine.getEntitiesFor(Family.all(PositionComponent.class, AIComponent.class).get()).size() <= 0) {
+                currentVictoryTime += dt;
+                if (currentVictoryTime >= victoryEndTime)
+                    victory = true;
+            }
+        }
     }
 
     public void incrementRespawnTimer(float dt) {
@@ -278,5 +335,19 @@ public class GameScreen implements Screen {
         points += p;
     }
 
+    public GameTimer getTimer() {
+        return timer;
+    }
 
+    public void setTimer(GameTimer t) {
+        timer = t;
+    }
+
+    public boolean getVictory() {
+        return victory;
+    }
+
+    public void setVictory(boolean b) {
+        victory = b;
+    }
 }

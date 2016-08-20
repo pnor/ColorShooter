@@ -13,7 +13,7 @@ public class ImageComponent implements Component {
     public boolean rotate;
 
     public void dispose() {
-
+        atlas.dispose();
     }
 
     public static TextureAtlas atlas = new TextureAtlas("CSSprites.atlas");

@@ -13,4 +13,5 @@ public class PlayerInputComponent implements Component{
     public int right;
     public int left;
     public int shoot;
+    public int sprint;
 }

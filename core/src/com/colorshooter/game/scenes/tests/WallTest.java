@@ -1,10 +1,9 @@
-package com.colorshooter.game.scenes;
+package com.colorshooter.game.scenes.tests;
 
 import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
 import com.colorshooter.game.GameEntity;
+import com.colorshooter.game.GameTimer;
 import com.colorshooter.game.components.ImageComponent;
 import com.colorshooter.game.systems.*;
 
@@ -22,9 +21,15 @@ public class WallTest extends GameScreen implements Screen {
     private PlayerInputSystem playerInputSystem;
     private DrawingSystem drawingSystem;
 
+    public WallTest(int i) {
+        super(i);
+    }
+
     @Override
     public void show() {
         super.show();
+        setTimer(new GameTimer());
+        getTimer().setTime(500f);
 
         setBackground(ImageComponent.atlas.findRegion("Space3"));
 
@@ -36,7 +41,7 @@ public class WallTest extends GameScreen implements Screen {
         movementSystem = new MovementSystem(1);
         collisionSystem = new CollisionSystem(2);
         bouncingSystem = new BouncingSystem(3);
-        drawingSystem = new DrawingSystem(4);
+        drawingSystem = new DrawingSystem(4, getBatch(), getShapes());
 
         getEngine().addSystem(playerInputSystem);
         getEngine().addSystem(movementSystem);

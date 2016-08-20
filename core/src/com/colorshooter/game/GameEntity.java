@@ -30,9 +30,6 @@ public class GameEntity extends Entity{
 
     public boolean dispose() {
         if (disposed) {
-            if (im.has(this)) {
-                im.get(this).dispose();
-            }
             this.removeAll();
             return true;
         }

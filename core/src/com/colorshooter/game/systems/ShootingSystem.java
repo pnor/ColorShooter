@@ -5,12 +5,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.colorshooter.game.EntityConstructors;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.components.PositionComponent;
 import com.colorshooter.game.components.ShootComponent;
-import com.colorshooter.game.scenes.GameScreen;
-import com.sun.javafx.geom.Point2D;
 
 import static com.colorshooter.game.Mappers.cm;
 import static com.colorshooter.game.Mappers.pm;

@@ -6,12 +6,11 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.colorshooter.game.EntityConstructors;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.GameEvent;
 import com.colorshooter.game.components.*;
-import com.colorshooter.game.scenes.GameScreen;
+import com.colorshooter.game.scenes.tests.GameScreen;
 
 import java.awt.geom.Point2D;
 
@@ -65,17 +64,16 @@ public class PlayerInputSystem extends EntitySystem{
                 PositionSystem.lookAt(pos, mouse.x, mouse.y, col);
 
                 if (Gdx.input.isKeyPressed(controller.forward)) {
-                    MovementSystem.moveTowards(pos, mouse.x, mouse.y, mov.speedPerSecond * dt, col);
-                    System.out.println("up");
+                    if (Gdx.input.isKeyPressed(controller.sprint))
+                        MovementSystem.moveTowards(pos, mouse.x, mouse.y, mov.speedPerSecond * dt * 1.65f, col);
+                    else
+                        MovementSystem.moveTowards(pos, mouse.x, mouse.y, mov.speedPerSecond * dt, col);
                 } else if (Gdx.input.isKeyPressed(controller.back)) {
-                    MovementSystem.moveByRotation(pos, pos.rotation + 180, mov.speedPerSecond * dt / 2f, col);
-                    System.out.println("back");
+                    MovementSystem.moveByRotation(pos, pos.rotation + 180, mov.speedPerSecond * dt / 1.25f, col);
                 } else if (Gdx.input.isKeyPressed(controller.right)) {
-                    MovementSystem.moveByRotation(pos, pos.rotation + 90, mov.speedPerSecond * dt / 2f, col);
-                    System.out.println("right");
+                    MovementSystem.moveByRotation(pos, pos.rotation + 90, mov.speedPerSecond * dt / 1.25f, col);
                 } else if (Gdx.input.isKeyPressed(controller.left)) {
-                    MovementSystem.moveByRotation(pos, pos.rotation - 90, mov.speedPerSecond * dt / 2f, col);
-                    System.out.println("left");
+                    MovementSystem.moveByRotation(pos, pos.rotation - 90, mov.speedPerSecond * dt / 1.25f, col);
                 }
 
                 if (Gdx.input.isKeyPressed(controller.shoot)) {
@@ -145,7 +143,7 @@ public class PlayerInputSystem extends EntitySystem{
             }
             else if (color.color == 'b') {
                 im.get(e).texRegion = ImageComponent.atlas.findRegion("PlayerShipBlue");
-                shm.get(e).attackDelay = 0.65f;
+                shm.get(e).attackDelay = 0.4f;
             }
             else if (color.color == 'y') {
                 im.get(e).texRegion = ImageComponent.atlas.findRegion("PlayerShipYellow");
