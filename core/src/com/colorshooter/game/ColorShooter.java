@@ -2,12 +2,13 @@ package com.colorshooter.game;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
-import com.colorshooter.game.scenes.levels.Level1;
-import com.colorshooter.game.scenes.levels.Level2;
+import com.colorshooter.game.scenes.levels.*;
 import com.colorshooter.game.scenes.tests.*;
 
+import static com.colorshooter.game.Mappers.hm;
+
 public class ColorShooter extends Game {
-	/* test screens
+	/*
 	private final Screen[] SCREENS = {
 			new PlayerTest(0),
 			new WallTest(0),
@@ -19,7 +20,15 @@ public class ColorShooter extends Game {
 
 	private final Screen[] SCREENS = {
 			new Level1(),
-			new Level2()
+			new Level2(),
+			new Level3(),
+			new Level4(),
+			new Level5(),
+			new Level6(),
+			new Level7(),
+			new Level8(),
+			new Level9(),
+			new Level10()
 	};
 
 	private int index;
@@ -34,7 +43,7 @@ public class ColorShooter extends Game {
 
 	public void render () {
 		int lastIndex = index;
-
+		//screen moving with dpad
 		if (Gdx.input.isKeyJustPressed(Input.Keys.DPAD_RIGHT)) {
 			index++;
 		}
@@ -48,12 +57,21 @@ public class ColorShooter extends Game {
 			setScreen(SCREENS[index]);
 			System.out.println("Current Screen: " + SCREENS[index]);
 		}
+		//---
+
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
 		if (getScreen() instanceof GameScreen && ((GameScreen) getScreen()).getReset()) {
 			getScreen().show();
 			((GameScreen) getScreen()).reset();
+			((GameScreen) getScreen()).incrementPoints((int) (- ((GameScreen) getScreen()).getPoints() / 2.5));
+			hm.get(((GameScreen) getScreen()).getPlayer()).invincible = true;
 
+		} else if (getScreen() instanceof GameScreen && ((GameScreen) getScreen()).getNextScreen()) {
+			index++;
+			setScreen(SCREENS[index]);
+			Gdx.gl.glClearColor(1, 1, 1, 1);
 		} else {
 			getScreen().render(Gdx.graphics.getDeltaTime());
 		}

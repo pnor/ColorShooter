@@ -41,7 +41,7 @@ public class Level1 extends GameScreen implements Screen {
     public void show() {
         super.show();
         setTimer(new GameTimer());
-        getTimer().setTime(90f);
+        getTimer().setTime(60f);
 
         setBackground(ImageComponent.atlas.findRegion("Space1"));
 
@@ -122,6 +122,7 @@ public class Level1 extends GameScreen implements Screen {
 
     @Override
     public void hide() {
+        super.hide();
         getEngine().removeAllEntities();
 
         for (EntitySystem system : getEngine().getSystems()) {

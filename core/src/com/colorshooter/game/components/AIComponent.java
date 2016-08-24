@@ -49,6 +49,7 @@ public class AIComponent implements Component{
     f : fire laser
     c : ice laser
     t : thunder laser
+    u : multi green arrow
      */
     public boolean gradualTurning = true;
 

@@ -63,7 +63,6 @@ public class ShootingSystem extends EntitySystem{
 
         pos2.x = (pos.x + pos.originX - pos2.originX) + (pos.width + pos2.width / 4) * (float) Math.cos(Math.toRadians(pos.rotation));
         pos2.y = (pos.y + pos.originY - pos2.originY) + (pos.height + pos2.height/ 4) * (float) Math.sin(Math.toRadians(pos.rotation));
-        pos2.rotation = pos.rotation;
 
         if (cm.has(e)) {
             CollisionSystem.setBoundingBoxLocation(cm.get(e), pos2.x, pos2.y, pos2.rotation);

@@ -11,12 +11,13 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.GameTimer;
-import com.colorshooter.game.HUDActor;
 import com.colorshooter.game.components.AIComponent;
 import com.colorshooter.game.components.ImageComponent;
 import com.colorshooter.game.components.PositionComponent;
@@ -43,7 +44,8 @@ public class GameScreen implements Screen {
     private Label levelNum;
     private Label life;
     private Label lifeCount;
-    private HUDActor icon;
+    private Image icon;
+    private Image healthBar;
     private Label pointID;
     private Label pointNum;
     private Label timeLabel;
@@ -59,6 +61,7 @@ public class GameScreen implements Screen {
     private boolean victory;
     private float currentVictoryTime;
     private float victoryEndTime = 3f;
+    private boolean nextScreen;
 
     private boolean reset;
 
@@ -72,6 +75,8 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
+        victory = false;
+
         stage = new Stage();
         shapes = new ShapeRenderer();
         engine = new Engine();
@@ -98,10 +103,14 @@ public class GameScreen implements Screen {
         if (background != null) {
            stage.getBatch().begin();
            if (victory)
-               stage.getBatch().setColor(Color.DARK_GRAY);
+               stage.getBatch().setColor(Color.GRAY);
             stage.getBatch().draw(background, 0, 0, stage.getWidth(), stage.getHeight());
             stage.getBatch().end();
         }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
+            nextScreen = true;
+
         if (victory)
             return;
 
@@ -128,6 +137,8 @@ public class GameScreen implements Screen {
 
     @Override
     public void hide() {
+        nextScreen = false;
+        victory = false;
     }
 
     @Override
@@ -140,17 +151,20 @@ public class GameScreen implements Screen {
         skin = new Skin(Gdx.files.internal("uiskin.json"));
         skin.addRegions(uiatlas);
 
-        icon = new HUDActor(ImageComponent.atlas.findRegion("PlayerShip"));
-        icon.setSize(55, 55);
+        icon = new Image(ImageComponent.atlas.findRegion("PlayerShip"));
+        icon.setSize(65, 65);
 
         table = new Table(skin);
         table.setSize(getStage().getWidth(), getStage().getHeight());
         table.setFillParent(true);
 
-        healthLabel = new Label("Health : 150 / 150", skin);
+        healthLabel = new Label("Health : 200 / 200", skin);
         healthLabel.setFontScale(1.25f, 1.25f);
+        healthBar = new Image(new TextureAtlas("CSNinePatch.pack").createPatch("barpatch"));
         levelLabel = new Label("Level:", skin);
         levelNum = new Label("" + level, skin);
+        levelNum.setColor(Color.ORANGE);
+        levelNum.setFontScale(1.1f);
         life = new Label("Lives:", skin);
         lifeCount = new Label("-", skin);
         pointID = new Label("Points:", skin);
@@ -162,8 +176,9 @@ public class GameScreen implements Screen {
         else
             timeLabel = new Label("-:--", skin);
 
+        //table.center().setFillParent(true);
         table.top().left();
-        table.pad(20);
+        table.pad(22);
         table.add(icon);
         table.add(healthLabel).padLeft(10);
         table.add(levelLabel).padLeft(400);
@@ -173,8 +188,13 @@ public class GameScreen implements Screen {
         table.add(lifeCount).padLeft(10);
         table.row();
         table.add(pointID).padLeft(5);
-        table.add(pointNum);
+        table.add(pointNum).padLeft(30);
+        //table.add(healthBar);
         table.add(timeLabel).padLeft(400);
+        /*
+        table.add().fillX().expandY();
+        table.add(healthBar);
+        */
 
         table.debug();
     }
@@ -191,7 +211,9 @@ public class GameScreen implements Screen {
                 healthLabel.setText("Health : " + lastHealth + " / " + lastMax);
             }
             if (!icon.equals(im.get(player).texRegion)) {
-                icon.setTex(im.get(player).texRegion);
+                float w = icon.getWidth(); float h = icon.getHeight();
+                icon.setDrawable(new TextureRegionDrawable(im.get(player).texRegion));
+                icon.setSize(w, h);
             }
             if (!lifeCount.textEquals(Integer.toString(lives))) {
                 lifeCount.setText(Integer.toString(lives));
@@ -223,15 +245,22 @@ public class GameScreen implements Screen {
     }
 
     public void showVictoryHUD() {
-        Label victoryText = new Label("Victory!", skin);
-        victoryText.setFontScale(1.25f);
+        Label victoryText = new Label("Level Complete!", skin);
+        victoryText.setColor(Color.CYAN);
+        victoryText.setFontScale(1.3f);
         table.clearChildren();
         table.center();
-        table.add(victoryText).padBottom(100f);
+        table.add(victoryText).padBottom(50f);
         table.row();
-        table.add(icon).padBottom(50f);
+        table.add(icon).padBottom(10f);
         table.row();
-        table.add("" + points);
+        table.add("Lives : " + lives);
+        table.row();
+        table.add("Health : " + hm.get(player).health + " / " + hm.get(player).maxHealth);
+        table.row();
+        table.add("" + points).padBottom(40f);
+        table.row();
+        table.add("Press ENTER to continue");
         stage.getBatch().begin();
         stage.getBatch().setColor(Color.WHITE);
         table.draw(stage.getBatch(), 1);
@@ -349,5 +378,9 @@ public class GameScreen implements Screen {
 
     public void setVictory(boolean b) {
         victory = b;
+    }
+
+    public boolean getNextScreen() {
+        return nextScreen;
     }
 }

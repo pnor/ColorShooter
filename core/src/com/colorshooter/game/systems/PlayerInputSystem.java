@@ -71,9 +71,9 @@ public class PlayerInputSystem extends EntitySystem{
                 } else if (Gdx.input.isKeyPressed(controller.back)) {
                     MovementSystem.moveByRotation(pos, pos.rotation + 180, mov.speedPerSecond * dt / 1.25f, col);
                 } else if (Gdx.input.isKeyPressed(controller.right)) {
-                    MovementSystem.moveByRotation(pos, pos.rotation + 90, mov.speedPerSecond * dt / 1.25f, col);
-                } else if (Gdx.input.isKeyPressed(controller.left)) {
                     MovementSystem.moveByRotation(pos, pos.rotation - 90, mov.speedPerSecond * dt / 1.25f, col);
+                } else if (Gdx.input.isKeyPressed(controller.left)) {
+                    MovementSystem.moveByRotation(pos, pos.rotation + 90, mov.speedPerSecond * dt / 1.25f, col);
                 }
 
                 if (Gdx.input.isKeyPressed(controller.shoot)) {

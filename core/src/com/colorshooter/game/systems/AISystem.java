@@ -241,5 +241,8 @@ public class AISystem extends EntitySystem{
             ShootingSystem.shoot(getEngine(), EntityConstructors.generateIceLaser(0, 0, pm.get(e).rotation, 1), pm.get(e), shm.get(e));
         else if (aim.get(e).projectileType == 't')
             ShootingSystem.shoot(getEngine(), EntityConstructors.generateThunderLaser(0, 0, pm.get(e).rotation, 1), pm.get(e), shm.get(e));
+        else if (aim.get(e).projectileType == 'u') {
+            ShootingSystem.shoot(getEngine(), EntityConstructors.generateGreenArrow(0, 0, pm.get(e).rotation, 1), pm.get(e), shm.get(e));
+        }
     }
 }

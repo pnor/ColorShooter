@@ -61,8 +61,10 @@ public class DrawingSystem extends EntitySystem{
             }
             */
             //---
+
             if (!pos.drawable)
                 continue;
+
 
             if (!im.has(e)) {
                 shapes.setColor(Color.BROWN);

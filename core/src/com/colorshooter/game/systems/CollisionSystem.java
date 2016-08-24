@@ -129,7 +129,7 @@ public class CollisionSystem extends EntitySystem{
         Intersector.MinimumTranslationVector min = new Intersector.MinimumTranslationVector();
         boolean collide = Intersector.overlapConvexPolygons(cm.get(e).boundingBox, cm.get(e2).boundingBox, min);
 
-        if (collide) {
+        if (collide && !cm.get(e).unmovable) {
             MovementSystem.moveNormalized(pm.get(e), min.normal.x, min.normal.y, min.depth, cm.get(e));
         }
         return collide;

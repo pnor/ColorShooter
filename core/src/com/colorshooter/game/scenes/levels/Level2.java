@@ -41,7 +41,7 @@ public class Level2 extends GameScreen implements Screen {
     public void show() {
         super.show();
         setTimer(new GameTimer());
-        getTimer().setTime(90f);
+        getTimer().setTime(70f);
 
         setBackground(ImageComponent.atlas.findRegion("Space1"));
 
@@ -50,18 +50,18 @@ public class Level2 extends GameScreen implements Screen {
 
         GameEntity enemySpawn = generateEnemySpawnPoint(1000,900, "UFO", 12f,  getEngine());
         em.get(enemySpawn).currentTime = 3f;
-        GameEntity enemySpawn2 = generateEnemySpawnPoint(100,900, "UFO", 9f,  getEngine());
-        em.get(enemySpawn2).currentTime = 6f;
+        GameEntity enemySpawn2 = generateEnemySpawnPoint(100,900, "UFO", 6f,  getEngine());
+        em.get(enemySpawn2).currentTime = 4f;
         GameEntity enemySpawn3 = generateEnemySpawnPoint(0, 0, "UFO", 12f,  getEngine());
         GameEntity enemySpawn4 = generateEnemySpawnPoint(1000, 0, "UFO", 6f,  getEngine());
 
-        GameEntity powerUps = generateItemSpawnPoint(650, 364, "Health", 10f,  getEngine());
+        GameEntity powerUps = generateItemSpawnPoint(550, 450, "Health", 10f,  getEngine());
         em.get(powerUps).currentTime = 5f;
-        GameEntity powerUps2 = generateRandomPowerUp(650, 464, 10f,  getEngine());
+        GameEntity powerUps2 = generateRandomPowerUp(300, 450, 15f,  getEngine());
         em.get(powerUps2).currentTime = 7f;
-        GameEntity powerUps3 = generateRandomPowerUp(650, 264, 10f,  getEngine());
+        GameEntity powerUps3 = generateRandomPowerUp(750, 450, 20f,  getEngine());
         em.get(powerUps3).currentTime = 2f;
-        GameEntity powerUps4 = generateRandomPowerUp(650, 664, 10f,  getEngine());
+        GameEntity powerUps4 = generateRandomPowerUp(900, 450, 15f,  getEngine());
 
         movementSystem = new MovementSystem(1);
         collisionSystem = new CollisionSystem(7);
@@ -131,6 +131,7 @@ public class Level2 extends GameScreen implements Screen {
 
     @Override
     public void hide() {
+        super.hide();
         getEngine().removeAllEntities();
 
         for (EntitySystem system : getEngine().getSystems()) {

@@ -28,4 +28,5 @@ public class CollisionComponent implements Component{
      */
 
     public boolean rotateBox = false;
+    public boolean unmovable;
 }
