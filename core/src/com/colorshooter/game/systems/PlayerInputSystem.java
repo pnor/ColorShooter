@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.colorshooter.game.EntityConstructors;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.GameEvent;
@@ -63,7 +64,7 @@ public class PlayerInputSystem extends EntitySystem{
             if (!bounce.isBouncing && !fm.get(e).isFrozen) {
                 PositionSystem.lookAt(pos, mouse.x, mouse.y, col);
 
-                if (Gdx.input.isKeyPressed(controller.forward)) {
+                if (Gdx.input.isKeyPressed(controller.forward) && !checkMouseInsidePlayer(mouse, (GameEntity) e)) {
                     if (Gdx.input.isKeyPressed(controller.sprint))
                         MovementSystem.moveTowards(pos, mouse.x, mouse.y, mov.speedPerSecond * dt * 1.65f, col);
                     else
@@ -112,6 +113,11 @@ public class PlayerInputSystem extends EntitySystem{
 
     public Family getFamily() {
         return family;
+    }
+
+    private boolean checkMouseInsidePlayer(Point2D.Float mouse, GameEntity e) {
+        PositionComponent pos = pm.get(e);
+        return Math.abs(pos.x + pos.originX - mouse.x) <= 5 && Math.abs(pos.y + pos.originY - mouse.y) <= 5;
     }
 
     public void updateProcessing(Engine engine) {

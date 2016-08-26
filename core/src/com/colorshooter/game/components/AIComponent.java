@@ -6,26 +6,27 @@ import com.badlogic.ashley.core.Component;
  * Created by pnore_000 on 7/3/2016.
  */
 public class AIComponent implements Component{
+    /**
+     * value determines which AI it will run
+     * r : randomly moves around, and changes directionally to a random direction. Aims at player when they go
+     * into their awareness radius <p>
+     * f : follows player<p>
+     * e : escapes player, and wanders randomly when player is outside target rotation<p>
+     * l : escapes player at double speed, and wanders randomly when player is outside<p>
+     * a : follows player but escapes when they get within awareness radius<p>
+     * w : Moves randomly, always shooting<p>
+     * x : follows player but escapes when they get within awareness radius (uses target time to control turning. better for
+     *     rotating images<p>
+     */
     public char AIType;
-    //value determines which AI it will run
-    /*
-    r : randomly moves around, and changes directionally to a random direction. Aims at player when they go
-    into their awareness radius
-    f : follows player
-    e : escapes player, and wanders randomly when player is outside target rotation
-    l : escapes player at double speed, and wanders randomly when player is outside
-    a : follows player but escapes when they get within awareness radius
-    w : Moves randomly, always shooting
-    x : follows player but escapes when they get within awareness radius (uses target time to control turning. better for
-        rotating images
+
+    /**
+     * tells what state the enemy is in, whether it be turning, following, etc. <p>
+     * 0 : moving in straight lines <p>
+     * 1 : turning<p>
+     * 2 : following<p>
      */
     public int AIState;
-    //tells what state the enemy is in, whether it be turning, following, etc.
-    /*
-    0 : moving in straight lines
-    1 : turning
-    2 : following
-     */
 
     public float targetRotation = 999f;
     public float currenttime;
@@ -34,23 +35,23 @@ public class AIComponent implements Component{
 
     //for what it shoots
     public boolean shoots;
-    public char projectileType;
-    /*
-    l : basic laser
-    e : exploding laser
-    s : swirl
-    w : weak laser
-    p : pink laser
-    g : ghost's laser
-    i : wisp projectile
-    h : shock wave
-    m : homing Missile
-    b : bubble attack
-    f : fire laser
-    c : ice laser
-    t : thunder laser
-    u : multi green arrow
+    /**
+     * l : basic laser <p>
+     * e : exploding laser <p>
+     * s : swirl <p>
+     * w : weak laser <p>
+     * p : pink laser <p>
+     * g : ghost's laser <p>
+     * i : wisp projectile <p>
+     * h : shock wave <p>
+     * m : homing Missile <p>
+     * b : bubble attack <p>
+     * f : fire laser <p>
+     * c : ice laser <p>
+     * t : thunder laser <p>
+     * u : multi green arrow <p>
      */
+    public char projectileType;
     public boolean gradualTurning = true;
 
 

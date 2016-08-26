@@ -61,22 +61,6 @@ public class HUDTest extends GameScreen{
     @Override
     public void render(float delta) {
         super.render(delta);
-        if (getVictory()) {
-            showVictoryHUD();
-            return;
-        }
-
-        getEngine().update(delta);
-        getBatch().begin();
-        drawHUD();
-        getBatch().end();
-
-        for (Entity e : getEngine().getEntities()) {
-            if (((GameEntity) e).getDisposed()) {
-                ((GameEntity) e).dispose();
-                getEngine().removeEntity(e);
-            }
-        }
     }
 
     private void setUpSystems() {
@@ -87,7 +71,7 @@ public class HUDTest extends GameScreen{
         drawingSystem = new DrawingSystem(5, getBatch(), getShapes());
         healthSystem = new HealthSystem(ImageComponent.atlas, 3);
         damageSystem = new DamageSystem(6);
-        aiSystem = new AISystem(this, new GameEntity[] {getPlayer()}, 8);
+        aiSystem = new AISystem(this, 8);
         lifetimeSystem = new LifetimeSystem(9);
         animationSystem = new AnimationSystem(10);
         eventSystem = new EventSystem(11);

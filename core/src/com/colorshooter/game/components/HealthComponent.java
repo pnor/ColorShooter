@@ -11,13 +11,14 @@ public class HealthComponent implements Component{
 
     public boolean isAlive = true;
 
-    public int deathAction;
-    /* determines what it does on death
-    0 : does nothing special
-    1 : explosion
-    2 : big explosion
-    3 : player's explosion
+    /**
+     *  determines what it does on death <p>
+     * 0 : does nothing special<p>
+     * 1 : explosion<p>
+     * 2 : big explosion<p>
+     * 3 : player's explosion<p>
      */
+    public int deathAction;
 
     public float invinciblityDuration;
     public float currentDuration;

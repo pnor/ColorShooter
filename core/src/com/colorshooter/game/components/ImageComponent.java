@@ -12,9 +12,11 @@ public class ImageComponent implements Component {
     public TextureRegion texRegion;
     public boolean rotate;
 
-    public void dispose() {
+    public static void dispose() {
         atlas.dispose();
+        backgroundAtlas.dispose();
     }
 
-    public static TextureAtlas atlas = new TextureAtlas("CSSprites.atlas");
+    public static TextureAtlas atlas = new TextureAtlas("CSSprites.pack");
+    public static TextureAtlas backgroundAtlas = new TextureAtlas("CSBackgrounds.pack");
 }

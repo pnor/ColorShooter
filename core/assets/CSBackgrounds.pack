@@ -1,0 +1,133 @@
+
+CSBackgrounds.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+BlueSpace1
+  rotate: false
+  xy: 1, 903
+  size: 1400, 900
+  orig: 1400, 900
+  offset: 0, 0
+  index: -1
+ColorSpace
+  rotate: false
+  xy: 1, 1
+  size: 1400, 900
+  orig: 1400, 900
+  offset: 0, 0
+  index: -1
+
+CSBackgrounds2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+CubeSpace
+  rotate: false
+  xy: 1, 903
+  size: 1400, 900
+  orig: 1400, 900
+  offset: 0, 0
+  index: -1
+GraySpace1
+  rotate: false
+  xy: 1, 1
+  size: 1400, 900
+  orig: 1400, 900
+  offset: 0, 0
+  index: -1
+
+CSBackgrounds3.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+PinkSpace1
+  rotate: false
+  xy: 1, 903
+  size: 1400, 900
+  orig: 1400, 900
+  offset: 0, 0
+  index: -1
+RedSpace1
+  rotate: false
+  xy: 1, 1
+  size: 1400, 900
+  orig: 1400, 900
+  offset: 0, 0
+  index: -1
+
+CSBackgrounds4.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+RedSpace2
+  rotate: false
+  xy: 1, 903
+  size: 1400, 900
+  orig: 1400, 900
+  offset: 0, 0
+  index: -1
+Sky
+  rotate: false
+  xy: 1, 1
+  size: 1400, 900
+  orig: 1400, 900
+  offset: 0, 0
+  index: -1
+
+CSBackgrounds5.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Space1
+  rotate: false
+  xy: 1, 903
+  size: 1400, 900
+  orig: 1400, 900
+  offset: 0, 0
+  index: -1
+Space2
+  rotate: false
+  xy: 1, 1
+  size: 1400, 900
+  orig: 1400, 900
+  offset: 0, 0
+  index: -1
+
+CSBackgrounds6.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Space3
+  rotate: false
+  xy: 1, 903
+  size: 1400, 900
+  orig: 1400, 900
+  offset: 0, 0
+  index: -1
+Space4
+  rotate: false
+  xy: 1, 1
+  size: 1400, 900
+  orig: 1400, 900
+  offset: 0, 0
+  index: -1
+
+CSBackgrounds7.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+TurretSpace
+  rotate: false
+  xy: 1, 903
+  size: 1400, 900
+  orig: 1400, 900
+  offset: 0, 0
+  index: -1
+YellowSpace
+  rotate: false
+  xy: 1, 1
+  size: 1400, 900
+  orig: 1400, 900
+  offset: 0, 0
+  index: -1

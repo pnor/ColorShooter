@@ -5,8 +5,10 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -103,6 +105,9 @@ public class DrawingSystem extends EntitySystem{
                 }
                 batch.end();
             }
+            batch.begin();
+            batch.draw(ImageComponent.atlas.findRegion("MouseIcon"), Gdx.input.getX() - 6, 894 - Gdx.input.getY());
+            batch.end();
 
         }
 

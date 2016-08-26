@@ -9,23 +9,24 @@ import com.badlogic.gdx.math.Polygon;
 public class CollisionComponent implements Component{
     public Polygon boundingBox;
 
-    public int collisionReaction;
-    /* determines how OTHER OBJECTS will react when colliding with this
-    0 : do nothing
-    1 : move out of range
-    2 : puts into bouncing state (with collision)
-    3 : ricochet
-    4 : puts into bouncing state (without collision)
-    5 : destroy thing causing collision
-    6 : puts only players into bouncing state
-    7 : puts only the players into bouncing state (without collision)
-    8 : puts into poison state (without collision)
-    9 : puts into freeze state (with collision)
-
-
-    --represents how THIS OBJECT will react when colliding with something
-    5 : destroys self
+    /**
+     * determines how OTHER OBJECTS will react when colliding with this.
+     * <p>
+     * 0 : do nothing <p>
+     * 1 : move out of range <p>
+     * 2 : puts into bouncing state (with collision) <p>
+     * 3 : ricochet <p>
+     * 4 : puts into bouncing state (without collision) <p>
+     * 5 : destroy thing causing collision <p>
+     * 6 : puts only players into bouncing state <p>
+     * 7 : puts only the players into bouncing state (without collision) <p>
+     * 8 : puts into poison state (without collision) <p>
+     * 9 : puts into freeze state (with collision) <p>
+     <p>
+     * --represents how THIS OBJECT will react when colliding with something <p>
+     * 5 : destroys self <p>
      */
+    public int collisionReaction;
 
     public boolean rotateBox = false;
     public boolean unmovable;

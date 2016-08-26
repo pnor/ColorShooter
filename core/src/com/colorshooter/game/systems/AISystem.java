@@ -23,17 +23,18 @@ import static com.colorshooter.game.Mappers.*;
 public class AISystem extends EntitySystem{
     private ImmutableArray<Entity> entities;
     private Family family = Family.all(AIComponent.class, PositionComponent.class).get();
-    private GameEntity[] players;
+    private Family playerFamily = Family.all(PlayerInputComponent.class, MovementComponent.class).get();
+    private ImmutableArray<Entity> players;
     private GameScreen screen;
 
-    public AISystem(GameScreen s, GameEntity[] p, int priority) {
+    public AISystem(GameScreen s, int priority) {
         super(priority);
-        players = p;
         screen = s;
     }
 
     public void addedToEngine(Engine engine) {
         entities = engine.getEntitiesFor(family);
+        players = engine.getEntitiesFor(playerFamily);
     }
 
     public void update(float dt) {
@@ -46,6 +47,8 @@ public class AISystem extends EntitySystem{
             pos = pm.get(e);
             mov = mm.get(e);
             GameEntity closestPlayer = getClosestPlayer(pos);
+            if (closestPlayer == null)
+                return;
             PositionComponent playerPos = pm.get(closestPlayer);
 
             //out of bounds
@@ -194,20 +197,22 @@ public class AISystem extends EntitySystem{
      * returns the player closest to the passed in {@code PositionComponent}.
      */
     private GameEntity getClosestPlayer(PositionComponent pos) {
-        if (players.length == 1)
-            return players[0];
+        if (players.size() == 0)
+            return null;
+        else if (players.size() == 1)
+            return (GameEntity) players.get(0);
 
         int smallestIndex = 0;
-        float smallestDistance = MovementSystem.getDistance(pos, pm.get(players[0]).x +  pm.get(players[0]).originX, pm.get(players[0]).y +  pm.get(players[0]).originY);
+        float smallestDistance = MovementSystem.getDistance(pos, pm.get(players.get(0)).x +  pm.get(players.get(0)).originX, pm.get(players.get(0)).y +  pm.get(players.get(0)).originY);
         float currentDistance = 0f;
-        for (int i = 1; i < players.length; i ++) {
-            currentDistance = MovementSystem.getDistance(pos, pm.get(players[i]).x +  pm.get(players[i]).originX, pm.get(players[i]).y +  pm.get(players[i]).originY);
+        for (int i = 1; i < players.size(); i ++) {
+            currentDistance = MovementSystem.getDistance(pos, pm.get(players.get(0)).x +  pm.get(players.get(0)).originX, pm.get(players.get(0)).y +  pm.get(players.get(0)).originY);
             if (currentDistance < smallestDistance) {
                 smallestIndex = i;
                 smallestDistance = currentDistance;
             }
         }
-        return players[smallestIndex];
+        return (GameEntity) players.get(smallestIndex);
     }
 
     public boolean checkPosition(PositionComponent pos) {

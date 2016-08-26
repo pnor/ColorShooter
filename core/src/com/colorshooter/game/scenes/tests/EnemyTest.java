@@ -72,7 +72,7 @@ public class EnemyTest extends GameScreen implements Screen{
         drawingSystem = new DrawingSystem(5, getBatch(), getShapes());
         healthSystem = new HealthSystem(ImageComponent.atlas, 3);
         damageSystem = new DamageSystem(6);
-        aiSystem = new AISystem(this, new GameEntity[] {getPlayer()}, 8);
+        aiSystem = new AISystem(this, 8);
         lifetimeSystem = new LifetimeSystem(9);
         animationSystem = new AnimationSystem(10);
         eventSystem = new EventSystem(11);
@@ -119,24 +119,6 @@ public class EnemyTest extends GameScreen implements Screen{
     @Override
     public void render(float delta) {
         super.render(delta);
-        if (getVictory()) {
-            showVictoryHUD();
-            return;
-        }
-
-        getEngine().update(delta);
-        getBatch().begin();
-        drawHUD();
-        getBatch().end();
-
-        for (Entity e : getEngine().getEntities()) {
-            if (((GameEntity) e).getDisposed()) {
-                if (pom.has(e))
-                    incrementPoints(pom.get(e).points);
-                if (((GameEntity) e).dispose())
-                    getEngine().removeEntity(e);
-            }
-        }
     }
 
     @Override

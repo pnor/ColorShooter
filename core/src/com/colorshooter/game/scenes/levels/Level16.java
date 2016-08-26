@@ -1,42 +1,38 @@
 package com.colorshooter.game.scenes.levels;
 
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Screen;
 import com.colorshooter.game.GameEntity;
-import com.colorshooter.game.GameTimer;
 import com.colorshooter.game.components.ImageComponent;
 import com.colorshooter.game.scenes.tests.GameScreen;
-import com.colorshooter.game.systems.*;
 
 import static com.colorshooter.game.EntityConstructors.*;
-import static com.colorshooter.game.Mappers.*;
-import static com.colorshooter.game.Mappers.pom;
+import static com.colorshooter.game.Mappers.cm;
+import static com.colorshooter.game.Mappers.pm;
 
 /**
- * Created by pnore_000 on 8/23/2016.
+ * Created by pnore_000 on 8/26/2016.
  */
-public class Level10 extends GameScreen implements Screen {
+public class Level16 extends GameScreen implements Screen{
 
-    public Level10() {
-        super(10);
+    public Level16() {
+        super(16);
     }
 
     @Override
     public void show() {
         super.show();
 
-        setBackground(ImageComponent.backgroundAtlas.findRegion("Space1"));
+        setBackground(ImageComponent.backgroundAtlas.findRegion("GraySpace1"));
 
         setPlayer(generatePlayer(678, 414));
         cm.get(getPlayer()).boundingBox.setOrigin(pm.get(getPlayer()).x + pm.get(getPlayer()).originX, pm.get(getPlayer()).y + pm.get(getPlayer()).originY);
 
-        GameEntity boss = generateBossUFO(100, 900);
+        GameEntity boss = generateBossWisp(900, 800);
 
         GameEntity powerUps = generateItemSpawnPoint(200, 200, "Health", 5f,  getEngine());
-        GameEntity powerUps2 = generateItemSpawnPoint(800, 800, "SpeedUp", 7f,  getEngine());
-        GameEntity powerUps3 = generateItemSpawnPoint(200, 800, "MaxHealth", 9f,  getEngine());
-        GameEntity powerUps4 = generateItemSpawnPoint(800, 200, "ShootUp", 9f,  getEngine());
+        GameEntity powerUps2 = generateItemSpawnPoint(1100, 700, "MaxHealth", 7f,  getEngine());
+        GameEntity powerUps3 = generateItemSpawnPoint(200, 700, "MaxHealth", 8f,  getEngine());
+        GameEntity powerUps4 = generateItemSpawnPoint(1100, 200, "ShootUp", 9f,  getEngine());
 
         GameEntity colors = generateRandomColorSpawnPoint(678, 450, 15f,  getEngine());
 
@@ -59,5 +55,4 @@ public class Level10 extends GameScreen implements Screen {
         super.hide();
         this.dispose();
     }
-
 }

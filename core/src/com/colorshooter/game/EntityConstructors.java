@@ -1266,7 +1266,7 @@ public class EntityConstructors {
             };
         }
 
-        lfm.get(laser).endTime = 7f;
+        lfm.get(laser).endTime = 12f;
 
         return laser;
     }
@@ -1850,7 +1850,7 @@ public class EntityConstructors {
             dam.tag = 'n';
 
         LifetimeComponent life = lfm.get(laser);
-        life.endTime = 1.5f;
+        life.endTime = 4f;
 
         return laser;
     }
@@ -2629,7 +2629,7 @@ public class EntityConstructors {
         health.deathAction = 0;
 
         DamageComponent dam = dm.get(enemy);
-        dam.damage = 10;
+        dam.damage = 25;
         dam.tag = 'p';
 
         EventComponent eve = em.get(enemy);
@@ -2672,6 +2672,51 @@ public class EntityConstructors {
 
         enemy.add(new PointsComponent());
         pom.get(enemy).points = 550;
+
+        return enemy;
+    }
+
+    public static GameEntity generateGoldWisp(float x, float y) {
+        GameEntity enemy = new GameEntity("gold wisp");
+
+        enemy.add(new PositionComponent());
+        enemy.add(new MovementComponent());
+        enemy.add(new ImageComponent());
+        enemy.add(new AIComponent());
+        enemy.add(new HealthComponent());
+
+        MovementComponent mov = mm.get(enemy);
+        mov.speedPerSecond = 390f;
+        mov.move = true;
+
+        ImageComponent img = im.get(enemy);
+        img.texRegion = ImageComponent.atlas.findRegion("GoldWisp");
+
+        PositionComponent position = pm.get(enemy);
+        position.x = x;
+        position.y = y;
+        position.height = img.texRegion.getRegionHeight();
+        position.width = img.texRegion.getRegionWidth();
+        PositionSystem.setOrigins(position);
+        position.rotation = (float) Math.random() * 360;
+
+        AIComponent AI = aim.get(enemy);
+        AI.awarenessRadius = 200f;
+        AI.AIType = 'w';
+        AI.targetTime = 2f;
+        AI.targetRotation = position.rotation;
+        AI.shoots = false;
+
+        HealthComponent health = hm.get(enemy);
+        health.isAlive = true;
+        health.maxHealth = 70;
+        health.health = 70;
+        health.invinciblityDuration = 0.09f;
+        health.tag = 'e';
+        health.deathAction = 3;
+
+        enemy.add(new PointsComponent());
+        pom.get(enemy).points = 7777;
 
         return enemy;
     }
@@ -2939,6 +2984,7 @@ public class EntityConstructors {
         return enemy;
     }
 
+
     public static GameEntity generateBossWisp(float x, float y) {
         GameEntity enemy = new GameEntity("boss wisp");
 
@@ -2978,25 +3024,25 @@ public class EntityConstructors {
         collision.collisionReaction = 8;
 
         AIComponent AI = aim.get(enemy);
-        AI.awarenessRadius = 450f;
+        AI.awarenessRadius = 650f;
         AI.AIType = 'r';
         AI.targetTime = 10f;
         AI.targetRotation = position.rotation;
 
         HealthComponent health = hm.get(enemy);
         health.isAlive = true;
-        health.maxHealth = 1200;
-        health.health = 1200;
-        health.invinciblityDuration = 0.3f;
+        health.maxHealth = 2700;
+        health.health = 2700;
+        health.invinciblityDuration = 0.2f;
         health.tag = 'e';
-        health.deathAction = 0;
+        health.deathAction = 2;
 
         DamageComponent dam = dm.get(enemy);
-        dam.damage = 10;
+        dam.damage = 40;
         dam.tag = 'p';
 
         EventComponent eve = em.get(enemy);
-        eve.targetTime = 3f;
+        eve.targetTime = 6f;
         eve.repeat = true;
         eve.ticking = true;
         eve.event = new GameEvent() {
@@ -3004,13 +3050,14 @@ public class EntityConstructors {
             public void event(GameEntity e, Engine engine) {
                 if (mm.get(e).speedPerSecond == 50f) {
                     PositionComponent pos = pm.get(e);
-                    mm.get(e).speedPerSecond = 150f;
+                    mm.get(e).speedPerSecond = 170f;
 
                     for (int i = 0; i < 12; i ++) {
                         engine.addEntity(generatePoisonWispProjectile(pos.x + pos.originX, pos.y + pos.originY, i * 30));
                     }
                     engine.addEntity(generatePoisonWisp(pos.x + pos.originX + 10, pos.y + pos.originY));
                     engine.addEntity(generatePoisonWisp(pos.x + pos.originX + 10, pos.y + pos.originY + 20));
+                    engine.addEntity(generatePoisonWisp(pos.x + pos.originX - 10, pos.y + pos.originY + 20));
 
                 } else {
                     mm.get(e).speedPerSecond = 50f;
@@ -3939,6 +3986,14 @@ public class EntityConstructors {
                 public void event(GameEntity e, Engine engine) {
                     PositionComponent p = pm.get(e);
                     engine.addEntity(generateFasterEnemy(p.x, p.y));
+                }
+            };
+        }  else if (spawned.equals("GoldWisp")) {
+            event.event = new GameEvent() {
+                @Override
+                public void event(GameEntity e, Engine engine) {
+                    PositionComponent p = pm.get(e);
+                    engine.addEntity(generateGoldWisp(p.x, p.y));
                 }
             };
         }

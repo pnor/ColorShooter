@@ -24,11 +24,19 @@ public class ColorShooter extends Game {
 			new Level3(),
 			new Level4(),
 			new Level5(),
+			new BonusLevel1(),
 			new Level6(),
 			new Level7(),
 			new Level8(),
 			new Level9(),
-			new Level10()
+			new Level10(),
+			new Level11(),
+			new Level12(),
+			new Level13(),
+			new Level14(),
+			new Level15(),
+			new BonusLevel2(),
+			new Level16()
 	};
 
 	private int index;
@@ -62,7 +70,7 @@ public class ColorShooter extends Game {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		if (getScreen() instanceof GameScreen && ((GameScreen) getScreen()).getReset()) {
+		if (getScreen() instanceof GameScreen && ((GameScreen) getScreen()).getScreenState() == 2) {
 			getScreen().show();
 			((GameScreen) getScreen()).reset();
 			((GameScreen) getScreen()).incrementPoints((int) (- ((GameScreen) getScreen()).getPoints() / 2.5));
