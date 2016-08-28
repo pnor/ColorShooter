@@ -22,10 +22,9 @@ public class Level16 extends GameScreen implements Screen{
     public void show() {
         super.show();
 
-        setBackground(ImageComponent.backgroundAtlas.findRegion("GraySpace1"));
+        setBackground(ImageComponent.backgroundAtlas.findRegion("GreenSpace2"));
 
         setPlayer(generatePlayer(678, 414));
-        cm.get(getPlayer()).boundingBox.setOrigin(pm.get(getPlayer()).x + pm.get(getPlayer()).originX, pm.get(getPlayer()).y + pm.get(getPlayer()).originY);
 
         GameEntity boss = generateBossWisp(900, 800);
 

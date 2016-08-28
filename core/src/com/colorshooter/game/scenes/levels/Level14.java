@@ -24,12 +24,11 @@ public class Level14 extends GameScreen implements Screen {
     public void show() {
         super.show();
         setTimer(new GameTimer());
-        getTimer().setTime(100f);
+        getTimer().setTime(80f);
 
-        setBackground(ImageComponent.backgroundAtlas.findRegion("GraySpace1"));
+        setBackground(ImageComponent.backgroundAtlas.findRegion("GreenSpace1"));
 
         setPlayer(generatePlayer(678, 414));
-        cm.get(getPlayer()).boundingBox.setOrigin(pm.get(getPlayer()).x + pm.get(getPlayer()).originX, pm.get(getPlayer()).y + pm.get(getPlayer()).originY);
 
         GameEntity enemySpawn = generateEnemySpawnPoint(1000,900, "PoisonWisp", 6f,  getEngine());
         em.get(enemySpawn).currentTime = 64f;
@@ -52,6 +51,8 @@ public class Level14 extends GameScreen implements Screen {
         GameEntity object3 = generateFloatingPoison(800, 300, 40, 40, 90f);
         GameEntity object4 = generateFloatingPoison(200, 500, 40, 40, 90f);
         GameEntity object5 = generateFloatingPoison(600, 900, 40, 40, 90f);
+        GameEntity object6 = generateFloatingPoison(1100, 800, 40, 40, 90f);
+        GameEntity object7 = generateFloatingPoison(1000, 800, 40, 40, 90f);
 
         getEngine().addEntity(powerUps);
         getEngine().addEntity(powerUps2);
@@ -67,6 +68,8 @@ public class Level14 extends GameScreen implements Screen {
         getEngine().addEntity(object3);
         getEngine().addEntity(object4);
         getEngine().addEntity(object5);
+        getEngine().addEntity(object6);
+        getEngine().addEntity(object7);
 
     }
 

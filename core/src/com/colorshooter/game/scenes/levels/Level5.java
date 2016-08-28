@@ -42,12 +42,11 @@ public class Level5 extends GameScreen implements Screen {
     public void show() {
         super.show();
         setTimer(new GameTimer());
-        getTimer().setTime(90f);
+        getTimer().setTime(65f);
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("BlueSpace1"));
 
         setPlayer(generatePlayer(678, 414));
-        cm.get(getPlayer()).boundingBox.setOrigin(pm.get(getPlayer()).x + pm.get(getPlayer()).originX, pm.get(getPlayer()).y + pm.get(getPlayer()).originY);
 
         GameEntity enemySpawn = generateEnemySpawnPoint(1000,900, "BlueUFO", 10f,  getEngine());
         em.get(enemySpawn).currentTime = 6f;

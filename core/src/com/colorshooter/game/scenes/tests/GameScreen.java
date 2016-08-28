@@ -81,6 +81,7 @@ public class GameScreen implements Screen {
     private GameTimer timer;
 
     private static float pointMultiplier = 1;
+    private float bestMultiplier;
     private float currentMultiTime;
     private float endMultiTime;
 
@@ -111,7 +112,8 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-         screenState = 0;
+        screenState = 0;
+        pointMultiplier = 1.0f;
 
         stage = new Stage();
         shapes = new ShapeRenderer();
@@ -309,12 +311,15 @@ public class GameScreen implements Screen {
         } else {
             levelLabel = new Label("Bonus!", skin);
         }
+
         if (level <= 0)
             levelLabel.setColor(Color.YELLOW);
         else if (level <= 10 && level >= 1)
             levelNum.setColor(Color.ORANGE);
-        else if (level >= 11 && level <= 20)
+        else if (level >= 11 && level <= 16)
             levelNum.setColor(Color.CYAN);
+        else if (level >= 17 && level <= 22)
+            levelNum.setColor(Color.YELLOW);
 
         life = new Label("Lives:", skin);
         lifeCount = new Label("-", skin);
@@ -326,7 +331,7 @@ public class GameScreen implements Screen {
             timeLabel = new Label("-:--", skin);
 
         pointMultiplierLabel = new Label("" + pointMultiplier, skin);
-        pointMultiplierLabel.setFontScale(1.4f);
+        pointMultiplierLabel.setFontScale(2f);
 
         //  BACKUP!!!
         //table.center().setFillParent(true);
@@ -349,7 +354,7 @@ public class GameScreen implements Screen {
         //table.add(healthBar);
         table.add(timeLabel).padLeft(400);
         table.row();
-        table.add(pointMultiplierLabel).padTop(740);
+        table.add(pointMultiplierLabel).padTop(730);
         /*
         table.add().fillX().expandY();
         table.add(healthBar);
@@ -443,7 +448,11 @@ public class GameScreen implements Screen {
         table.row();
         table.add("Health : " + hm.get(player).health + " / " + hm.get(player).maxHealth);
         table.row();
-        table.add("" + points).padBottom(40f);
+        table.add("" + points);
+        table.row();
+        Label bestMultiLabel = new Label("Best Score Multiplier : " + bestMultiplier, skin);
+        bestMultiLabel.setColor(1.25f  - (bestMultiplier / 4), 1.25f - (bestMultiplier / 4), 1f, 1f);
+        table.add(bestMultiLabel).padBottom(40f);
         table.row();
         Label screenText = new Label("Press ENTER to continue", skin);
         screenText.setColor(Color.YELLOW);
@@ -538,6 +547,7 @@ public class GameScreen implements Screen {
 
     public void reset() {
         lives -= 1;
+        pointMultiplier = 1f;
         if (lives < 0)
             Gdx.app.exit();
         screenState = 0;
@@ -583,9 +593,11 @@ public class GameScreen implements Screen {
         pointMultiplier = n;
     }
 
-    public static void incrementPointMultiplier(float n) {
+    public void incrementPointMultiplier(float n) {
         pointMultiplier += n;
         pointMultiplier = Math.round(pointMultiplier * 100);
         pointMultiplier /= 100;
+        if (pointMultiplier > bestMultiplier)
+            bestMultiplier = pointMultiplier;
     }
 }

@@ -27,12 +27,11 @@ public class Level6 extends GameScreen implements Screen {
     public void show() {
         super.show();
         setTimer(new GameTimer());
-        getTimer().setTime(100f);
+        getTimer().setTime(65f);
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("BlueSpace1"));
 
         setPlayer(generatePlayer(678, 414));
-        cm.get(getPlayer()).boundingBox.setOrigin(pm.get(getPlayer()).x + pm.get(getPlayer()).originX, pm.get(getPlayer()).y + pm.get(getPlayer()).originY);
 
         GameEntity enemySpawn = generateEnemySpawnPoint(1000,900, "Wisp", 5f,  getEngine());
         GameEntity enemySpawn2 = generateEnemySpawnPoint(100,900, "Wisp", 6f,  getEngine());

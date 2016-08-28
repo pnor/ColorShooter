@@ -24,12 +24,11 @@ public class Level15 extends GameScreen implements Screen{
     public void show() {
         super.show();
         setTimer(new GameTimer());
-        getTimer().setTime(100f);
+        getTimer().setTime(80f);
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("YellowSpace"));
 
         setPlayer(generatePlayer(678, 414));
-        cm.get(getPlayer()).boundingBox.setOrigin(pm.get(getPlayer()).x + pm.get(getPlayer()).originX, pm.get(getPlayer()).y + pm.get(getPlayer()).originY);
 
         GameEntity enemySpawn = generateRandomUFOSpawnPoint(1000,900, 2f, false, getEngine());
         GameEntity enemySpawn2 = generateRandomUFOSpawnPoint(0,900, 3f, false,   getEngine());

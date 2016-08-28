@@ -61,7 +61,7 @@ public class PlayerInputSystem extends EntitySystem{
 
             updateColor(e);
 
-            if (!bounce.isBouncing && !fm.get(e).isFrozen) {
+            if ((!bm.has(e) && !fm.has(e)) || !bounce.isBouncing && !fm.get(e).isFrozen) {
                 PositionSystem.lookAt(pos, mouse.x, mouse.y, col);
 
                 if (Gdx.input.isKeyPressed(controller.forward) && !checkMouseInsidePlayer(mouse, (GameEntity) e)) {
@@ -80,29 +80,31 @@ public class PlayerInputSystem extends EntitySystem{
                 if (Gdx.input.isKeyPressed(controller.shoot)) {
                     playerShoot(e);
                 }
-            } else if (bounce.isBouncing) {
+            } else if (bm.has(e) && bounce.isBouncing) {
                 MovementSystem.moveTowards(pos, mouse.x, mouse.y, -140f * (bounce.bounceDuration - bounce.currentDuration) / bounce.bounceDuration * dt, col);
             }
 
-            if (poim.get(e).isPoisoned) {
-                img.texRegion = ImageComponent.atlas.findRegion("PoisonedShip");
-                if (!em.has(e)) {
-                    e.add(new EventComponent());
-                    EventComponent eve = em.get(e);
-                    eve.ticking = true;
-                    eve.repeat = true;
-                    eve.targetTime = 0.3f;
-                    eve.event = new GameEvent() {
-                        @Override
-                        public void event(GameEntity e, Engine engine) {
-                            hm.get(e).health -= 2;
-                        }
-                    };
+            if (poim.has(e)) {
+                if (poim.get(e).isPoisoned) {
+                    img.texRegion = ImageComponent.atlas.findRegion("PoisonedShip");
+                    if (!em.has(e)) {
+                        e.add(new EventComponent());
+                        EventComponent eve = em.get(e);
+                        eve.ticking = true;
+                        eve.repeat = true;
+                        eve.targetTime = 0.3f;
+                        eve.event = new GameEvent() {
+                            @Override
+                            public void event(GameEntity e, Engine engine) {
+                                hm.get(e).health -= 2;
+                            }
+                        };
+                    }
+                } else if (!poim.get(e).isPoisoned && img.texRegion == ImageComponent.atlas.findRegion("PoisonedShip")) {
+                    e.remove(EventComponent.class);
+                    colm.get(e).oldColor = 'z';
+                    updateColor(e);
                 }
-            } else if (!poim.get(e).isPoisoned && img.texRegion == ImageComponent.atlas.findRegion("PoisonedShip")) {
-                e.remove(EventComponent.class);
-                colm.get(e).oldColor = 'z';
-                updateColor(e);
             }
         }
     }
@@ -125,6 +127,9 @@ public class PlayerInputSystem extends EntitySystem{
     }
 
     public void updateColor(Entity e) {
+        if (!colm.has(e))
+            return;
+
         ColorComponent color = colm.get(e);
         if (color.color != color.oldColor) {
             if (color.color == 'x') {
@@ -155,13 +160,17 @@ public class PlayerInputSystem extends EntitySystem{
                 im.get(e).texRegion = ImageComponent.atlas.findRegion("PlayerShipYellow");
                 shm.get(e).attackDelay = 0.07f;
             }
+            else if (color.color == 'o') {
+                im.get(e).texRegion = ImageComponent.atlas.findRegion("PlayerShipOrange");
+                shm.get(e).attackDelay = 0.12f;
+            }
         }
         color.oldColor = color.color;
     }
 
     public void playerShoot(Entity e) {
         ColorComponent color = colm.get(e);
-        if (color.color == 'x')
+        if (color == null || color.color == 'x')
             ShootingSystem.shoot(getEngine(), EntityConstructors.generateLaser(0, 0, pm.get(e).rotation, ImageComponent.atlas.findRegion("Laser"), 0), pm.get(e), shm.get(e));
         else if (color.color == 'r')
             ShootingSystem.shoot(getEngine(), EntityConstructors.generateExplosionLaser(0, 0, pm.get(e).rotation, 0), pm.get(e), shm.get(e));
@@ -175,5 +184,7 @@ public class PlayerInputSystem extends EntitySystem{
             ShootingSystem.shoot(getEngine(), EntityConstructors.generateHomingMissile(0, 0, pm.get(e).rotation, 0), pm.get(e), shm.get(e));
         else if (color.color == 'p')
             ShootingSystem.shoot(getEngine(), EntityConstructors.generatePinkLaser(0, 0, pm.get(e).rotation, 0), pm.get(e), shm.get(e));
+        else if (color.color == 'o')
+            ShootingSystem.shoot(getEngine(), EntityConstructors.generateOrangeArrow(0, 0, pm.get(e).rotation, 0), pm.get(e), shm.get(e));
     }
 }

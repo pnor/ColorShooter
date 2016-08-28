@@ -36,7 +36,12 @@ public class ColorShooter extends Game {
 			new Level14(),
 			new Level15(),
 			new BonusLevel2(),
-			new Level16()
+			new Level16(),
+			new Level17(),
+			new Level18(),
+			new Level19(),
+			new Level20(),
+			new BonusLevel3()
 	};
 
 	private int index;
@@ -73,7 +78,7 @@ public class ColorShooter extends Game {
 		if (getScreen() instanceof GameScreen && ((GameScreen) getScreen()).getScreenState() == 2) {
 			getScreen().show();
 			((GameScreen) getScreen()).reset();
-			((GameScreen) getScreen()).incrementPoints((int) (- ((GameScreen) getScreen()).getPoints() / 2.5));
+			((GameScreen) getScreen()).incrementPoints((int) (- 10000));
 			hm.get(((GameScreen) getScreen()).getPlayer()).invincible = true;
 
 		} else if (getScreen() instanceof GameScreen && ((GameScreen) getScreen()).getNextScreen()) {

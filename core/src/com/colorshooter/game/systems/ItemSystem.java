@@ -6,9 +6,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.colorshooter.game.GameEntity;
-import com.colorshooter.game.components.ItemComponent;
-import com.colorshooter.game.components.PlayerInputComponent;
-import com.colorshooter.game.components.PositionComponent;
+import com.colorshooter.game.components.*;
 
 import static com.colorshooter.game.Mappers.*;
 
@@ -27,7 +25,7 @@ public class ItemSystem extends EntitySystem{
 
     @Override
     public void addedToEngine(Engine engine) {
-        playerFam = Family.all(PlayerInputComponent.class, PositionComponent.class).get();
+        playerFam = Family.all(PlayerInputComponent.class, PositionComponent.class, ColorComponent.class).get();
         itemFam = Family.all(ItemComponent.class, PositionComponent.class).get();
         players = engine.getEntitiesFor(playerFam);
         items = engine.getEntitiesFor(itemFam);

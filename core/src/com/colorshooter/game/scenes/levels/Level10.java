@@ -29,7 +29,6 @@ public class Level10 extends GameScreen implements Screen {
         setBackground(ImageComponent.backgroundAtlas.findRegion("Space1"));
 
         setPlayer(generatePlayer(678, 414));
-        cm.get(getPlayer()).boundingBox.setOrigin(pm.get(getPlayer()).x + pm.get(getPlayer()).originX, pm.get(getPlayer()).y + pm.get(getPlayer()).originY);
 
         GameEntity boss = generateBossUFO(100, 900);
 

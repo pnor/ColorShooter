@@ -50,6 +50,7 @@ public class AIComponent implements Component{
      * c : ice laser <p>
      * t : thunder laser <p>
      * u : multi green arrow <p>
+     * o : orange arrow <p>
      */
     public char projectileType;
     public boolean gradualTurning = true;

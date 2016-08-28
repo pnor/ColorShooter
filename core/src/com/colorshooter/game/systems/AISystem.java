@@ -42,6 +42,9 @@ public class AISystem extends EntitySystem{
         PositionComponent pos;
         MovementComponent mov;
 
+
+        updateProcessing(getEngine());
+
         for (Entity e : entities) {
             ai = aim.get(e);
             pos = pm.get(e);
@@ -191,6 +194,7 @@ public class AISystem extends EntitySystem{
 
     public void updateProcessing(Engine engine) {
         entities = engine.getEntitiesFor(family);
+        players = engine.getEntitiesFor(playerFamily);
     }
 
     /**
@@ -246,8 +250,9 @@ public class AISystem extends EntitySystem{
             ShootingSystem.shoot(getEngine(), EntityConstructors.generateIceLaser(0, 0, pm.get(e).rotation, 1), pm.get(e), shm.get(e));
         else if (aim.get(e).projectileType == 't')
             ShootingSystem.shoot(getEngine(), EntityConstructors.generateThunderLaser(0, 0, pm.get(e).rotation, 1), pm.get(e), shm.get(e));
-        else if (aim.get(e).projectileType == 'u') {
+        else if (aim.get(e).projectileType == 'u')
             ShootingSystem.shoot(getEngine(), EntityConstructors.generateGreenArrow(0, 0, pm.get(e).rotation, 1), pm.get(e), shm.get(e));
+        else if (aim.get(e).projectileType == 'o')
+                ShootingSystem.shoot(getEngine(), EntityConstructors.generateOrangeArrow(0, 0, pm.get(e).rotation, 1), pm.get(e), shm.get(e));
         }
     }
-}

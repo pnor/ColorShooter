@@ -76,7 +76,7 @@ public class EntityConstructors {
                 position.x + position.width, position.y + position.height,
                 position.x, position.y + position.height
         });
-        collision.boundingBox.setOrigin(collision.boundingBox.getBoundingRectangle().getWidth() / 1.5f, collision.boundingBox.getBoundingRectangle().getHeight() / 1.5f);
+        collision.boundingBox.setOrigin(pm.get(player).x + pm.get(player).originX, pm.get(player).y + pm.get(player).originY);
         collision.collisionReaction = 0;
         collision.rotateBox = true;
 
@@ -922,6 +922,58 @@ public class EntityConstructors {
 
         LifetimeComponent life = lfm.get(laser);
         life.endTime = 0.5f;
+
+        return laser;
+    }
+
+    public static GameEntity generateOrangeArrow(float x, float y, float rotation, int hurtsPlayer) {
+        //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
+        GameEntity laser = new GameEntity("orange arrow");
+
+        laser.add(new PositionComponent());
+        laser.add(new DamageComponent());
+        laser.add(new ImageComponent());
+        laser.add(new MovementComponent());
+        laser.add(new LifetimeComponent());
+        laser.add(new EventComponent());
+
+        ImageComponent img = im.get(laser);
+        img.texRegion = ImageComponent.atlas.findRegion("OrangeDart");
+        img.rotate = true;
+
+        PositionComponent pos = pm.get(laser);
+        pos.x = x; pos.y = y;
+        pos.width = img.texRegion.getRegionWidth();
+        pos.height = img.texRegion.getRegionHeight();
+        pos.rotation = rotation;
+        PositionSystem.setOrigins(pos);
+
+        MovementComponent move = mm.get(laser);
+        move.speedPerSecond = 100;
+
+        DamageComponent dam = dm.get(laser);
+        dam.damage = 25;
+        if (hurtsPlayer == 0)
+            dam.tag = 'e';
+        else if (hurtsPlayer == 1)
+            dam.tag = 'p';
+        else
+            dam.tag = 'n';
+
+        EventComponent ev = em.get(laser);
+        ev.targetTime = 0.1f;
+        ev.repeat = true;
+        ev.ticking = true;
+        ev.event = new GameEvent() {
+            @Override
+            public void event(GameEntity e, Engine engine) {
+                mm.get(e).speedPerSecond += mm.get(e).speedPerSecond / 6;
+                pm.get(e).rotation += 36f;
+            }
+        };
+
+        LifetimeComponent life = lfm.get(laser);
+        life.endTime = 4f;
 
         return laser;
     }
@@ -2716,7 +2768,7 @@ public class EntityConstructors {
         health.deathAction = 3;
 
         enemy.add(new PointsComponent());
-        pom.get(enemy).points = 7777;
+        pom.get(enemy).points = 3777;
 
         return enemy;
     }
@@ -2921,6 +2973,115 @@ public class EntityConstructors {
 
         enemy.add(new PointsComponent());
         pom.get(enemy).points = 770;
+
+        return enemy;
+    }
+
+    public static GameEntity generateEnemyShipGold(float x, float y) {
+        GameEntity enemy = new GameEntity("enemy ship gold");
+        //make touhger later!!!
+
+        enemy.add(new PositionComponent());
+        enemy.add(new CollisionComponent());
+        enemy.add(new MovementComponent());
+        enemy.add(new ImageComponent());
+        enemy.add(new AIComponent());
+        enemy.add(new ShootComponent());
+        enemy.add(new HealthComponent());
+        enemy.add(new BouncingComponent());
+        enemy.add(new EventComponent());
+
+        MovementComponent mov = mm.get(enemy);
+        mov.speedPerSecond = 240f;
+        mov.move = true;
+
+        ImageComponent img = im.get(enemy);
+        img.texRegion = ImageComponent.atlas.findRegion("EnemyShipGold");
+        img.rotate = true;
+
+
+        PositionComponent position = pm.get(enemy);
+        position.x = x;
+        position.y = y;
+        position.height = img.texRegion.getRegionHeight();
+        position.width = img.texRegion.getRegionWidth();
+        PositionSystem.setOrigins(position);
+        position.rotation = (float) Math.random() * 360;
+
+        CollisionComponent collision = cm.get(enemy);
+        collision.boundingBox = new Polygon(new float[] {
+                position.x, position.y,
+                position.x + position.width, position.y,
+                position.x + position.width, position.y + position.height,
+                position.x, position.y + position.height
+        });
+        CollisionSystem.setBoundingBoxLocation(collision, 0, 0, position.rotation);
+        collision.boundingBox.setOrigin(position.x + position.originX, position.y + position.originY);
+        collision.collisionReaction = 1;
+        collision.rotateBox = true;
+
+        AIComponent AI = aim.get(enemy);
+        AI.awarenessRadius = 450f;
+        AI.AIType = 'r';
+        AI.targetTime = 2f;
+        AI.targetRotation = position.rotation;
+        AI.shoots = true;
+        AI.projectileType = 'f';
+
+        HealthComponent health = hm.get(enemy);
+        health.isAlive = true;
+        health.maxHealth = 360;
+        health.health = 360;
+        health.invinciblityDuration = 0.11f;
+        health.tag = 'e';
+        health.deathAction = 1;
+
+        ShootComponent shoot = shm.get(enemy);
+        shoot.attackDelay = 0.8f;
+
+        bm.get(enemy).bounceDuration = 2f;
+
+        EventComponent ev = em.get(enemy);
+        ev.repeat = true;
+        ev.ticking = true;
+        ev.targetTime = 7f;
+        ev.event = new GameEvent() {
+            @Override
+            public void event(GameEntity e, Engine engine) {
+                PositionComponent pos = pm.get(e);
+                AIComponent ai = aim.get(e);
+
+                if (ai.projectileType == 'f') {
+                    for (int i = 0; i < 6; i++) {
+                        engine.addEntity(generateFireLaser(pos.x + pos.originX, pos.y + pos.originY, pos.rotation - 90 + i * 30));
+                    }
+                    ai.projectileType = 't';
+                    ai.awarenessRadius = 300;
+                    shm.get(e).attackDelay = 0.4f;
+                    mm.get(e).speedPerSecond = 250f;
+                    ai.AIType = 'r';
+                } else if (ai.projectileType == 't') {
+                    for (int i = 0; i < 6; i++) {
+                        engine.addEntity(generateOrangeArrow(pos.x + pos.originX, pos.y + pos.originY, i * 60, 1));
+                    }
+                    ai.projectileType = 'u';
+                    ai.AIType = 'e';
+                    ai.awarenessRadius = 300;
+                    shm.get(e).attackDelay = 0.13f;
+                } else if (ai.projectileType == 'u') {
+                    for (int i = 0; i < 6; i++) {
+                        engine.addEntity(generateOrangeArrow(pos.x + pos.originX, pos.y + pos.originY, i * 60, 1));
+                    }
+                    ai.projectileType = 'f';
+                    ai.AIType = 'x';
+                    ai.awarenessRadius = 400;
+                    shm.get(e).attackDelay = 0.42f;
+                }
+            }
+        };
+
+        enemy.add(new PointsComponent());
+        pom.get(enemy).points = 2000;
 
         return enemy;
     }
@@ -3671,7 +3832,8 @@ public class EntityConstructors {
             item.event = new GameEvent() {
                 @Override
                 public void event(GameEntity e, Engine engine) {
-                    colm.get(e).color = 'r';
+                    if (colm.has(e))
+                        colm.get(e).color = 'r';
                 }
             };
         } else if (color.equals("Blue")) {
@@ -3683,7 +3845,8 @@ public class EntityConstructors {
             item.event = new GameEvent() {
                 @Override
                 public void event(GameEntity e, Engine engine) {
-                    colm.get(e).color = 'b';
+                    if (colm.has(e))
+                        colm.get(e).color = 'b';
                 }
             };
 
@@ -3696,7 +3859,8 @@ public class EntityConstructors {
             item.event = new GameEvent() {
                 @Override
                 public void event(GameEntity e, Engine engine) {
-                    colm.get(e).color = 'g';
+                    if (colm.has(e))
+                        colm.get(e).color = 'g';
                 }
             };
         } else if (color.equals("Yellow")) {
@@ -3708,7 +3872,8 @@ public class EntityConstructors {
             item.event = new GameEvent() {
                 @Override
                 public void event(GameEntity e, Engine engine) {
-                    colm.get(e).color = 'y';
+                    if (colm.has(e))
+                        colm.get(e).color = 'y';
                 }
             };
         } else if (color.equals("Pink")) {
@@ -3720,7 +3885,8 @@ public class EntityConstructors {
             item.event = new GameEvent() {
                 @Override
                 public void event(GameEntity e, Engine engine) {
-                    colm.get(e).color = 'p';
+                    if (colm.has(e))
+                        colm.get(e).color = 'p';
                 }
             };
         } else if (color.equals("Purple")) {
@@ -3732,7 +3898,21 @@ public class EntityConstructors {
             item.event = new GameEvent() {
                 @Override
                 public void event(GameEntity e, Engine engine) {
-                    colm.get(e).color = 'v';
+                    if (colm.has(e))
+                        colm.get(e).color = 'v';
+                }
+            };
+        } else if (color.equals("Orange")) {
+            img.texRegion = ImageComponent.atlas.findRegion("OrangePower1");
+            anim.animations.add(new ArrayList<TextureRegion>());
+            anim.baseTextureRegion = ImageComponent.atlas.findRegion("OrangePower1");
+            anim.animations.get(0).add(ImageComponent.atlas.findRegion("OrangePower1"));
+            anim.animations.get(0).add(ImageComponent.atlas.findRegion("OrangePower2"));
+            item.event = new GameEvent() {
+                @Override
+                public void event(GameEntity e, Engine engine) {
+                    if (colm.has(e))
+                        colm.get(e).color = 'o';
                 }
             };
         }
@@ -3749,6 +3929,112 @@ public class EntityConstructors {
         life.endTime = 7f;
 
         return power;
+    }
+
+    public static GameEntity generateDoubleUp(float x, float y) {
+        GameEntity healer = new GameEntity("double up");
+
+        healer.add(new PositionComponent());
+        healer.add(new ItemComponent());
+        healer.add(new ImageComponent());
+        healer.add(new AnimationComponent());
+        healer.add(new LifetimeComponent());
+
+        ImageComponent img = im.get(healer);
+        img.texRegion = ImageComponent.atlas.findRegion("DoubleUp");
+
+        AnimationComponent anim = am.get(healer);
+        anim.animate = true;
+        anim.repeat = true;
+        anim.animations.add(new ArrayList<TextureRegion>());
+        anim.baseTextureRegion = ImageComponent.atlas.findRegion("DoubleUp");
+        anim.animations.get(0).add(ImageComponent.atlas.findRegion("DoubleUp"));
+        anim.animations.get(0).add(ImageComponent.atlas.findRegion("DoubleUp2"));
+        anim.currentAnimation = 0;
+        anim.currentIndex = 0;
+        anim.animationTime = 0.2f;
+
+        PositionComponent pos = pm.get(healer);
+        pos.x = x;
+        pos.y = y;
+        pos.width = img.texRegion.getRegionWidth();
+        pos.height = img.texRegion.getRegionHeight();
+        pos.rotation = 0f;
+        PositionSystem.setOrigins(pos);
+        pos.drawable = true;
+
+        LifetimeComponent life = lfm.get(healer);
+        life.endTime = 9f;
+
+        ItemComponent item = itm.get(healer);
+        item.event = new GameEvent() {
+            @Override
+            public void event(GameEntity e, Engine engine) {
+                engine.addEntity(generateGhostPlayerShip(pm.get(e).x, pm.get(e).y));
+            }
+        };
+
+        return healer;
+    }
+
+    public static GameEntity generateGhostPlayerShip(float x, float y) {
+        GameEntity player = new GameEntity("other player ghost");
+
+        player.add(new PlayerInputComponent());
+        player.add(new PositionComponent());
+        player.add(new MovementComponent());
+        player.add(new ImageComponent());
+        player.add(new HealthComponent());
+        player.add(new ShootComponent());
+        player.add(new CollisionComponent());
+
+        PlayerInputComponent controller = pim.get(player);
+        controller.forward = Input.Keys.W;
+        controller.back = Input.Keys.S;
+        controller.right = Input.Keys.D;
+        controller.left = Input.Keys.A;
+        controller.shoot = Input.Keys.SPACE;
+        controller.sprint = Input.Keys.SHIFT_LEFT;
+
+        ImageComponent image = im.get(player);
+        image.texRegion = ImageComponent.atlas.findRegion("GhostPlayerShip");
+        image.rotate = true;
+
+        PositionComponent position = pm.get(player);
+        position.x = x;
+        position.y = y;
+        position.height = image.texRegion.getRegionHeight();
+        position.width = image.texRegion.getRegionWidth();
+        PositionSystem.setOrigins(position);
+
+        CollisionComponent collision = cm.get(player);
+        collision.boundingBox = new Polygon(new float[] {
+                position.x, position.y,
+                position.x + position.width, position.y,
+                position.x + position.width, position.y + position.height,
+                position.x, position.y + position.height
+        });
+        collision.boundingBox.setOrigin(pm.get(player).x + pm.get(player).originX, pm.get(player).y + pm.get(player).originY);
+        collision.collisionReaction = 1;
+        collision.rotateBox = true;
+
+        MovementComponent move = mm.get(player);
+        move.speedPerSecond = 150f;
+        move.move = false;
+        position.rotation = 0f;
+
+        HealthComponent heal = hm.get(player);
+        heal.maxHealth = 100;
+        heal.health = 100;
+        heal.invinciblityDuration = 0.6f;
+        heal.isAlive = true;
+        heal.tag = 'p';
+        heal.deathAction = 3;
+
+        ShootComponent sho = shm.get(player);
+        sho.attackDelay = 0.2f;
+
+        return player;
     }
 
     /*
@@ -3978,6 +4264,14 @@ public class EntityConstructors {
                 public void event(GameEntity e, Engine engine) {
                     PositionComponent p = pm.get(e);
                     engine.addEntity(generateEnemyShipYellow(p.x, p.y));
+                }
+            };
+        } else if (spawned.equals("EnemyShipGold")) {
+            event.event = new GameEvent() {
+                @Override
+                public void event(GameEntity e, Engine engine) {
+                    PositionComponent p = pm.get(e);
+                    engine.addEntity(generateEnemyShipGold(p.x, p.y));
                 }
             };
         } else if (spawned.equals("FastEnemy")) {
@@ -4227,7 +4521,7 @@ public class EntityConstructors {
         event.event = new GameEvent() {
             @Override
             public void event(GameEntity e, Engine engine) {
-                int i = (int) (Math.random() * 2);
+                int i = (int) (Math.random() * 3);
 
                 if (i == 0) {
                     PositionComponent p = pm.get(e);
@@ -4235,6 +4529,9 @@ public class EntityConstructors {
                 } else if (i == 1) {
                     PositionComponent p = pm.get(e);
                     engine.addEntity(generateEnemyShipBlue(p.x, p.y));
+                } else if (i == 2) {
+                    PositionComponent p = pm.get(e);
+                    engine.addEntity(generateEnemyShipGold(p.x, p.y));
                 }
             }
         };
@@ -4333,6 +4630,14 @@ public class EntityConstructors {
                     engine.addEntity(generateColorPowerUp(p.x, p.y, "Purple"));
                 }
             };
+        } else if (spawned.equals("Orange")) {
+            event.event = new GameEvent() {
+                @Override
+                public void event(GameEntity e, Engine engine) {
+                    PositionComponent p = pm.get(e);
+                    engine.addEntity(generateColorPowerUp(p.x, p.y, "Orange"));
+                }
+            };
         } else if (spawned.equals("SuperShootUp")) {
             event.event = new GameEvent() {
                 @Override
@@ -4347,6 +4652,14 @@ public class EntityConstructors {
                 public void event(GameEntity e, Engine engine) {
                     PositionComponent p = pm.get(e);
                     engine.addEntity(generateShootUp(p.x, p.y));
+                }
+            };
+        } else if (spawned.equals("DoubleUp")) {
+            event.event = new GameEvent() {
+                @Override
+                public void event(GameEntity e, Engine engine) {
+                    PositionComponent p = pm.get(e);
+                    engine.addEntity(generateDoubleUp(p.x, p.y));
                 }
             };
         }
@@ -4610,6 +4923,14 @@ public class EntityConstructors {
                     engine.addEntity(generateColorPowerUp(p.x, p.y, "Purple"));
                 }
             };
+        } else if (spawned.equals("Orange")) {
+            event.event = new GameEvent() {
+                @Override
+                public void event(GameEntity e, Engine engine) {
+                    PositionComponent p = pm.get(e);
+                    engine.addEntity(generateColorPowerUp(p.x, p.y, "Orange"));
+                }
+            };
         } else if (spawned.equals("SuperShootUp")) {
             event.event = new GameEvent() {
                 @Override
@@ -4624,6 +4945,14 @@ public class EntityConstructors {
                 public void event(GameEntity e, Engine engine) {
                     PositionComponent p = pm.get(e);
                     engine.addEntity(generateShootUp(p.x, p.y));
+                }
+            };
+        } else if (spawned.equals("DoubleUp")) {
+            event.event = new GameEvent() {
+                @Override
+                public void event(GameEntity e, Engine engine) {
+                    PositionComponent p = pm.get(e);
+                    engine.addEntity(generateDoubleUp(p.x, p.y));
                 }
             };
         }
@@ -4678,6 +5007,65 @@ public class EntityConstructors {
                 } else if (i == 3) {
                     PositionComponent p = pm.get(e);
                     engine.addEntity(generateMaxHealingItem(p.x, p.y));
+                }
+            }
+        };
+
+        return spawn;
+    }
+
+    public static GameEntity generateMovingRandomColorSpawnPoint(float x, float y, float freq, Engine engine) {
+        GameEntity spawn = new GameEntity("spawn");
+
+        spawn.add(new PositionComponent());
+        spawn.add(new EventComponent());
+        spawn.add(new AIComponent());
+        spawn.add(new MovementComponent());
+
+        MovementComponent move = mm.get(spawn);
+        move.speedPerSecond = 300f;
+
+        AIComponent ai = aim.get(spawn);
+        ai.AIType = 'w';
+        ai.targetTime = 3f;
+        ai.shoots = false;
+
+        PositionComponent pos = pm.get(spawn);
+        pos.x = x;
+        pos.y = y;
+        pos.width = 10f;
+        pos.height = 10f;
+        pos.rotation = 0f;
+        PositionSystem.setOrigins(pos);
+        pos.drawable = false;
+
+        EventComponent event = em.get(spawn);
+        event.ticking = true;
+        event.repeat = true;
+        event.targetTime = freq;
+        event.event = new GameEvent() {
+            @Override
+            public void event(GameEntity e, Engine engine) {
+                int i = (int) (Math.random() * 6);
+
+                if (i == 0) {
+                    PositionComponent p = pm.get(e);
+                    engine.addEntity(generateColorPowerUp(p.x, p.y, "Red"));
+                } else if (i == 1) {
+                    PositionComponent p = pm.get(e);
+                    engine.addEntity(generateColorPowerUp(p.x, p.y, "Green"));
+                } else if (i == 2) {
+                    PositionComponent p = pm.get(e);
+                    engine.addEntity(generateColorPowerUp(p.x, p.y, "Blue"));
+                } else if (i == 3) {
+                    PositionComponent p = pm.get(e);
+                    engine.addEntity(generateColorPowerUp(p.x, p.y, "Yellow"));
+                } else if (i == 4) {
+                    PositionComponent p = pm.get(e);
+                    engine.addEntity(generateColorPowerUp(p.x, p.y, "Pink"));
+                } else if (i == 5) {
+                    PositionComponent p = pm.get(e);
+                    engine.addEntity(generateColorPowerUp(p.x, p.y, "Purple"));
                 }
             }
         };
