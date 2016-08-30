@@ -22,6 +22,8 @@ public class CollisionComponent implements Component{
      * 7 : puts only the players into bouncing state (without collision) <p>
      * 8 : puts into poison state (without collision) <p>
      * 9 : puts into freeze state (with collision) <p>
+     * 10 : only collides with entities sharing this collisionReaction
+     * 11 : puts into freeze state (without collision) <p>
      <p>
      * --represents how THIS OBJECT will react when colliding with something <p>
      * 5 : destroys self <p>

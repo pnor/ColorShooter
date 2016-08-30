@@ -1,27 +1,24 @@
 package com.colorshooter.game.scenes.levels;
 
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Screen;
+import com.colorshooter.game.ColorShooter;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.GameTimer;
 import com.colorshooter.game.components.ImageComponent;
-import com.colorshooter.game.scenes.tests.GameScreen;
-import com.colorshooter.game.systems.*;
+import com.colorshooter.game.scenes.GameScreen;
 
 import static com.colorshooter.game.EntityConstructors.*;
 import static com.colorshooter.game.EntityConstructors.generateItemSpawnPoint;
 import static com.colorshooter.game.EntityConstructors.generateRandomPowerUp;
 import static com.colorshooter.game.Mappers.*;
-import static com.colorshooter.game.Mappers.pom;
 
 /**
  * Created by pnore_000 on 8/20/2016.
  */
 public class Level4 extends GameScreen implements Screen {
 
-    public Level4() {
-        super(4);
+    public Level4(ColorShooter game) {
+        super(4, game);
     }
 
     @Override

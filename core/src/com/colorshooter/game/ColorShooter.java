@@ -2,46 +2,48 @@ package com.colorshooter.game;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.colorshooter.game.scenes.GameScreen;
 import com.colorshooter.game.scenes.levels.*;
-import com.colorshooter.game.scenes.tests.*;
+import com.colorshooter.game.scenes.menus.MainMenu;
 
 import static com.colorshooter.game.Mappers.hm;
 
 public class ColorShooter extends Game {
-	/*
-	private final Screen[] SCREENS = {
-			new PlayerTest(0),
-			new WallTest(0),
-			new ShootingTest(0),
-			new EnemyTest(0),
-			new HUDTest(0)
-	};
-	*/
 
 	private final Screen[] SCREENS = {
-			new Level1(),
-			new Level2(),
-			new Level3(),
-			new Level4(),
-			new Level5(),
-			new BonusLevel1(),
-			new Level6(),
-			new Level7(),
-			new Level8(),
-			new Level9(),
-			new Level10(),
-			new Level11(),
-			new Level12(),
-			new Level13(),
-			new Level14(),
-			new Level15(),
-			new BonusLevel2(),
-			new Level16(),
-			new Level17(),
-			new Level18(),
-			new Level19(),
-			new Level20(),
-			new BonusLevel3()
+			new MainMenu(this),
+			new Level1(this),
+			new Level2(this),
+			new Level3(this),
+			new Level4(this),
+			new Level5(this),
+			new BonusLevel1(this),
+			new Level6(this),
+			new Level7(this),
+			new Level8(this),
+			new Level9(this),
+			new Level10(this),
+			new Level11(this),
+			new Level12(this),
+			new Level13(this),
+			new Level14(this),
+			new Level15(this),
+			new BonusLevel2(this),
+			new Level16(this),
+			new Level17(this),
+			new Level18(this),
+			new Level19(this),
+			new Level20(this),
+			new BonusLevel3(this),
+			new Level21(this),
+			new Level22(this),
+			new Level23(this),
+			new Level24(this),
+			new Level25(this),
+			new Level26(this),
+			new Level27(this)
 	};
 
 	private int index;
@@ -76,15 +78,14 @@ public class ColorShooter extends Game {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		if (getScreen() instanceof GameScreen && ((GameScreen) getScreen()).getScreenState() == 2) {
-			getScreen().show();
-			((GameScreen) getScreen()).reset();
-			((GameScreen) getScreen()).incrementPoints((int) (- 10000));
-			hm.get(((GameScreen) getScreen()).getPlayer()).invincible = true;
-
-		} else if (getScreen() instanceof GameScreen && ((GameScreen) getScreen()).getNextScreen()) {
-			index++;
-			setScreen(SCREENS[index]);
-			Gdx.gl.glClearColor(1, 1, 1, 1);
+			if (((GameScreen) getScreen()).getLives() < 1) {
+				setScreen(0);
+			} else {
+				getScreen().show();
+				((GameScreen) getScreen()).reset();
+				((GameScreen) getScreen()).incrementPoints((int) (-10000));
+				hm.get(((GameScreen) getScreen()).getPlayer()).invincible = true;
+			}
 		} else {
 			getScreen().render(Gdx.graphics.getDeltaTime());
 		}
@@ -98,8 +99,20 @@ public class ColorShooter extends Game {
 		super.setScreen(screen);
 	}
 
+	public void setScreen(int i) {
+		super.setScreen(SCREENS[i]);
+		index = i;
+	}
+
+
 	public Screen getScreen() {
 		return super.getScreen();
+	}
+
+	public void moveScreen() {
+		index++;
+		index = (SCREENS.length + index) % SCREENS.length;
+		super.setScreen(SCREENS[index]);
 	}
 
 }

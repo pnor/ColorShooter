@@ -1,26 +1,23 @@
 package com.colorshooter.game.scenes.levels;
 
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Screen;
+import com.colorshooter.game.ColorShooter;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.GameTimer;
 import com.colorshooter.game.components.ImageComponent;
-import com.colorshooter.game.scenes.tests.GameScreen;
-import com.colorshooter.game.systems.*;
+import com.colorshooter.game.scenes.GameScreen;
 
 import static com.colorshooter.game.EntityConstructors.*;
 import static com.colorshooter.game.EntityConstructors.generateRandomPowerUp;
 import static com.colorshooter.game.Mappers.*;
-import static com.colorshooter.game.Mappers.pom;
 
 /**
  * Created by pnore_000 on 8/20/2016.
  */
 public class Level3 extends GameScreen implements Screen {
 
-    public Level3() {
-        super(3);
+    public Level3(ColorShooter game) {
+        super(3, game);
     }
 
     @Override
@@ -33,9 +30,9 @@ public class Level3 extends GameScreen implements Screen {
 
         setPlayer(generatePlayer(678, 414));
 
-        GameEntity object1 = generateObject(300, 300, ImageComponent.atlas.findRegion("SpaceJunk").getRegionWidth(), ImageComponent.atlas.findRegion("SpaceJunk").getRegionHeight(), ImageComponent.atlas.findRegion("SpaceJunk"));
-        GameEntity object2 = generateObject(700, 600, ImageComponent.atlas.findRegion("SpaceJunk").getRegionWidth(), ImageComponent.atlas.findRegion("SpaceJunk").getRegionHeight(), ImageComponent.atlas.findRegion("SpaceJunk"));
-        GameEntity object3 = generateObject(960, 100, ImageComponent.atlas.findRegion("SpaceJunk").getRegionWidth(), ImageComponent.atlas.findRegion("SpaceJunk").getRegionHeight(), ImageComponent.atlas.findRegion("SpaceJunk"));
+        GameEntity object1 = generateObject(300, 300, ImageComponent.atlas.findRegion("SpaceJunk").getRegionWidth(), ImageComponent.atlas.findRegion("SpaceJunk").getRegionHeight(), ImageComponent.atlas.findRegion("SpaceJunk"), true);
+        GameEntity object2 = generateObject(700, 600, ImageComponent.atlas.findRegion("SpaceJunk").getRegionWidth(), ImageComponent.atlas.findRegion("SpaceJunk").getRegionHeight(), ImageComponent.atlas.findRegion("SpaceJunk"), true);
+        GameEntity object3 = generateObject(960, 100, ImageComponent.atlas.findRegion("SpaceJunk").getRegionWidth(), ImageComponent.atlas.findRegion("SpaceJunk").getRegionHeight(), ImageComponent.atlas.findRegion("SpaceJunk"), true);
 
 
         GameEntity enemySpawn = generateEnemySpawnPoint(100,900, "RedUFO", 7f,  getEngine());

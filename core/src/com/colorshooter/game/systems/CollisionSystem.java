@@ -50,6 +50,13 @@ public class CollisionSystem extends EntitySystem{
                     }
                 }
 
+                if (cm.get(entities.get(j)).collisionReaction == 11) {
+                    if (checkCollision(cm.get(entities.get(i)), cm.get(entities.get(j)))) {
+                        if (fm.has(entities.get(i)) && pim.has(entities.get(i)))
+                            fm.get(entities.get(i)).isFrozen = true;
+                    }
+                }
+
                 if (cm.get(entities.get(j)).collisionReaction == 8) {
                     if (checkCollision(cm.get(entities.get(i)), cm.get(entities.get(j)))) {
                         if (poim.has(entities.get(i)) && pim.has(entities.get(i)))
@@ -81,7 +88,7 @@ public class CollisionSystem extends EntitySystem{
 
                 if (cm.get(entities.get(i)).collisionReaction == 3) {
                     if (checkCollision(cm.get(entities.get(i)), cm.get(entities.get(j))))
-                        pm.get(entities.get(i)).rotation = 135 + (float) (Math.random() * 150);
+                        pm.get(entities.get(i)).rotation += 165 + (float) (Math.random() * 30);
                 }
 
                 if (cm.get(entities.get(j)).collisionReaction == 2) {
@@ -90,6 +97,9 @@ public class CollisionSystem extends EntitySystem{
                             bm.get(entities.get(i)).isBouncing = true;
                     }
                 }
+
+                if (cm.get(entities.get(j)).collisionReaction == 10 && cm.get(entities.get(i)).collisionReaction == 10)
+                    stopCollision(entities.get(i), entities.get(j));
 
                 if (cm.get(entities.get(j)).collisionReaction == 1)
                     stopCollision(entities.get(i), entities.get(j));

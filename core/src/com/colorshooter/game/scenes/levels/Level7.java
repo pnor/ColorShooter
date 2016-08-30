@@ -1,26 +1,22 @@
 package com.colorshooter.game.scenes.levels;
 
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Screen;
+import com.colorshooter.game.ColorShooter;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.GameTimer;
 import com.colorshooter.game.components.ImageComponent;
-import com.colorshooter.game.scenes.tests.GameScreen;
-import com.colorshooter.game.systems.*;
+import com.colorshooter.game.scenes.GameScreen;
 
 import static com.colorshooter.game.EntityConstructors.*;
-import static com.colorshooter.game.EntityConstructors.generateMovingObject;
 import static com.colorshooter.game.Mappers.*;
-import static com.colorshooter.game.Mappers.pom;
 
 /**
  * Created by pnore_000 on 8/22/2016.
  */
 public class Level7 extends GameScreen implements Screen {
 
-    public Level7() {
-        super(7);
+    public Level7(ColorShooter game) {
+        super(7, game);
     }
 
     @Override

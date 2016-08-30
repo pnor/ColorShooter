@@ -1,10 +1,10 @@
 package com.colorshooter.game.scenes.tests;
 
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
+import com.colorshooter.game.ColorShooter;
 import com.colorshooter.game.GameEntity;
-import com.colorshooter.game.GameTimer;
 import com.colorshooter.game.components.ImageComponent;
+import com.colorshooter.game.scenes.GameScreen;
 import com.colorshooter.game.systems.*;
 
 import static com.colorshooter.game.EntityConstructors.*;
@@ -12,7 +12,7 @@ import static com.colorshooter.game.EntityConstructors.*;
 /**
  * Created by pnore_000 on 8/8/2016.
  */
-public class HUDTest extends GameScreen{
+public class HUDTest extends GameScreen {
 
     private MovementSystem movementSystem;
     private CollisionSystem collisionSystem;
@@ -30,8 +30,8 @@ public class HUDTest extends GameScreen{
     private PoisonSystem poisSystem;
     private FrozenSystem frozenSystem;
 
-    public HUDTest(int i) {
-        super(i);
+    public HUDTest(int i, ColorShooter game) {
+        super(i, game);
     }
 
     @Override

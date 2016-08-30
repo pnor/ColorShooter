@@ -1,10 +1,11 @@
 package com.colorshooter.game.scenes.levels;
 
 import com.badlogic.gdx.Screen;
+import com.colorshooter.game.ColorShooter;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.GameTimer;
 import com.colorshooter.game.components.ImageComponent;
-import com.colorshooter.game.scenes.tests.GameScreen;
+import com.colorshooter.game.scenes.GameScreen;
 
 import static com.colorshooter.game.EntityConstructors.*;
 import static com.colorshooter.game.EntityConstructors.generateItemSpawnPoint;
@@ -17,8 +18,8 @@ import static com.colorshooter.game.Mappers.pm;
  */
 public class Level18 extends GameScreen implements Screen{
 
-    public Level18() {
-        super(18);
+    public Level18(ColorShooter game) {
+        super(18, game);
     }
 
     @Override
@@ -41,10 +42,10 @@ public class Level18 extends GameScreen implements Screen{
         GameEntity color2 = generateItemSpawnPoint(550, 250, "Red", 30f,  getEngine());
 
         GameEntity powerUps = generateMovingItemSpawnPoint(300, 450, "Health", 6f,  getEngine());
-        GameEntity powerUps2 = generateMovingRandomPowerUp(220, 330, 6f,  getEngine());
+        GameEntity powerUps2 = generateMovingRandomPowerUp(220, 330, 7f,  getEngine());
 
         GameEntity doubleUp = generateItemSpawnPoint(720, 400, "DoubleUp", 15f,  getEngine());
-        em.get(doubleUp).currentTime = 9f;
+        em.get(doubleUp).currentTime = 7f;
 
         getEngine().addEntity(powerUps);
         getEngine().addEntity(powerUps2);

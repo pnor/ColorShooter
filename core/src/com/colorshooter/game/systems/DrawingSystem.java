@@ -76,15 +76,15 @@ public class DrawingSystem extends EntitySystem{
             } else {
                 img = im.get(e);
                 batch.begin();
-                if (fm.has(e) && fm.get(e).isFrozen) {
-                    batch.setColor(Color.CYAN);
+                if (hm.has(e) && hm.get(e).invincible) {
+                    batch.setColor(Color.RED);
                     if (img.rotate)
                         batch.draw(img.texRegion, pos.x, pos.y, pos.originX, pos.originY, pos.width, pos.height, 1, 1, pos.rotation);
                     else
                         batch.draw(img.texRegion, pos.x, pos.y, pos.originX, pos.originY, pos.width, pos.height, 1, 1, 0);
                     batch.setColor(Color.WHITE);
-                } else if (hm.has(e) && hm.get(e).invincible) {
-                    batch.setColor(Color.RED);
+                } else if (fm.has(e) && fm.get(e).isFrozen) {
+                    batch.setColor(Color.CYAN);
                     if (img.rotate)
                         batch.draw(img.texRegion, pos.x, pos.y, pos.originX, pos.originY, pos.width, pos.height, 1, 1, pos.rotation);
                     else

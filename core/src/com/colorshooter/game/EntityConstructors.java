@@ -62,7 +62,7 @@ public class EntityConstructors {
         PositionSystem.setOrigins(position);
 
         MovementComponent move = mm.get(player);
-        move.speedPerSecond = 300f;
+        move.speedPerSecond = 320f;
         move.move = false;
         position.rotation = 0f;
 
@@ -89,7 +89,7 @@ public class EntityConstructors {
         pois.isPoisoned = false;
 
         FrozenComponent frozen = fm.get(player);
-        frozen.frozenDuration = 3f;
+        frozen.frozenDuration = 2f;
         frozen.isFrozen = false;
 
         HealthComponent heal = hm.get(player);
@@ -137,7 +137,45 @@ public class EntityConstructors {
         return wall;
     }
 
-    public static GameEntity generateObject(float x, float y, float width, float height, TextureRegion t) {
+    public static GameEntity generateObject(float x, float y, float width, float height, TextureRegion t, boolean randomlyRotate) {
+        GameEntity obj = new GameEntity("object");
+
+        obj.add(new PositionComponent());
+        obj.add(new CollisionComponent());
+        obj.add(new ImageComponent());
+
+        PositionComponent position = pm.get(obj);
+        position.x = x;
+        position.y = y;
+        position.height = height;
+        position.width = width;
+        PositionSystem.setOrigins(position);
+        if (randomlyRotate)
+            position.rotation = (float) (Math.random() * 360);
+        else
+            position.rotation = 0;
+
+
+        ImageComponent img = im.get(obj);
+        img.texRegion = t;
+        img.rotate = true;
+
+        CollisionComponent collision = cm.get(obj);
+        collision.boundingBox = new Polygon(new float[] {
+                position.x, position.y,
+                position.x + position.width, position.y,
+                position.x + position.width, position.y + position.height,
+                position.x, position.y + position.height
+        });
+        collision.boundingBox.setOrigin(position.width / 2 + position.x, position.height / 2 + position.y);
+        collision.collisionReaction = 1;
+        collision.rotateBox = true;
+        collision.unmovable = true;
+
+        return obj;
+    }
+
+    public static GameEntity generatePushableObject(float x, float y, float width, float height, TextureRegion t) {
         GameEntity obj = new GameEntity("object");
 
         obj.add(new PositionComponent());
@@ -166,7 +204,7 @@ public class EntityConstructors {
         collision.boundingBox.setOrigin(position.width / 2 + position.x, position.height / 2 + position.y);
         collision.collisionReaction = 1;
         collision.rotateBox = true;
-        collision.unmovable = true;
+        collision.unmovable = false;
 
         return obj;
     }
@@ -340,7 +378,7 @@ public class EntityConstructors {
                     anim.animationTime = 0.2f;
 
                     DamageComponent dam = dm.get(e);
-                    dam.damage = 40;
+                    dam.damage = 32;
                     dam.tag = 'e';
 
                     em.get(e).targetTime = 0.1f;
@@ -413,6 +451,59 @@ public class EntityConstructors {
         return explosion;
     }
 
+    public static GameEntity generateBlueExplosion(float x, float y) {
+        GameEntity explosion = new GameEntity("blue explosion");
+
+        explosion.add(new PositionComponent());
+        explosion.add(new ImageComponent());
+        explosion.add(new AnimationComponent());
+        explosion.add(new DamageComponent());
+        explosion.add(new LifetimeComponent());
+        explosion.add(new EventComponent());
+
+        ImageComponent img = im.get(explosion);
+        img.texRegion = ImageComponent.atlas.findRegion("FinalDeathExplosion");
+
+        AnimationComponent anim = am.get(explosion);
+        anim.animate = true;
+        anim.repeat = true;
+        anim.animations.add(new ArrayList<TextureRegion>());
+        anim.baseTextureRegion = ImageComponent.atlas.findRegion("FinalDeathExplosion");
+        anim.animations.get(0).add(ImageComponent.atlas.findRegion("FinalDeathExplosion"));
+        anim.animations.get(0).add(ImageComponent.atlas.findRegion("FinalDeathExplosion2"));
+        anim.animations.get(0).add(ImageComponent.atlas.findRegion("FinalDeathExplosion3"));
+        anim.currentAnimation = 0;
+        anim.currentIndex = 0;
+        anim.animationTime = 0.2f;
+
+        PositionComponent pos = pm.get(explosion);
+        pos.x = x;
+        pos.y = y;
+        pos.width = img.texRegion.getRegionWidth();
+        pos.height = img.texRegion.getRegionHeight();
+        PositionSystem.setOrigins(pos);
+        pos.rotation = 0f;
+
+        DamageComponent dam = dm.get(explosion);
+        dam.damage = 10;
+        dam.tag = 'n';
+
+        LifetimeComponent life = lfm.get(explosion);
+        life.endTime = 1f;
+
+        EventComponent ev = em.get(explosion);
+        ev.targetTime = 0.1f;
+        ev.event = new GameEvent() {
+            @Override
+            public void event(GameEntity e, Engine engine) {
+                if ( dm.get(e).damage >= 5)
+                    dm.get(e).damage -= 5;
+            }
+        };
+
+        return explosion;
+    }
+
     public static GameEntity generateBigExplosion(float x, float y) {
         GameEntity explosion = new GameEntity("explosion");
 
@@ -447,7 +538,7 @@ public class EntityConstructors {
         pos.rotation = 0f;
 
         DamageComponent dam = dm.get(explosion);
-        dam.damage = 25;
+        dam.damage = 15;
         dam.tag = 'n';
 
         LifetimeComponent life = lfm.get(explosion);
@@ -501,7 +592,7 @@ public class EntityConstructors {
 
         DamageComponent dam = dm.get(explosion);
         dam.damage = 10;
-        dam.tag = 'n';
+        dam.tag = 'e';
 
         LifetimeComponent life = lfm.get(explosion);
         life.endTime = 1f;
@@ -551,7 +642,7 @@ public class EntityConstructors {
         anim.animationTime = 0.5f;
 
         EventComponent ev = em.get(mine);
-        ev.targetTime = 1.5f;
+        ev.targetTime = 1.3f;
         ev.ticking = true;
         ev.repeat = false;
         ev.event = new GameEvent() {
@@ -563,8 +654,8 @@ public class EntityConstructors {
                 im.get(e).texRegion = ImageComponent.atlas.findRegion("BigExplosion");
 
                 PositionComponent pos = pm.get(e);
-                pos.width = 200;
-                pos.height = 200;
+                pos.width = 220;
+                pos.height = 220;
                 pos.x = pos.originX + pos.x - pos.width / 2;
                 pos.y = pos.originY + pos.y  - pos.height / 2;
                 PositionSystem.setOrigins(pm.get(e));
@@ -626,7 +717,7 @@ public class EntityConstructors {
         PositionSystem.setOrigins(pos);
 
         MovementComponent move = mm.get(laser);
-        move.speedPerSecond = 550;
+        move.speedPerSecond = 700;
 
         CollisionComponent col = cm.get(laser);
         col.boundingBox = new Polygon(new float[] {
@@ -640,7 +731,7 @@ public class EntityConstructors {
         col.rotateBox = true;
 
         DamageComponent dam = dm.get(laser);
-        dam.damage = 5;
+        dam.damage = 3;
         if (hurtsPlayer == 0)
             dam.tag = 'e';
         else if (hurtsPlayer == 1)
@@ -658,8 +749,8 @@ public class EntityConstructors {
                 @Override
                 public void event(GameEntity e, Engine engine) {
                     pm.get(e).rotation += 3f;
-                    mm.get(e).speedPerSecond += 300f;
-                    dm.get(e).damage += 2;
+                    mm.get(e).speedPerSecond += 200f;
+                    dm.get(e).damage += 4;
                 }
             };
         } else if (temp == 1) {
@@ -667,8 +758,8 @@ public class EntityConstructors {
                 @Override
                 public void event(GameEntity e, Engine engine) {
                     pm.get(e).rotation -= 3f;
-                    mm.get(e).speedPerSecond += 300f;
-                    dm.get(e).damage += 2;
+                    mm.get(e).speedPerSecond += 220f;
+                    dm.get(e).damage += 5;
                 }
             };
         } else if (temp == 2) {
@@ -676,7 +767,7 @@ public class EntityConstructors {
                 @Override
                 public void event(GameEntity e, Engine engine) {
                     pm.get(e).rotation += 1f;
-                    mm.get(e).speedPerSecond += 270f;
+                    mm.get(e).speedPerSecond += 200f;
                     dm.get(e).damage += 3;
                 }
             };
@@ -685,14 +776,14 @@ public class EntityConstructors {
                 @Override
                 public void event(GameEntity e, Engine engine) {
                     pm.get(e).rotation -= 1f;
-                    mm.get(e).speedPerSecond += 260f;
+                    mm.get(e).speedPerSecond += 210f;
                     dm.get(e).damage += 4;
                 }
             };
         }
 
         LifetimeComponent life = lfm.get(laser);
-        life.endTime = 1.2f;
+        life.endTime = 2.2f;
 
         return laser;
     }
@@ -714,8 +805,8 @@ public class EntityConstructors {
 
         PositionComponent pos = pm.get(laser);
         pos.x = x; pos.y = y;
-        pos.width = img.texRegion.getRegionWidth();
-        pos.height = img.texRegion.getRegionHeight();
+        pos.width = img.texRegion.getRegionWidth() + 5;
+        pos.height = img.texRegion.getRegionHeight() + 5;
         pos.rotation = rotation;
         PositionSystem.setOrigins(pos);
 
@@ -734,7 +825,7 @@ public class EntityConstructors {
         anim.animationTime = 0.1f;
 
         DamageComponent dam = dm.get(laser);
-        dam.damage = 20;
+        dam.damage = 26;
         if (hurtsPlayer == 0)
             dam.tag = 'e';
         else if (hurtsPlayer == 1)
@@ -743,7 +834,7 @@ public class EntityConstructors {
             dam.tag = 'n';
 
         LifetimeComponent life = lfm.get(laser);
-        life.endTime = 0.6f;
+        life.endTime = 0.8f;
 
         return laser;
     }
@@ -797,7 +888,7 @@ public class EntityConstructors {
         anim.animationTime = 0.1f;
 
         DamageComponent dam = dm.get(missile);
-        dam.damage = 20;
+        dam.damage = 18;
         if (hurtsPlayer == 0)
             dam.tag = 'e';
         else if (hurtsPlayer == 1)
@@ -817,15 +908,15 @@ public class EntityConstructors {
                 if (enemies.size() != 0) {
                     int smallestIndex = 0;
                     float smallestDistance = MovementSystem.getDistance(pos, pm.get(enemies.get(0)).x + pm.get(enemies.get(0)).originX, pm.get(enemies.get(0)).y + pm.get(enemies.get(0)).originY);
-                    float currentDistance = 999f;
-                    for (int i = 1; i < enemies.size(); i++) {
-                        currentDistance = MovementSystem.getDistance(pos, pm.get(enemies.get(0)).x + pm.get(enemies.get(0)).originX, pm.get(enemies.get(0)).y + pm.get(enemies.get(0)).originY);
+                    float currentDistance = 9999f;
+                    for (int i = 0; i < enemies.size(); i++) {
+                        currentDistance = Math.abs(MovementSystem.getDistance(pos, pm.get(enemies.get(i)).x + pm.get(enemies.get(i)).originX, pm.get(enemies.get(i)).y + pm.get(enemies.get(i)).originY));
                         if (currentDistance <= smallestDistance) {
                             smallestIndex = i;
                             smallestDistance = currentDistance;
                         }
                     }
-                    PositionSystem.lookAt(pos, pm.get(enemies.get(smallestIndex)).x + pm.get(enemies.get(smallestIndex)).originX, pm.get(enemies.get(smallestIndex)).y + pm.get(enemies.get(smallestIndex)).originY, cm.get(e));
+                    PositionSystem.lookAt(pos, pm.get(enemies.get(smallestIndex)).x + pm.get(enemies.get(smallestIndex)).originX, pm.get(enemies.get(smallestIndex)).y + pm.get(enemies.get(smallestIndex)).originY, null);
                 }
 
                 mm.get(e).speedPerSecond += 80;
@@ -912,7 +1003,7 @@ public class EntityConstructors {
         col.rotateBox = true;
 
         DamageComponent dam = dm.get(laser);
-        dam.damage = 13;
+        dam.damage = 15;
         if (hurtsPlayer == 0)
             dam.tag = 'e';
         else if (hurtsPlayer == 1)
@@ -974,6 +1065,42 @@ public class EntityConstructors {
 
         LifetimeComponent life = lfm.get(laser);
         life.endTime = 4f;
+
+        return laser;
+    }
+
+    public static GameEntity generateOrangeArrowSeed(float x, float y, float rotation) {
+        //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
+        GameEntity laser = new GameEntity("orange arrow seed");
+
+        laser.add(new PositionComponent());
+        laser.add(new LifetimeComponent());
+        laser.add(new EventComponent());
+
+        PositionComponent pos = pm.get(laser);
+        pos.x = x; pos.y = y;
+        pos.width = 1;
+        pos.height = 1;
+        pos.rotation = rotation;
+        PositionSystem.setOrigins(pos);
+
+        EventComponent ev = em.get(laser);
+        ev.targetTime = 0.1f;
+        ev.currentTime = 0.2f;
+        ev.repeat = false;
+        ev.ticking = true;
+        ev.event = new GameEvent() {
+            @Override
+            public void event(GameEntity e, Engine engine) {
+                PositionComponent pos= pm.get(e);
+                for (int i = 0; i < 12; i++) {
+                    engine.addEntity(generateOrangeArrow(pos.x + pos.originX, pos.y + pos.originY,i * 30, 0));
+                }
+            }
+        };
+
+        LifetimeComponent life = lfm.get(laser);
+        life.endTime = 0.15f;
 
         return laser;
     }
@@ -1183,7 +1310,6 @@ public class EntityConstructors {
         laser.add(new DamageComponent());
         laser.add(new ImageComponent());
         laser.add(new MovementComponent());
-        laser.add(new CollisionComponent());
         laser.add(new LifetimeComponent());
 
         ImageComponent img = im.get(laser);
@@ -1200,16 +1326,6 @@ public class EntityConstructors {
         MovementComponent move = mm.get(laser);
         move.speedPerSecond = 1000f;
 
-        CollisionComponent col = cm.get(laser);
-        col.boundingBox = new Polygon(new float[] {
-                pos.x, pos.y,
-                pos.x + pos.width, pos.y,
-                pos.x + pos.width, pos.y + pos.height,
-                pos.x, pos.y + pos.height
-        });
-        col.boundingBox.setOrigin(pos.width / 2 + pos.x, pos.height / 2 + pos.y);
-        col.collisionReaction = 5;
-        col.rotateBox = true;
 
         DamageComponent dam = dm.get(laser);
         dam.damage = 15;
@@ -1741,6 +1857,7 @@ public class EntityConstructors {
         laser.add(new CollisionComponent());
         laser.add(new LifetimeComponent());
         laser.add(new EventComponent());
+        laser.add(new AnimationComponent());
 
         ImageComponent img = im.get(laser);
         img.texRegion = ImageComponent.atlas.findRegion("Ice");
@@ -1766,6 +1883,18 @@ public class EntityConstructors {
         col.boundingBox.setOrigin(pos.width / 2 + pos.x, pos.height / 2 + pos.y);
         col.collisionReaction = 9;
         col.rotateBox = true;
+
+        AnimationComponent anim = am.get(laser);
+        anim.animate = true;
+        anim.repeat = true;
+        anim.animations = new ArrayList<ArrayList<TextureRegion>>();
+        anim.animations.add(new ArrayList<TextureRegion>());
+        anim.baseTextureRegion = ImageComponent.atlas.findRegion("Ice");
+        anim.animations.get(0).add(ImageComponent.atlas.findRegion("Ice"));
+        anim.animations.get(0).add(ImageComponent.atlas.findRegion("Ice2"));
+        anim.currentAnimation = 0;
+        anim.currentIndex = 0;
+        anim.animationTime = 0.2f;
 
         DamageComponent dam = dm.get(laser);
         dam.damage = 10;
@@ -1906,6 +2035,196 @@ public class EntityConstructors {
 
         return laser;
     }
+
+    public static GameEntity generateBlueArrow(float x, float y, float rotation, int hurtsPlayer) {
+        //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
+        GameEntity laser = new GameEntity("blue arrow");
+
+        laser.add(new PositionComponent());
+        laser.add(new DamageComponent());
+        laser.add(new ImageComponent());
+        laser.add(new MovementComponent());
+        laser.add(new LifetimeComponent());
+        laser.add(new EventComponent());
+
+        ImageComponent img = im.get(laser);
+        img.texRegion = ImageComponent.atlas.findRegion("BlueDart");
+        img.rotate = true;
+
+        PositionComponent pos = pm.get(laser);
+        pos.x = x; pos.y = y;
+        pos.width = img.texRegion.getRegionWidth();
+        pos.height = img.texRegion.getRegionHeight();
+        pos.rotation = rotation;
+        PositionSystem.setOrigins(pos);
+
+        MovementComponent move = mm.get(laser);
+        move.speedPerSecond = 20;
+
+        DamageComponent dam = dm.get(laser);
+        dam.damage = 35;
+        if (hurtsPlayer == 0)
+            dam.tag = 'e';
+        else if (hurtsPlayer == 1)
+            dam.tag = 'p';
+        else
+            dam.tag = 'n';
+
+        EventComponent ev = em.get(laser);
+        ev.targetTime = 0.1f;
+        ev.repeat = true;
+        ev.ticking = true;
+        ev.event = new GameEvent() {
+            @Override
+            public void event(GameEntity e, Engine engine) {
+                mm.get(e).speedPerSecond += mm.get(e).speedPerSecond / 3;
+            }
+        };
+
+        LifetimeComponent life = lfm.get(laser);
+        life.endTime = 3f;
+
+        return laser;
+    }
+
+    public static GameEntity generateWhiteArrow(float x, float y, float rotation, int hurtsPlayer) {
+        //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
+        GameEntity laser = new GameEntity("laser");
+
+        laser.add(new PositionComponent());
+        laser.add(new DamageComponent());
+        laser.add(new ImageComponent());
+        laser.add(new MovementComponent());
+        laser.add(new CollisionComponent());
+        laser.add(new LifetimeComponent());
+        laser.add(new EventComponent());
+
+        ImageComponent img = im.get(laser);
+        img.texRegion = ImageComponent.atlas.findRegion("WhiteDart");
+        img.rotate = true;
+
+        PositionComponent pos = pm.get(laser);
+        pos.x = x; pos.y = y;
+        pos.width = img.texRegion.getRegionWidth();
+        pos.height = img.texRegion.getRegionHeight();
+        pos.rotation = rotation;
+        PositionSystem.setOrigins(pos);
+
+        MovementComponent move = mm.get(laser);
+        move.speedPerSecond = 600f;
+
+        CollisionComponent col = cm.get(laser);
+        col.boundingBox = new Polygon(new float[] {
+                pos.x, pos.y,
+                pos.x + pos.width, pos.y,
+                pos.x + pos.width, pos.y + pos.height,
+                pos.x, pos.y + pos.height
+        });
+        col.boundingBox.setOrigin(pos.width / 2 + pos.x, pos.height / 2 + pos.y);
+        col.collisionReaction = 11;
+        col.rotateBox = true;
+        col.unmovable = true;
+
+        DamageComponent dam = dm.get(laser);
+        dam.damage = 15;
+        if (hurtsPlayer == 0)
+            dam.tag = 'e';
+        else if (hurtsPlayer == 1)
+            dam.tag = 'p';
+        else
+            dam.tag = 'n';
+
+        LifetimeComponent life = lfm.get(laser);
+        life.endTime = 6f;
+
+        EventComponent ev = em.get(laser);
+        ev.targetTime = 0.1f;
+        ev.repeat = true;
+        ev.ticking = true;
+        ev.event = new GameEvent() {
+            @Override
+            public void event(GameEntity e, Engine engine) {
+                if (mm.get(e).speedPerSecond >= 100f)
+                    mm.get(e).speedPerSecond -= 55f;
+            }
+        };
+
+        return laser;
+    }
+
+    public static GameEntity generateGhostArrow(float x, float y, float rotation, int hurtsPlayer) {
+        //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
+        GameEntity laser = new GameEntity("ghost arrow");
+
+        laser.add(new PositionComponent());
+        laser.add(new DamageComponent());
+        laser.add(new ImageComponent());
+        laser.add(new MovementComponent());
+        laser.add(new LifetimeComponent());
+        laser.add(new EventComponent());
+        laser.add(new CollisionComponent());
+        laser.add(new HealthComponent());
+
+        ImageComponent img = im.get(laser);
+        img.texRegion = ImageComponent.atlas.findRegion("GhostDart");
+        img.rotate = true;
+
+        PositionComponent pos = pm.get(laser);
+        pos.x = x; pos.y = y;
+        pos.width = img.texRegion.getRegionWidth();
+        pos.height = img.texRegion.getRegionHeight();
+        pos.rotation = rotation;
+        PositionSystem.setOrigins(pos);
+
+        MovementComponent move = mm.get(laser);
+        move.speedPerSecond = 5;
+
+        CollisionComponent col = cm.get(laser);
+        col.boundingBox = new Polygon(new float[] {
+                pos.x, pos.y,
+                pos.x + pos.width, pos.y,
+                pos.x + pos.width, pos.y + pos.height,
+                pos.x, pos.y + pos.height
+        });
+        col.boundingBox.setOrigin(pos.width / 2 + pos.x, pos.height / 2 + pos.y);
+        col.collisionReaction = 11;
+        col.unmovable = true;
+        col.rotateBox = true;
+
+        HealthComponent heal = hm.get(laser);
+        heal.deathAction = 0;
+        heal.maxHealth = 15;
+        heal.health = 15;
+        heal.invinciblityDuration = 0.09f;
+        heal.tag = 'e';
+
+        DamageComponent dam = dm.get(laser);
+        dam.damage = 35;
+        if (hurtsPlayer == 0)
+            dam.tag = 'e';
+        else if (hurtsPlayer == 1)
+            dam.tag = 'p';
+        else
+            dam.tag = 'n';
+
+        EventComponent ev = em.get(laser);
+        ev.targetTime = 0.1f;
+        ev.repeat = true;
+        ev.ticking = true;
+        ev.event = new GameEvent() {
+            @Override
+            public void event(GameEntity e, Engine engine) {
+                mm.get(e).speedPerSecond += mm.get(e).speedPerSecond / 5;
+                pm.get(e).rotation += 35f;
+            }
+        };
+
+        LifetimeComponent life = lfm.get(laser);
+        life.endTime = 8f;
+
+        return laser;
+    }
+
 
     /*
     Enemy ------------------------------------------------------------------
@@ -2136,6 +2455,7 @@ public class EntityConstructors {
 
         ShootComponent shoot = shm.get(enemy);
         shoot.attackDelay = 2.5f;
+        shoot.isAttacking = true;
 
         bm.get(enemy).bounceDuration = 3.5f;
 
@@ -2510,11 +2830,11 @@ public class EntityConstructors {
 
         HealthComponent health = hm.get(enemy);
         health.isAlive = true;
-        health.maxHealth = 250;
-        health.health = 250;
+        health.maxHealth = 180;
+        health.health = 180;
         health.invinciblityDuration = 0.09f;
         health.tag = 'e';
-        health.deathAction = 1;
+        health.deathAction = 4;
 
         ShootComponent shoot = shm.get(enemy);
         shoot.attackDelay = 0.2f;
@@ -2522,7 +2842,162 @@ public class EntityConstructors {
         bm.get(enemy).bounceDuration = 2f;
 
         enemy.add(new PointsComponent());
-        pom.get(enemy).points = 400;
+        pom.get(enemy).points = 700;
+
+        return enemy;
+    }
+
+    public static GameEntity generateMiniGhostUFO(float x, float y) {
+        GameEntity enemy = new GameEntity("minighost ufo");
+
+        enemy.add(new PositionComponent());
+        enemy.add(new MovementComponent());
+        enemy.add(new ImageComponent());
+        enemy.add(new AIComponent());
+        enemy.add(new ShootComponent());
+        enemy.add(new HealthComponent());
+        enemy.add(new BouncingComponent());
+        enemy.add(new DamageComponent());
+
+        MovementComponent mov = mm.get(enemy);
+        mov.speedPerSecond = 290f;
+        mov.move = true;
+
+        ImageComponent img = im.get(enemy);
+        img.texRegion = ImageComponent.atlas.findRegion("GhostUFO1");
+
+        PositionComponent position = pm.get(enemy);
+        position.x = x;
+        position.y = y;
+        position.height = img.texRegion.getRegionHeight() / 2;
+        position.width = img.texRegion.getRegionWidth() / 2;
+        PositionSystem.setOrigins(position);
+        position.rotation = (float) Math.random() * 360;
+
+        AIComponent AI = aim.get(enemy);
+        AI.awarenessRadius = 180f;
+        AI.AIType = 'r';
+        AI.targetTime = 0.7f;
+        AI.targetRotation = position.rotation;
+        AI.shoots = true;
+        AI.projectileType = 'g';
+
+        HealthComponent health = hm.get(enemy);
+        health.isAlive = true;
+        health.maxHealth = 40;
+        health.health = 40;
+        health.invinciblityDuration = 0.09f;
+        health.tag = 'e';
+        health.deathAction = 0;
+
+        ShootComponent shoot = shm.get(enemy);
+        shoot.attackDelay = 0.35f;
+
+        DamageComponent dam = dm.get(enemy);
+        dam.damage = 5;
+        dam.tag = 'p';
+
+        bm.get(enemy).bounceDuration = 5f;
+
+        enemy.add(new PointsComponent());
+        pom.get(enemy).points = 250;
+
+        return enemy;
+    }
+
+    public static GameEntity generateFinalEnemy(float x, float y) {
+        GameEntity enemy = new GameEntity("final enemy");
+
+        enemy.add(new PositionComponent());
+        enemy.add(new CollisionComponent());
+        enemy.add(new MovementComponent());
+        enemy.add(new ImageComponent());
+        enemy.add(new AnimationComponent());
+        enemy.add(new AIComponent());
+        enemy.add(new HealthComponent());
+        enemy.add(new EventComponent());
+        enemy.add(new BouncingComponent());
+
+        MovementComponent mov = mm.get(enemy);
+        mov.speedPerSecond = 100f;
+        mov.move = true;
+
+        ImageComponent img = im.get(enemy);
+        img.texRegion = ImageComponent.atlas.findRegion("FinalUFO");
+
+        AnimationComponent anim = am.get(enemy);
+        anim.animate = true;
+        anim.repeat = true;
+        anim.animations.add(new ArrayList<TextureRegion>());
+        anim.baseTextureRegion = ImageComponent.atlas.findRegion("FinalUFO");
+        anim.animations.get(0).add(ImageComponent.atlas.findRegion("FinalUFO"));
+        anim.animations.get(0).add(ImageComponent.atlas.findRegion("FinalUFO2"));
+        anim.animations.get(0).add(ImageComponent.atlas.findRegion("FinalUFO3"));
+        anim.currentAnimation = 0;
+        anim.currentIndex = 0;
+        anim.animationTime = 1f;
+
+        PositionComponent position = pm.get(enemy);
+        position.x = x;
+        position.y = y;
+        position.height = img.texRegion.getRegionHeight();
+        position.width = img.texRegion.getRegionWidth();
+        PositionSystem.setOrigins(position);
+        position.rotation = (float) Math.random() * 360;
+
+        CollisionComponent collision = cm.get(enemy);
+        collision.boundingBox = new Polygon(new float[] {
+                position.x, position.y,
+                position.x + position.width, position.y,
+                position.x + position.width, position.y + position.height,
+                position.x, position.y + position.height
+        });
+        CollisionSystem.setBoundingBoxLocation(collision, 0, 0, position.rotation);
+        collision.boundingBox.setOrigin(position.x + position.originX, position.y + position.originY);
+        collision.collisionReaction = 7;
+
+        AIComponent AI = aim.get(enemy);
+        AI.awarenessRadius = 250f;
+        AI.AIType = 'w';
+        AI.targetTime = 4f;
+        AI.targetRotation = position.rotation;
+        AI.shoots = false;
+
+        HealthComponent health = hm.get(enemy);
+        health.isAlive = true;
+        health.maxHealth = 170;
+        health.health = 170;
+        health.invinciblityDuration = 0.09f;
+        health.tag = 'e';
+        health.deathAction = 5;
+
+        EventComponent event = em.get(enemy);
+        event.repeat = true;
+        event.targetTime = 5f;
+        event.ticking = true;
+        event.event = new GameEvent() {
+            @Override
+            public void event(GameEntity e, Engine engine) {
+                PositionComponent pos = pm.get(e);
+
+                if (mm.get(e).speedPerSecond <= 350f) {
+                    mm.get(e).speedPerSecond += 50f;
+                    if (aim.get(e).targetTime >= 0.4)
+                        aim.get(e).targetTime -= 0.15;
+                }
+
+                im.get(e).texRegion = ImageComponent.atlas.findRegion("GhostUFO1");
+
+                for (int i = 0; i < 6; i++) {
+                    engine.addEntity(generateGhostArrow(pos.x + pos.originX, pos.y + pos.originY, i * 60, 1));
+                }
+            }
+        };
+
+        bm.get(enemy).bounceDuration = 1.5f;
+
+        enemy.add(new PointsComponent());
+        pom.get(enemy).points = 688;
 
         return enemy;
     }
@@ -2773,6 +3248,52 @@ public class EntityConstructors {
         return enemy;
     }
 
+    public static GameEntity generatePlatinumWisp(float x, float y) {
+        GameEntity enemy = new GameEntity("platinum wisp");
+
+        enemy.add(new PositionComponent());
+        enemy.add(new MovementComponent());
+        enemy.add(new ImageComponent());
+        enemy.add(new AIComponent());
+        enemy.add(new HealthComponent());
+
+        MovementComponent mov = mm.get(enemy);
+        mov.speedPerSecond = 480f;
+        mov.move = true;
+
+        ImageComponent img = im.get(enemy);
+        img.texRegion = ImageComponent.atlas.findRegion("PlatinumWisp");
+
+        PositionComponent position = pm.get(enemy);
+        position.x = x;
+        position.y = y;
+        position.height = img.texRegion.getRegionHeight();
+        position.width = img.texRegion.getRegionWidth();
+        PositionSystem.setOrigins(position);
+        position.rotation = (float) Math.random() * 360;
+
+        AIComponent AI = aim.get(enemy);
+        AI.awarenessRadius = 200f;
+        AI.AIType = 'w';
+        AI.targetTime = 1.5f;
+        AI.targetRotation = position.rotation;
+        AI.shoots = false;
+
+        HealthComponent health = hm.get(enemy);
+        health.isAlive = true;
+        health.maxHealth = 200;
+        health.health = 200;
+        health.invinciblityDuration = 0.09f;
+        health.tag = 'e';
+        health.deathAction = 5;
+
+        enemy.add(new PointsComponent());
+        pom.get(enemy).points = 25777;
+
+        return enemy;
+    }
+
+
     public static GameEntity generateEnemyShipRed(float x, float y) {
         GameEntity enemy = new GameEntity("enemy ship red");
 
@@ -2979,7 +3500,6 @@ public class EntityConstructors {
 
     public static GameEntity generateEnemyShipGold(float x, float y) {
         GameEntity enemy = new GameEntity("enemy ship gold");
-        //make touhger later!!!
 
         enemy.add(new PositionComponent());
         enemy.add(new CollisionComponent());
@@ -3034,7 +3554,7 @@ public class EntityConstructors {
         health.health = 360;
         health.invinciblityDuration = 0.11f;
         health.tag = 'e';
-        health.deathAction = 1;
+        health.deathAction = 2;
 
         ShootComponent shoot = shm.get(enemy);
         shoot.attackDelay = 0.8f;
@@ -3052,8 +3572,8 @@ public class EntityConstructors {
                 AIComponent ai = aim.get(e);
 
                 if (ai.projectileType == 'f') {
-                    for (int i = 0; i < 6; i++) {
-                        engine.addEntity(generateFireLaser(pos.x + pos.originX, pos.y + pos.originY, pos.rotation - 90 + i * 30));
+                    for (int i = 0; i < 4; i++) {
+                        engine.addEntity(generateFireLaser(pos.x + pos.originX, pos.y + pos.originY, pos.rotation - 80 + i * 40));
                     }
                     ai.projectileType = 't';
                     ai.awarenessRadius = 300;
@@ -3067,7 +3587,7 @@ public class EntityConstructors {
                     ai.projectileType = 'u';
                     ai.AIType = 'e';
                     ai.awarenessRadius = 300;
-                    shm.get(e).attackDelay = 0.13f;
+                    shm.get(e).attackDelay = 0.5f;
                 } else if (ai.projectileType == 'u') {
                     for (int i = 0; i < 6; i++) {
                         engine.addEntity(generateOrangeArrow(pos.x + pos.originX, pos.y + pos.originY, i * 60, 1));
@@ -3473,7 +3993,7 @@ public class EntityConstructors {
         enemy.add(new EventComponent());
 
         MovementComponent mov = mm.get(enemy);
-        mov.speedPerSecond = 250f;
+        mov.speedPerSecond = 320f;
         mov.move = true;
 
         ImageComponent img = im.get(enemy);
@@ -3506,56 +4026,66 @@ public class EntityConstructors {
         AI.targetTime = 0.6f;
         AI.targetRotation = position.rotation;
         AI.shoots = true;
-        AI.projectileType = 't';
+        AI.projectileType = 'u';
 
         HealthComponent health = hm.get(enemy);
         health.isAlive = true;
-        health.maxHealth = 1900;
-        health.health = 1900;
+        health.maxHealth = 1350;
+        health.health = 1350;
         health.invinciblityDuration = 0.15f;
         health.tag = 'e';
         health.deathAction = 2;
 
         ShootComponent shoot = shm.get(enemy);
-        shoot.attackDelay = 0.42f;
+        shoot.attackDelay = 0.6f;
 
-        bm.get(enemy).bounceDuration = 0.3f;
+        bm.get(enemy).bounceDuration = 2f;
 
         EventComponent ev = em.get(enemy);
         ev.repeat = true;
         ev.ticking = true;
-        ev.targetTime = 3.5f;
+        ev.targetTime = 7f;
         ev.event = new GameEvent() {
             @Override
             public void event(GameEntity e, Engine engine) {
                 PositionComponent pos = pm.get(e);
                 AIComponent ai = aim.get(e);
 
-                if (ai.projectileType == 't') {
+                if (ai.projectileType == 'u') {
                     for (int i = 0; i < 6; i++) {
-                        engine.addEntity(generateThunderLaser(pos.x + pos.originX, pos.y + pos.originY, i * 60, 1));
+                        engine.addEntity(generateGreenArrow(pos.x + pos.originX, pos.y + pos.originY, i * 60, 1));
                     }
                     ai.projectileType = 'f';
                     ai.awarenessRadius = 300;
-                    shm.get(e).attackDelay = 0.4f;
+                    shm.get(e).attackDelay = 0.29f;
                     mm.get(e).speedPerSecond = 250f;
                     ai.AIType = 'x';
                 } else if (ai.projectileType == 'f') {
-                    for (int i = 0; i < 9; i++) {
-                        engine.addEntity(generateThunderLaser(pos.x + pos.originX, pos.y + pos.originY, i * 0, 1));
-                    }
-                    ai.projectileType = 'c';
-                    ai.AIType = 'e';
-                    ai.awarenessRadius = 300;
-                    shm.get(e).attackDelay = 0.3f;
-                } else if (ai.projectileType == 'c') {
                     for (int i = 0; i < 12; i++) {
-                        engine.addEntity(generateThunderLaser(pos.x + pos.originX, pos.y + pos.originY, i * 30, 1));
+                        engine.addEntity(generateOrangeArrow(pos.x + pos.originX, pos.y + pos.originY,i * 30, 1));
                     }
-                    ai.projectileType = 't';
+                    ai.projectileType = 'W';
                     ai.AIType = 'x';
                     ai.awarenessRadius = 400;
-                    shm.get(e).attackDelay = 0.42f;
+                    shm.get(e).attackDelay = 2.7f;
+                } else if (ai.projectileType == 'W') {
+                    for (int i = 0; i < 4; i++) {
+                        engine.addEntity(generateWhiteArrow(pos.x + pos.originX, pos.y + pos.originY, i * 90, 1));
+                    }
+                    ai.projectileType = 'B';
+                    ai.AIType = 'x';
+                    ai.awarenessRadius = 400;
+                    shm.get(e).attackDelay = 0.55f;
+                    mm.get(e).speedPerSecond = 250f;
+                    shm.get(e).isAttacking = true;
+                } else if (ai.projectileType == 'B') {
+                    for (int i = 0; i < 8; i++) {
+                        engine.addEntity(generateBlueArrow(pos.x + pos.originX, pos.y + pos.originY, i * 45, 1));
+                    }
+                    ai.projectileType = 'u';
+                    ai.AIType = 'x';
+                    ai.awarenessRadius = 400;
+                    shm.get(e).attackDelay = 0.6f;
                     mm.get(e).speedPerSecond = 250f;
                 }
             }
@@ -3657,7 +4187,7 @@ public class EntityConstructors {
         item.event = new GameEvent() {
             @Override
             public void event(GameEntity e, Engine engine) {
-                hm.get(e).maxHealth += 5;
+                hm.get(e).maxHealth += 10;
                 hm.get(e).health = hm.get(e).maxHealth;
             }
         };
@@ -3926,7 +4456,7 @@ public class EntityConstructors {
         PositionSystem.setOrigins(pos);
 
         LifetimeComponent life = lfm.get(power);
-        life.endTime = 7f;
+        life.endTime = 10f;
 
         return power;
     }
@@ -4015,18 +4545,18 @@ public class EntityConstructors {
                 position.x, position.y + position.height
         });
         collision.boundingBox.setOrigin(pm.get(player).x + pm.get(player).originX, pm.get(player).y + pm.get(player).originY);
-        collision.collisionReaction = 1;
+        collision.collisionReaction = 10;
         collision.rotateBox = true;
 
         MovementComponent move = mm.get(player);
-        move.speedPerSecond = 150f;
+        move.speedPerSecond = 160f;
         move.move = false;
         position.rotation = 0f;
 
         HealthComponent heal = hm.get(player);
-        heal.maxHealth = 100;
-        heal.health = 100;
-        heal.invinciblityDuration = 0.6f;
+        heal.maxHealth = 150;
+        heal.health = 150;
+        heal.invinciblityDuration = 0.35f;
         heal.isAlive = true;
         heal.tag = 'p';
         heal.deathAction = 3;
@@ -4290,6 +4820,22 @@ public class EntityConstructors {
                     engine.addEntity(generateGoldWisp(p.x, p.y));
                 }
             };
+        } else if (spawned.equals("PlatinumWisp")) {
+            event.event = new GameEvent() {
+                @Override
+                public void event(GameEntity e, Engine engine) {
+                    PositionComponent p = pm.get(e);
+                    engine.addEntity(generatePlatinumWisp(p.x, p.y));
+                }
+            };
+        } else if (spawned.equals("FinalUFO")) {
+            event.event = new GameEvent() {
+                @Override
+                public void event(GameEntity e, Engine engine) {
+                    PositionComponent p = pm.get(e);
+                    engine.addEntity(generateFinalEnemy(p.x, p.y));
+                }
+            };
         }
         return spawn;
     }
@@ -4384,7 +4930,7 @@ public class EntityConstructors {
             event.event = new GameEvent() {
                 @Override
                 public void event(GameEntity e, Engine engine) {
-                    int i = (int) (Math.random() * 8);
+                    int i = (int) (Math.random() * 6);
 
                     if (i == 0) {
                         PositionComponent p = pm.get(e);
@@ -4395,16 +4941,13 @@ public class EntityConstructors {
                     } else if (i == 2) {
                         PositionComponent p = pm.get(e);
                         engine.addEntity(generateGreenEnemy(p.x, p.y));
-                    } else if (i == 4) {
-                        PositionComponent p = pm.get(e);
-                        engine.addEntity(generatePinkEnemy(p.x, p.y));
-                    } else if (i == 5) {
+                    } else if (i == 3) {
                         PositionComponent p = pm.get(e);
                         engine.addEntity(generateRedEnemy(p.x, p.y));
-                    } else if (i == 6) {
+                    } else if (i == 4) {
                         PositionComponent p = pm.get(e);
                         engine.addEntity(generateYellowEnemy(p.x, p.y));
-                    } else if (i == 7) {
+                    } else if (i == 5) {
                         PositionComponent p = pm.get(e);
                         engine.addEntity(generateGhostUFO(p.x, p.y));
                     }
@@ -4414,7 +4957,7 @@ public class EntityConstructors {
             event.event = new GameEvent() {
                 @Override
                 public void event(GameEntity e, Engine engine) {
-                    int i = (int) (Math.random() * 7);
+                    int i = (int) (Math.random() * 5);
 
                     if (i == 0) {
                         PositionComponent p = pm.get(e);
@@ -4425,13 +4968,10 @@ public class EntityConstructors {
                     } else if (i == 2) {
                         PositionComponent p = pm.get(e);
                         engine.addEntity(generateGreenEnemy(p.x, p.y));
-                    } else if (i == 4) {
-                        PositionComponent p = pm.get(e);
-                        engine.addEntity(generatePinkEnemy(p.x, p.y));
-                    } else if (i == 5) {
+                    } else if (i == 3) {
                         PositionComponent p = pm.get(e);
                         engine.addEntity(generateRedEnemy(p.x, p.y));
-                    } else if (i == 6) {
+                    } else if (i == 4) {
                         PositionComponent p = pm.get(e);
                         engine.addEntity(generateYellowEnemy(p.x, p.y));
                     }

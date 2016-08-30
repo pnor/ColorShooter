@@ -17,6 +17,8 @@ public class HealthComponent implements Component{
      * 1 : explosion<p>
      * 2 : big explosion<p>
      * 3 : player's explosion<p>
+     * 4 : generate mini ghost UFO<p>
+     * 5 : generate blue explosion
      */
     public int deathAction;
 

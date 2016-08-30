@@ -1,10 +1,11 @@
 package com.colorshooter.game.scenes.levels;
 
 import com.badlogic.gdx.Screen;
+import com.colorshooter.game.ColorShooter;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.GameTimer;
 import com.colorshooter.game.components.ImageComponent;
-import com.colorshooter.game.scenes.tests.GameScreen;
+import com.colorshooter.game.scenes.GameScreen;
 
 import static com.colorshooter.game.EntityConstructors.*;
 import static com.colorshooter.game.Mappers.cm;
@@ -16,8 +17,8 @@ import static com.colorshooter.game.Mappers.pm;
  */
 public class BonusLevel1 extends GameScreen implements Screen{
 
-    public BonusLevel1() {
-        super();
+    public BonusLevel1(ColorShooter game) {
+        super(game);
     }
 
     @Override

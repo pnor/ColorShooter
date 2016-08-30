@@ -8,7 +8,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.colorshooter.game.EntityConstructors;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.components.*;
-import com.colorshooter.game.scenes.tests.GameScreen;
+import com.colorshooter.game.scenes.GameScreen;
 
 import static com.colorshooter.game.Mappers.*;
 
@@ -254,5 +254,10 @@ public class AISystem extends EntitySystem{
             ShootingSystem.shoot(getEngine(), EntityConstructors.generateGreenArrow(0, 0, pm.get(e).rotation, 1), pm.get(e), shm.get(e));
         else if (aim.get(e).projectileType == 'o')
                 ShootingSystem.shoot(getEngine(), EntityConstructors.generateOrangeArrow(0, 0, pm.get(e).rotation, 1), pm.get(e), shm.get(e));
-        }
+        else if (aim.get(e).projectileType == 'B')
+            ShootingSystem.shoot(getEngine(), EntityConstructors.generateBlueArrow(0, 0, pm.get(e).rotation, 1), pm.get(e), shm.get(e));
+        else if (aim.get(e).projectileType == 'W')
+            ShootingSystem.shoot(getEngine(), EntityConstructors.generateWhiteArrow(0, 0, pm.get(e).rotation, 1), pm.get(e), shm.get(e));
+
+    }
     }

@@ -6,12 +6,11 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.colorshooter.game.EntityConstructors;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.GameEvent;
 import com.colorshooter.game.components.*;
-import com.colorshooter.game.scenes.tests.GameScreen;
+import com.colorshooter.game.scenes.GameScreen;
 
 import java.awt.geom.Point2D;
 
@@ -81,7 +80,7 @@ public class PlayerInputSystem extends EntitySystem{
                     playerShoot(e);
                 }
             } else if (bm.has(e) && bounce.isBouncing) {
-                MovementSystem.moveTowards(pos, mouse.x, mouse.y, -140f * (bounce.bounceDuration - bounce.currentDuration) / bounce.bounceDuration * dt, col);
+                MovementSystem.moveTowards(pos, mouse.x, mouse.y, -230f * (bounce.bounceDuration - bounce.currentDuration) / bounce.bounceDuration * dt, col);
             }
 
             if (poim.has(e)) {
@@ -158,11 +157,11 @@ public class PlayerInputSystem extends EntitySystem{
             }
             else if (color.color == 'y') {
                 im.get(e).texRegion = ImageComponent.atlas.findRegion("PlayerShipYellow");
-                shm.get(e).attackDelay = 0.07f;
+                shm.get(e).attackDelay = 0.09f;
             }
             else if (color.color == 'o') {
                 im.get(e).texRegion = ImageComponent.atlas.findRegion("PlayerShipOrange");
-                shm.get(e).attackDelay = 0.12f;
+                shm.get(e).attackDelay = 1.2f;
             }
         }
         color.oldColor = color.color;
@@ -185,6 +184,6 @@ public class PlayerInputSystem extends EntitySystem{
         else if (color.color == 'p')
             ShootingSystem.shoot(getEngine(), EntityConstructors.generatePinkLaser(0, 0, pm.get(e).rotation, 0), pm.get(e), shm.get(e));
         else if (color.color == 'o')
-            ShootingSystem.shoot(getEngine(), EntityConstructors.generateOrangeArrow(0, 0, pm.get(e).rotation, 0), pm.get(e), shm.get(e));
+            ShootingSystem.shoot(getEngine(), EntityConstructors.generateOrangeArrowSeed(0, 0, pm.get(e).rotation), pm.get(e), shm.get(e));
     }
 }

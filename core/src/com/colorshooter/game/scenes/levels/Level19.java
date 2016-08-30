@@ -1,14 +1,14 @@
 package com.colorshooter.game.scenes.levels;
 
 import com.badlogic.gdx.Screen;
+import com.colorshooter.game.ColorShooter;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.GameTimer;
 import com.colorshooter.game.components.ImageComponent;
-import com.colorshooter.game.scenes.tests.GameScreen;
+import com.colorshooter.game.scenes.GameScreen;
 
 import static com.colorshooter.game.EntityConstructors.*;
 import static com.colorshooter.game.EntityConstructors.generateItemSpawnPoint;
-import static com.colorshooter.game.EntityConstructors.generateMovingRandomPowerUp;
 import static com.colorshooter.game.Mappers.cm;
 import static com.colorshooter.game.Mappers.em;
 import static com.colorshooter.game.Mappers.pm;
@@ -18,8 +18,8 @@ import static com.colorshooter.game.Mappers.pm;
  */
 public class Level19 extends GameScreen implements Screen {
 
-    public Level19() {
-        super(19);
+    public Level19(ColorShooter game) {
+        super(19, game);
     }
 
     @Override

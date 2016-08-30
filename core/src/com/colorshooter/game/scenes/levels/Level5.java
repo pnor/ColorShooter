@@ -1,17 +1,15 @@
 package com.colorshooter.game.scenes.levels;
 
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Screen;
+import com.colorshooter.game.ColorShooter;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.GameTimer;
 import com.colorshooter.game.components.ImageComponent;
-import com.colorshooter.game.scenes.tests.GameScreen;
+import com.colorshooter.game.scenes.GameScreen;
 import com.colorshooter.game.systems.*;
 
 import static com.colorshooter.game.EntityConstructors.*;
 import static com.colorshooter.game.Mappers.*;
-import static com.colorshooter.game.Mappers.pom;
 
 /**
  * Created by pnore_000 on 8/20/2016.
@@ -34,8 +32,8 @@ public class Level5 extends GameScreen implements Screen {
     private PoisonSystem poisSystem;
     private FrozenSystem frozenSystem;
 
-    public Level5() {
-        super(5);
+    public Level5(ColorShooter game) {
+        super(5, game);
     }
 
     @Override
@@ -61,9 +59,9 @@ public class Level5 extends GameScreen implements Screen {
         GameEntity color2 = generateItemSpawnPoint(250, 350, "Pink", 50f,  getEngine());
         em.get(color2).currentTime = 25f;
 
-        GameEntity powerUps = generateMovingItemSpawnPoint(300, 450, "Health", 6f,  getEngine());
+        GameEntity powerUps = generateMovingItemSpawnPoint(300, 450, "Health", 8f,  getEngine());
         em.get(powerUps).currentTime = 5f;
-        GameEntity powerUps2 = generateMovingItemSpawnPoint(300, 450, "Health", 6f,  getEngine());
+        GameEntity powerUps2 = generateMovingItemSpawnPoint(300, 450, "Health", 5.5f,  getEngine());
 
         getEngine().addEntity(powerUps);
         getEngine().addEntity(powerUps2);

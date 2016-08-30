@@ -1,16 +1,13 @@
 package com.colorshooter.game.scenes.levels;
 
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Screen;
+import com.colorshooter.game.ColorShooter;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.GameTimer;
 import com.colorshooter.game.components.ImageComponent;
-import com.colorshooter.game.scenes.tests.GameScreen;
-import com.colorshooter.game.systems.*;
+import com.colorshooter.game.scenes.GameScreen;
 
 import static com.colorshooter.game.EntityConstructors.*;
-import static com.colorshooter.game.EntityConstructors.generateRandomUFOSpawnPoint;
 import static com.colorshooter.game.Mappers.*;
 
 /**
@@ -18,8 +15,8 @@ import static com.colorshooter.game.Mappers.*;
  */
 public class Level1 extends GameScreen implements Screen {
 
-    public Level1() {
-        super(1);
+    public Level1(ColorShooter game) {
+        super(1, game);
     }
 
     @Override

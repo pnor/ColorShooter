@@ -1,9 +1,10 @@
-package com.colorshooter.game.scenes.tests;
+package com.colorshooter.game.scenes;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.colorshooter.game.ColorShooter;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.GameTimer;
 import com.colorshooter.game.components.AIComponent;
@@ -33,8 +35,9 @@ import static com.colorshooter.game.Mappers.*;
  */
 public class GameScreen implements Screen {
 
+    private final ColorShooter COLOR_SHOOTER;
+
     private Stage stage;
-    //private SpriteBatch batch;
     private ShapeRenderer shapes;
     private Engine engine;
 
@@ -74,11 +77,13 @@ public class GameScreen implements Screen {
     private static GameEntity player;
 
     private int level;
-    private static int lives = 5;
+    private static int lives = 3;
     private float currentRespawnTime;
     private float endRespawnTime;
-    private static int points;
     private GameTimer timer;
+    private static int points;
+    private int oldScore;
+    private int newScore;
 
     private static float pointMultiplier = 1;
     private float bestMultiplier;
@@ -87,7 +92,6 @@ public class GameScreen implements Screen {
 
     private float currentVictoryTime;
     private float victoryEndTime = 3f;
-    private boolean nextScreen;
 
     /**
      * 0 : normal
@@ -100,20 +104,23 @@ public class GameScreen implements Screen {
     private int lastHealth;
     private int lastMax;
 
-    public GameScreen(int i) {
+    public GameScreen(int i, ColorShooter game) {
         super();
         level = i;
+        COLOR_SHOOTER = game;
     }
 
-    public GameScreen() {
+    public GameScreen(ColorShooter game) {
         super();
         level = -1;
+        COLOR_SHOOTER = game;
     }
 
     @Override
     public void show() {
         screenState = 0;
         pointMultiplier = 1.0f;
+        oldScore = points;
 
         stage = new Stage();
         shapes = new ShapeRenderer();
@@ -128,13 +135,13 @@ public class GameScreen implements Screen {
             lastHealth = 0;
         }
 
-        endRespawnTime = 3f;
-        endMultiTime = 10f;
+        endRespawnTime = 4f;
+        endMultiTime = 3f;
         resetRespawnTimer();
         resetMultiTimer();
         setUpHUD();
 
-        //set up systemsw
+        //set up systems
         movementSystem = new MovementSystem(1);
         playerInputSystem = new PlayerInputSystem(this, 2);
         healthSystem = new HealthSystem(ImageComponent.atlas, 3);
@@ -182,14 +189,27 @@ public class GameScreen implements Screen {
             stage.getBatch().end();
         }
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.TAB))
+            if (screenState == 0)
+                pause();
+            else if (screenState == 3)
+                resume();
+
+
         if (screenState == 3)
             return;
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
-            nextScreen = true;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && screenState == 1) {
+            if (bestMultiplier >= 3f)
+                lives += 1;
+            COLOR_SHOOTER.moveScreen();
+            return;
+        }
 
         if (screenState == 1) {
-            showVictoryHUD();
+            rouletteScore();
+            updateVictoryHUD();
+            stage.draw();
             return;
         }
 
@@ -206,9 +226,7 @@ public class GameScreen implements Screen {
         }
 
         getEngine().update(delta);
-        getBatch().begin();
-        drawHUD();
-        getBatch().end();
+        stage.draw();
 
         for (Entity e : engine.getEntities()) {
             if (((GameEntity) e).getDisposed()) {
@@ -259,7 +277,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void hide() {
-        nextScreen = false;
         screenState = 1;
 
         for (EntitySystem system : getEngine().getSystems()) {
@@ -318,8 +335,10 @@ public class GameScreen implements Screen {
             levelNum.setColor(Color.ORANGE);
         else if (level >= 11 && level <= 16)
             levelNum.setColor(Color.CYAN);
-        else if (level >= 17 && level <= 22)
+        else if (level >= 17 && level <= 21)
             levelNum.setColor(Color.YELLOW);
+        else if (level >= 22)
+            levelNum.setColor(Color.LIME);
 
         life = new Label("Lives:", skin);
         lifeCount = new Label("-", skin);
@@ -336,25 +355,30 @@ public class GameScreen implements Screen {
         //  BACKUP!!!
         //table.center().setFillParent(true);
         table.top().left();
-        table.pad(22);
-        table.add(icon);
-        table.add(healthLabel).padLeft(10);
+        table.padTop(22).padLeft(10);
+        table.add(icon).size(65, 65);
+        table.add(healthLabel).size(170f, 30f).padLeft(5);
         if (level >= 1)
             table.add(levelLabel).padLeft(400);
         else
-            table.add(levelLabel).padLeft(410);
+            table.add(levelLabel).padLeft(400);
         if (levelNum != null)
-            table.add(levelNum).padLeft(10);
-        table.add().padLeft(600);
+            table.add(levelNum).size(20f, 20f).padLeft(10);
+        table.add().padLeft(530);
         table.add(life).padLeft(5);
         table.add(lifeCount).padLeft(10);
         table.row();
         table.add(pointID).padLeft(5);
-        table.add(pointNum).padLeft(30);
+        table.add(pointNum).left();
         //table.add(healthBar);
-        table.add(timeLabel).padLeft(400);
+        if (levelNum == null)
+            table.add(timeLabel).padLeft(400);
+        else
+            table.add(timeLabel).colspan(2).padLeft(400);
         table.row();
-        table.add(pointMultiplierLabel).padTop(730);
+        table.add("Combo Multiplier").padTop(710);
+        table.row();
+        table.add(pointMultiplierLabel);
         /*
         table.add().fillX().expandY();
         table.add(healthBar);
@@ -382,8 +406,7 @@ public class GameScreen implements Screen {
         table.add().fillX().expandY();
         table.add(healthBar);
         */
-
-        table.debug();
+        stage.addActor(table);
     }
 
     private void updateHUD() {
@@ -392,14 +415,16 @@ public class GameScreen implements Screen {
 
         if (!player.getDisposed()) {
 
-            if (lastHealth != hm.get(player).health) {
+            if (lastHealth != hm.get(player).health || lastMax != hm.get(player).maxHealth) {
                 lastHealth = hm.get(player).health;
-                healthLabel.setText("Health : " + lastHealth + " / " + lastMax);
-            }
-            if (lastMax != hm.get(player).maxHealth) {
                 lastMax = hm.get(player).maxHealth;
-                healthLabel.setText("Health : " + lastHealth + " / " + lastMax);
+                if (lastHealth > 0)
+                    healthLabel.setText("Health : " + lastHealth + " / " + lastMax);
+                else
+                    healthLabel.setText("Health : " + 0 + " / " + lastMax);
+
             }
+
             if (!icon.equals(im.get(player).texRegion)) {
                 float w = icon.getWidth(); float h = icon.getHeight();
                 icon.setDrawable(new TextureRegionDrawable(im.get(player).texRegion));
@@ -421,8 +446,6 @@ public class GameScreen implements Screen {
             pointNum.setText(Integer.toString(points));
             if (timer != null)
                 timeLabel.setText(timer.toString());
-            else
-                timeLabel.setText("-:--");
         }
 
 
@@ -446,21 +469,60 @@ public class GameScreen implements Screen {
         table.row();
         table.add("Lives : " + lives);
         table.row();
-        table.add("Health : " + hm.get(player).health + " / " + hm.get(player).maxHealth);
+        if (!player.getDisposed())
+            table.add("Health : " + hm.get(player).health + " / " + hm.get(player).maxHealth);
+        else {
+            icon.setDrawable(skin.getDrawable("GhostPlayerShip"));
+            table.add("Health : 0 / " + lastMax);
+        }
         table.row();
-        table.add("" + points);
+        pointNum.setText("" + oldScore);
+        table.add(pointNum);
         table.row();
         Label bestMultiLabel = new Label("Best Score Multiplier : " + bestMultiplier, skin);
-        bestMultiLabel.setColor(1.25f  - (bestMultiplier / 4), 1.25f - (bestMultiplier / 4), 1f, 1f);
-        table.add(bestMultiLabel).padBottom(40f);
-        table.row();
+        bestMultiLabel.setColor(1.25f  - (bestMultiplier / 4), 1f, 1.25f - (bestMultiplier / 4), 1f);
+        if (bestMultiplier > 3f) {
+            table.add(bestMultiLabel);
+            table.row();
+            Label bonusText = new Label("Multiplier Bonus! : + 1 Life", skin);
+            bonusText.setColor(Color.CYAN);
+            table.add(bonusText).padBottom(40f);
+            table.row();
+        } else {
+            table.add(bestMultiLabel).padBottom(40f);
+            table.row();
+        }
         Label screenText = new Label("Press ENTER to continue", skin);
         screenText.setColor(Color.YELLOW);
         table.add(screenText);
-        stage.getBatch().begin();
-        stage.getBatch().setColor(Color.WHITE);
-        table.draw(stage.getBatch(), 1);
-        stage.getBatch().end();
+    }
+
+    public void updateVictoryHUD() {
+        pointNum.setText("" + oldScore);
+    }
+
+    public void rouletteScore() {
+        if (newScore > oldScore) {
+            if (newScore - oldScore > 10000)
+                oldScore += 1000;
+            else if (newScore - oldScore > 1000)
+                oldScore += 100;
+            else if (newScore - oldScore > 100)
+                oldScore += 10;
+            else
+                oldScore += 1;
+        }
+
+        if (newScore < oldScore) {
+            if (Math.abs(newScore - oldScore) > 10000)
+                oldScore -= 1000;
+            else if (Math.abs(newScore - oldScore) > 1000)
+                oldScore -= 100;
+            else if (Math.abs(newScore - oldScore) > 100)
+                oldScore -= 10;
+            else
+                oldScore -= 1;
+        }
     }
 
     public void colorHUD(Color color) {
@@ -515,13 +577,17 @@ public class GameScreen implements Screen {
 
     public void checkVictory(float dt) {
         if (timer != null) {
-            if (timer.checkIfFinished())
+            if (timer.checkIfFinished()) {
                 screenState = 1;
+                newScore = points;
+            }
         } else if (timer == null) {
             if (engine.getEntitiesFor(Family.all(PositionComponent.class, AIComponent.class).get()).size() <= 0) {
                 currentVictoryTime += dt;
-                if (currentVictoryTime >= victoryEndTime)
+                if (currentVictoryTime >= victoryEndTime) {
+                    newScore = points;
                     screenState = 1;
+                }
             }
         }
     }
@@ -535,7 +601,7 @@ public class GameScreen implements Screen {
 
     public void incrementMultiTimer(float dt) {
         currentMultiTime += dt;
-        if (currentMultiTime >= endRespawnTime) {
+        if (currentMultiTime >= endMultiTime) {
             pointMultiplier = 1f;
             currentMultiTime = 0f;
         }
@@ -548,8 +614,6 @@ public class GameScreen implements Screen {
     public void reset() {
         lives -= 1;
         pointMultiplier = 1f;
-        if (lives < 0)
-            Gdx.app.exit();
         screenState = 0;
     }
 
@@ -581,10 +645,6 @@ public class GameScreen implements Screen {
         timer = t;
     }
 
-    public boolean getNextScreen() {
-        return nextScreen;
-    }
-
     public static float getPointMultiplier() {
         return pointMultiplier;
     }
@@ -599,5 +659,13 @@ public class GameScreen implements Screen {
         pointMultiplier /= 100;
         if (pointMultiplier > bestMultiplier)
             bestMultiplier = pointMultiplier;
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public void setLives(int i) {
+        lives = i;
     }
 }

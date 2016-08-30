@@ -162,7 +162,7 @@ Space4
   orig: 1400, 900
   offset: 0, 0
   index: -1
-TurretSpace
+Sunset
   rotate: false
   xy: 1, 1
   size: 1400, 900
@@ -174,6 +174,13 @@ CSBackgrounds10.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+TurretSpace
+  rotate: false
+  xy: 1, 903
+  size: 1400, 900
+  orig: 1400, 900
+  offset: 0, 0
+  index: -1
 YellowSpace
   rotate: false
   xy: 1, 1
