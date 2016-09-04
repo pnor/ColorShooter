@@ -17,7 +17,7 @@ import static com.colorshooter.game.Mappers.pm;
 /**
  * Created by pnore_000 on 8/29/2016.
  */
-public class Level24 extends GameScreen implements Screen{
+public class Level24 extends GameScreen{
 
     public Level24(ColorShooter game) {
         super(24, game);
@@ -34,9 +34,9 @@ public class Level24 extends GameScreen implements Screen{
         setPlayer(generatePlayer(678, 414));
         cm.get(getPlayer()).boundingBox.setOrigin(pm.get(getPlayer()).x + pm.get(getPlayer()).originX, pm.get(getPlayer()).y + pm.get(getPlayer()).originY);
 
-        GameEntity enemySpawn = generateRandomUFOSpawnPoint(500, -40, 5f, true, getEngine());
-        em.get(enemySpawn).currentTime = 4f;
-        GameEntity enemySpawn2 = generateRandomUFOSpawnPoint(500,900, 6f, true, getEngine());
+        GameEntity enemySpawn = generateRandomUFOSpawnPoint(500, -40, 4f, true, getEngine());
+        em.get(enemySpawn).currentTime = 2f;
+        GameEntity enemySpawn2 = generateRandomUFOSpawnPoint(500,900, 4f, true, getEngine());
 
         GameEntity powerUps = generateItemSpawnPoint(300, 550, "Health", 8f,  getEngine());
         GameEntity powerUps2 = generateItemSpawnPoint(500, 350, "SuperShootUp", 7f,  getEngine());

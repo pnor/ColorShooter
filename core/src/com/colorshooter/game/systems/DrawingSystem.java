@@ -24,12 +24,11 @@ public class DrawingSystem extends EntitySystem{
     private Family family;
     private ImmutableArray<Entity> entities;
     Batch batch;
-    ShapeRenderer shapes;
+    //ShapeRenderer shapes = new ShapeRenderer();
 
-    public DrawingSystem(int priority, Batch b, ShapeRenderer s) {
+    public DrawingSystem(int priority, Batch b) {
         super(priority);
         batch = b;
-        shapes = s;
     }
 
     @Override
@@ -46,8 +45,9 @@ public class DrawingSystem extends EntitySystem{
         for (Entity e : entities) {
             pos = pm.get(e);
             //debug box---
-            /*
+
             if (cm.has(e)) {
+                /*
                 shapes.begin(ShapeRenderer.ShapeType.Line);
                 shapes.setColor(Color.BLUE);
                 if (poim.get(e) != null && poim.get(e).isPoisoned)
@@ -60,8 +60,9 @@ public class DrawingSystem extends EntitySystem{
                     shapes.setColor(Color.PINK);
                 shapes.polygon(cm.get(e).boundingBox.getTransformedVertices());
                 shapes.end();
+                */
             }
-            */
+
             //---
 
             if (!pos.drawable)
@@ -69,14 +70,27 @@ public class DrawingSystem extends EntitySystem{
 
 
             if (!im.has(e)) {
-                shapes.setColor(Color.BROWN);
-                shapes.begin(ShapeRenderer.ShapeType.Filled);
-                shapes.rect(pos.x, pos.y, pos.width, pos.height);
-                shapes.end();
+                batch.begin();
+                batch.draw(ImageComponent.atlas.findRegion("GoldWisp"), pos.x, pos.y, pos.originX, pos.originY, pos.width, pos.height, 1, 1, pos.rotation);
+                batch.end();
             } else {
                 img = im.get(e);
                 batch.begin();
-                if (hm.has(e) && hm.get(e).invincible) {
+                if (irm.has(e) && irm.get(e).gotItem) {
+                    if (pim.has(e)) {
+                        if (img.rotate)
+                            batch.draw(ImageComponent.atlas.findRegion("PlayerShipGet"), pos.x, pos.y, pos.originX, pos.originY, pos.width, pos.height, 1, 1, pos.rotation);
+                        else
+                            batch.draw(ImageComponent.atlas.findRegion("PlayerShipGet"), pos.x, pos.y, pos.originX, pos.originY, pos.width, pos.height, 1, 1, 0);
+                    } else {
+                        batch.setColor(Color.YELLOW);
+                        if (img.rotate)
+                            batch.draw(img.texRegion, pos.x, pos.y, pos.originX, pos.originY, pos.width, pos.height, 1, 1, pos.rotation);
+                        else
+                            batch.draw(img.texRegion, pos.x, pos.y, pos.originX, pos.originY, pos.width, pos.height, 1, 1, 0);
+                        batch.setColor(Color.WHITE);
+                    }
+                } else if (hm.has(e) && hm.get(e).invincible) {
                     batch.setColor(Color.RED);
                     if (img.rotate)
                         batch.draw(img.texRegion, pos.x, pos.y, pos.originX, pos.originY, pos.width, pos.height, 1, 1, pos.rotation);

@@ -16,7 +16,7 @@ import static com.colorshooter.game.Mappers.pm;
 /**
  * Created by pnore_000 on 8/30/2016.
  */
-public class Level27 extends GameScreen implements Screen {
+public class Level27 extends GameScreen {
 
     public Level27(ColorShooter game) {
         super(27, game);
@@ -35,34 +35,33 @@ public class Level27 extends GameScreen implements Screen {
 
         GameEntity enemySpawn = generateEnemySpawnPoint(-100, -100, "FinalUFO", 18f, getEngine());
         em.get(enemySpawn).currentTime = 16f;
-        GameEntity enemySpawn2 = generateEnemySpawnPoint(1300, 1000, "FinalUFO", 19f, getEngine());
+        GameEntity enemySpawn2 = generateEnemySpawnPoint(1300, 1000, "FinalUFO", 20f, getEngine());
         GameEntity enemySpawn3 = generateEnemySpawnPoint(1300, 1000, "BigWisp", 13f, getEngine());
         em.get(enemySpawn3).currentTime = 7f;
-        GameEntity enemySpawn4 = generateEnemySpawnPoint(1300, 1000, "BigWisp", 16f, getEngine());
+        GameEntity enemySpawn4 = generateEnemySpawnPoint(1300, 1000, "EnemyShipGold", 30f, getEngine());
 
 
 
-        GameEntity powerUps = generateMovingItemSpawnPoint(300, 550, "MaxHealth", 9f,  getEngine());
+        GameEntity powerUps = generateMovingItemSpawnPoint(300, 550, "MaxHealth", 8f,  getEngine());
         em.get(powerUps).currentTime = 5f;
-        GameEntity powerUps2 = generateMovingItemSpawnPoint(500, 350, "ShootUp", 10f,  getEngine());
-        GameEntity powerUps3 = generateMovingItemSpawnPoint(300, 550, "Health", 12f,  getEngine());
+        GameEntity powerUps2 = generateMovingItemSpawnPoint(500, 350, "ShootUp", 8f,  getEngine());
+        GameEntity powerUps3 = generateMovingItemSpawnPoint(300, 550, "Health", 9f,  getEngine());
         em.get(powerUps3).currentTime = 3f;
 
 
         GameEntity colors = generateMovingItemSpawnPoint(618, 294, "Pink", 25f, getEngine());
-        GameEntity colors2 = generateMovingItemSpawnPoint(738, 434, "Red", 32f, getEngine());
-        GameEntity colors3 = generateMovingItemSpawnPoint(618, 694, "Orange", 65f, getEngine());
+        GameEntity colors2 = generateMovingItemSpawnPoint(738, 434, "Orange", 32f, getEngine());
+        GameEntity colors3 = generateMovingItemSpawnPoint(618, 694, "Green", 45f, getEngine());
 
-        GameEntity cube = generateMovingObject(900, -100, 100, 100, ImageComponent.atlas.findRegion("Cube"), 100f);
+        GameEntity cube = generateMovingObject(900, 900, 100, 100, ImageComponent.atlas.findRegion("Cube"), 100f);
         GameEntity cube2 = generateMovingObject(-100, -100, 100, 100, ImageComponent.atlas.findRegion("Cube"), 100f);
 
         GameEntity object = generateFloatingPoison(200, 300, 40, 40, 90f);
         GameEntity object2 = generateFloatingPoison(800, 700, 40, 40, 90f);
-        GameEntity object3 = generateFloatingPoison(500, 500, 40, 40, 90f);
+        GameEntity object3 = generateFloatingPoison(800, 900, 40, 40, 90f);
         GameEntity object4 = generateFloatingPoison(500, 600, 40, 40, 90f);
         GameEntity object5 = generateFloatingPoison(300, 700, 40, 40, 90f);
         GameEntity object6 = generateFloatingPoison(1200, 800, 40, 40, 90f);
-        GameEntity object7 = generateFloatingPoison(1000, 100, 40, 40, 90f);
 
 
         getEngine().addEntity(powerUps);
@@ -89,7 +88,6 @@ public class Level27 extends GameScreen implements Screen {
         getEngine().addEntity(object4);
         getEngine().addEntity(object5);
         getEngine().addEntity(object6);
-        getEngine().addEntity(object7);
     }
 
     @Override

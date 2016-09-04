@@ -11,7 +11,7 @@ import static com.colorshooter.game.EntityConstructors.*;
 /**
  * Created by pnore_000 on 8/23/2016.
  */
-public class Level10 extends GameScreen implements Screen {
+public class Level10 extends GameScreen {
 
     public Level10(ColorShooter game) {
         super(10, game);

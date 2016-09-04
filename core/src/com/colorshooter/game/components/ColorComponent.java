@@ -15,6 +15,7 @@ public class ColorComponent implements Component{
      p : pink<p></p>
      v : purple<p></p>
      o : orange<p></p>
+     w : white <p></p>
      */
     public char color;
 

@@ -8,4 +8,7 @@ import com.colorshooter.game.GameEvent;
  */
 public class ItemComponent implements Component{
     public GameEvent event;
+    public boolean toggleGetItem = true;
+    public boolean disposeAfterUse = true;
+    public boolean useableByEnemy = true;
 }

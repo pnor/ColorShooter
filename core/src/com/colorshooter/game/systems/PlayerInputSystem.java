@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.colorshooter.game.EntityConstructors;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.GameEvent;
@@ -68,12 +69,14 @@ public class PlayerInputSystem extends EntitySystem{
                         MovementSystem.moveTowards(pos, mouse.x, mouse.y, mov.speedPerSecond * dt * 1.65f, col);
                     else
                         MovementSystem.moveTowards(pos, mouse.x, mouse.y, mov.speedPerSecond * dt, col);
-                } else if (Gdx.input.isKeyPressed(controller.back)) {
-                    MovementSystem.moveByRotation(pos, pos.rotation + 180, mov.speedPerSecond * dt / 1.25f, col);
-                } else if (Gdx.input.isKeyPressed(controller.right)) {
-                    MovementSystem.moveByRotation(pos, pos.rotation - 90, mov.speedPerSecond * dt / 1.25f, col);
-                } else if (Gdx.input.isKeyPressed(controller.left)) {
-                    MovementSystem.moveByRotation(pos, pos.rotation + 90, mov.speedPerSecond * dt / 1.25f, col);
+                } else if (!playerOutOfBounds(e)) {
+                    if (Gdx.input.isKeyPressed(controller.back)) {
+                        MovementSystem.moveByRotation(pos, pos.rotation + 180, mov.speedPerSecond * dt / 1.25f, col);
+                    }else if (Gdx.input.isKeyPressed(controller.right)) {
+                        MovementSystem.moveByRotation(pos, pos.rotation - 90, mov.speedPerSecond * dt / 1.25f, col);
+                    } else if (Gdx.input.isKeyPressed(controller.left)) {
+                        MovementSystem.moveByRotation(pos, pos.rotation + 90, mov.speedPerSecond * dt / 1.25f, col);
+                    }
                 }
 
                 if (Gdx.input.isKeyPressed(controller.shoot)) {
@@ -101,8 +104,7 @@ public class PlayerInputSystem extends EntitySystem{
                     }
                 } else if (!poim.get(e).isPoisoned && img.texRegion == ImageComponent.atlas.findRegion("PoisonedShip")) {
                     e.remove(EventComponent.class);
-                    colm.get(e).oldColor = 'z';
-                    updateColor(e);
+                    updatePlayerImage(e);
                 }
             }
         }
@@ -110,6 +112,11 @@ public class PlayerInputSystem extends EntitySystem{
 
     private float fixYCoordinates(float y) {
         return screen.getStage().getHeight() - y;
+    }
+
+    private boolean playerOutOfBounds(Entity e) {
+        PositionComponent pos = pm.get(e);
+        return (pos.x < 0 || pos.y < 0 || screen.getStage().getWidth() - pos.x + pos.width < 100 || screen.getStage().getHeight() - pos.y + pos.height < 100);
     }
 
     public Family getFamily() {
@@ -137,7 +144,7 @@ public class PlayerInputSystem extends EntitySystem{
             }
             else if (color.color == 'r') {
                 im.get(e).texRegion = ImageComponent.atlas.findRegion("PlayerShipRed");
-                shm.get(e).attackDelay = 0.8f;
+                shm.get(e).attackDelay = 0.85f;
             }
             else if (color.color == 'g') {
                 im.get(e).texRegion = ImageComponent.atlas.findRegion("PlayerShipGreen");
@@ -161,10 +168,39 @@ public class PlayerInputSystem extends EntitySystem{
             }
             else if (color.color == 'o') {
                 im.get(e).texRegion = ImageComponent.atlas.findRegion("PlayerShipOrange");
-                shm.get(e).attackDelay = 1.2f;
+                shm.get(e).attackDelay = 2f;
+            }
+            else if (color.color == 'w') {
+                im.get(e).texRegion = ImageComponent.atlas.findRegion("PlayerShipWhite");
+                shm.get(e).attackDelay = 0.02f;
             }
         }
         color.oldColor = color.color;
+    }
+
+    public static void updatePlayerImage(Entity e) {
+        if (!colm.has(e))
+            return;
+
+        ColorComponent color = colm.get(e);
+        if (color.color == 'x')
+            im.get(e).texRegion = ImageComponent.atlas.findRegion("PlayerShip");
+        else if (color.color == 'r')
+            im.get(e).texRegion = ImageComponent.atlas.findRegion("PlayerShipRed");
+        else if (color.color == 'g')
+            im.get(e).texRegion = ImageComponent.atlas.findRegion("PlayerShipGreen");
+        else if (color.color == 'p')
+            im.get(e).texRegion = ImageComponent.atlas.findRegion("PlayerShipPink");
+        else if (color.color == 'v')
+            im.get(e).texRegion = ImageComponent.atlas.findRegion("PlayerShipPurple");
+        else if (color.color == 'b')
+            im.get(e).texRegion = ImageComponent.atlas.findRegion("PlayerShipBlue");
+        else if (color.color == 'y')
+            im.get(e).texRegion = ImageComponent.atlas.findRegion("PlayerShipYellow");
+        else if (color.color == 'o')
+            im.get(e).texRegion = ImageComponent.atlas.findRegion("PlayerShipOrange");
+        else if (color.color == 'w')
+            im.get(e).texRegion = ImageComponent.atlas.findRegion("PlayerShipWhite");
     }
 
     public void playerShoot(Entity e) {
@@ -185,5 +221,7 @@ public class PlayerInputSystem extends EntitySystem{
             ShootingSystem.shoot(getEngine(), EntityConstructors.generatePinkLaser(0, 0, pm.get(e).rotation, 0), pm.get(e), shm.get(e));
         else if (color.color == 'o')
             ShootingSystem.shoot(getEngine(), EntityConstructors.generateOrangeArrowSeed(0, 0, pm.get(e).rotation), pm.get(e), shm.get(e));
+        else if (color.color == 'w')
+            ShootingSystem.shoot(getEngine(), EntityConstructors.generateWhiteBeam(0, 0, pm.get(e).rotation, 0), pm.get(e), shm.get(e));
     }
 }

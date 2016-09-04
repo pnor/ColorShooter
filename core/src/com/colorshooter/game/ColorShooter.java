@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.colorshooter.game.scenes.GameScreen;
 import com.colorshooter.game.scenes.levels.*;
+import com.colorshooter.game.scenes.menus.HighScoreMenu;
 import com.colorshooter.game.scenes.menus.MainMenu;
 
 import static com.colorshooter.game.Mappers.hm;
@@ -14,6 +15,7 @@ public class ColorShooter extends Game {
 
 	private final Screen[] SCREENS = {
 			new MainMenu(this),
+			new HighScoreMenu(this),
 			new Level1(this),
 			new Level2(this),
 			new Level3(this),
@@ -43,7 +45,11 @@ public class ColorShooter extends Game {
 			new Level24(this),
 			new Level25(this),
 			new Level26(this),
-			new Level27(this)
+			new Level27(this),
+			new Level28(this),
+			new BonusLevel4(this),
+			new Level29(this),
+			new Level30(this)
 	};
 
 	private int index;

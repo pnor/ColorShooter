@@ -16,7 +16,7 @@ import static com.colorshooter.game.Mappers.pm;
 /**
  * Created by pnore_000 on 8/30/2016.
  */
-public class Level25 extends GameScreen implements Screen{
+public class Level25 extends GameScreen{
 
     public Level25(ColorShooter game) {
         super(25, game);
@@ -35,8 +35,8 @@ public class Level25 extends GameScreen implements Screen{
 
         GameEntity enemySpawn = generateRandomWispSpawnPoint(500, -40, 3.5f, true, getEngine());
         em.get(enemySpawn).currentTime = 2f;
-        GameEntity enemySpawn2 = generateRandomWispSpawnPoint(0, 900, 4.5f, true, getEngine());
-        GameEntity enemySpawn3 = generateEnemySpawnPoint(1300, 900, "GhostUFO", 7.5f, getEngine());
+        GameEntity enemySpawn2 = generateRandomWispSpawnPoint(0, 900, 5.5f, true, getEngine());
+        GameEntity enemySpawn3 = generateEnemySpawnPoint(1300, 900, "GhostUFO", 9.5f, getEngine());
 
         GameEntity powerUps = generateMovingItemSpawnPoint(300, 550, "MaxHealth", 9f,  getEngine());
         em.get(powerUps).currentTime = 5f;

@@ -16,7 +16,7 @@ import static com.colorshooter.game.Mappers.*;
 public class ItemSystem extends EntitySystem{
     private Family playerFam;
     private Family itemFam;
-    private ImmutableArray<Entity> players;
+    private ImmutableArray<Entity> users;
     private ImmutableArray<Entity> items;
 
     public ItemSystem(int priority) {
@@ -25,9 +25,9 @@ public class ItemSystem extends EntitySystem{
 
     @Override
     public void addedToEngine(Engine engine) {
-        playerFam = Family.all(PlayerInputComponent.class, PositionComponent.class, ColorComponent.class).get();
+        playerFam = Family.all(ItemReceivableComponent.class, PositionComponent.class).get();
         itemFam = Family.all(ItemComponent.class, PositionComponent.class).get();
-        players = engine.getEntitiesFor(playerFam);
+        users = engine.getEntitiesFor(playerFam);
         items = engine.getEntitiesFor(itemFam);
     }
 
@@ -37,7 +37,7 @@ public class ItemSystem extends EntitySystem{
         PositionComponent pos2;
         boolean collide;
 
-        for (Entity e : players) {
+        for (Entity e : users) {
             for (Entity e2 : items) {
                 if (e == e2)
                     continue;
@@ -62,8 +62,14 @@ public class ItemSystem extends EntitySystem{
                                     pos2.x, pos2.y + pos2.height} );
                 }
                 if (collide) {
-                    itm.get(e2).event.event((GameEntity) e, getEngine());
-                    ((GameEntity) e2).setDisposed(true);
+                    if (pim.has(e)  ||  (aim.has(e) && itm.get(e2).useableByEnemy)) {
+                        itm.get(e2).event.event((GameEntity) e, getEngine());
+                        if (itm.get(e2).toggleGetItem)
+                            irm.get(e).gotItem = true;
+                    }
+
+                    if (itm.get(e2).disposeAfterUse)
+                        ((GameEntity) e2).setDisposed(true);
                 }
             }
         }

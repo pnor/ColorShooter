@@ -14,7 +14,7 @@ import static com.colorshooter.game.Mappers.*;
 /**
  * Created by pnore_000 on 8/24/2016.
  */
-public class Level12 extends GameScreen implements Screen {
+public class Level12 extends GameScreen {
 
     public Level12(ColorShooter game) {
         super(12, game);

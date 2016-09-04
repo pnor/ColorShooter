@@ -52,7 +52,11 @@ public class AIComponent implements Component{
      * u : multi green arrow <p>
      * o : orange arrow <p>
      * B : blue arrow <p>
-     * W : white arrow <p></p>
+     * W : white arrow <p>
+     * 1 : blue beam <p>
+     * 2 : spinning red <p>
+     * 3 : green beam <p>
+     * 4 : Turret Laser <p></p>
      */
     public char projectileType;
     public boolean gradualTurning = true;

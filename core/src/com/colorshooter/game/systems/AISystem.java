@@ -10,6 +10,7 @@ import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.components.*;
 import com.colorshooter.game.scenes.GameScreen;
 
+import static com.colorshooter.game.EntityConstructors.generateBlueBeam;
 import static com.colorshooter.game.Mappers.*;
 
 /**
@@ -20,7 +21,7 @@ import static com.colorshooter.game.Mappers.*;
  * Processes all entities with an AIComponent so each can run their AI. Has methods for keeping position in correct locations
  * ({@code getClosestPlayer}, and {@code checkPosition}).
  */
-public class AISystem extends EntitySystem{
+public class AISystem extends EntitySystem {
     private ImmutableArray<Entity> entities;
     private Family family = Family.all(AIComponent.class, PositionComponent.class).get();
     private Family playerFamily = Family.all(PlayerInputComponent.class, MovementComponent.class).get();
@@ -56,7 +57,7 @@ public class AISystem extends EntitySystem{
 
             //out of bounds
             if (mm.has(e)) {
-                if (pos.x < 10 || pos.y < 10 || screen.getStage().getWidth() - pos.x + pos.width < 100 || screen.getStage().getHeight() - pos.y + pos.height < 100) {
+                if (pos.x < 20 || pos.y < 20 || screen.getStage().getWidth() - pos.x + pos.width < 100 || screen.getStage().getHeight() - pos.y + pos.height < 100) {
                     float tempRotate = pos.rotation;
                     PositionSystem.lookAt(pos, screen.getStage().getWidth() / 2, screen.getStage().getHeight() / 2, cm.get(e));
                     MovementSystem.moveBy(pos, mov.speedPerSecond * dt, cm.get(e));
@@ -109,7 +110,7 @@ public class AISystem extends EntitySystem{
                 if (ai.currenttime >= ai.targetTime) {
                     ai.targetRotation = (float) Math.random() * 360;
                     if (cm.has(e))
-                        CollisionSystem.updateBoundingBox(cm.get(e),0,0, pos.rotation);
+                        CollisionSystem.updateBoundingBox(cm.get(e), 0, 0, pos.rotation);
                     ai.currenttime = 0.0f;
                 }
                 //System.out.println("Distance: " + MovementSystem.getDistance(pos, (pm.get(closestPlayer)).x + (pm.get(closestPlayer)).originX, (pm.get(closestPlayer)).y + (pm.get(closestPlayer)).originY) + " Current Awareness: " + ai.awarenessRadius);
@@ -138,7 +139,7 @@ public class AISystem extends EntitySystem{
                     if (shm.has(e))
                         shootProjectile(e);
                     ai.currenttime = 0;
-                    pos.rotation +=180;
+                    pos.rotation += 180;
                 } else {
                     PositionSystem.lookAt(pos, playerPos.x + playerPos.originX, playerPos.y + playerPos.originY, cm.get(closestPlayer));
                     ai.currenttime += dt;
@@ -207,10 +208,10 @@ public class AISystem extends EntitySystem{
             return (GameEntity) players.get(0);
 
         int smallestIndex = 0;
-        float smallestDistance = MovementSystem.getDistance(pos, pm.get(players.get(0)).x +  pm.get(players.get(0)).originX, pm.get(players.get(0)).y +  pm.get(players.get(0)).originY);
+        float smallestDistance = MovementSystem.getDistance(pos, pm.get(players.get(0)).x + pm.get(players.get(0)).originX, pm.get(players.get(0)).y + pm.get(players.get(0)).originY);
         float currentDistance = 0f;
-        for (int i = 1; i < players.size(); i ++) {
-            currentDistance = MovementSystem.getDistance(pos, pm.get(players.get(0)).x +  pm.get(players.get(0)).originX, pm.get(players.get(0)).y +  pm.get(players.get(0)).originY);
+        for (int i = 1; i < players.size(); i++) {
+            currentDistance = MovementSystem.getDistance(pos, pm.get(players.get(0)).x + pm.get(players.get(0)).originX, pm.get(players.get(0)).y + pm.get(players.get(0)).originY);
             if (currentDistance < smallestDistance) {
                 smallestIndex = i;
                 smallestDistance = currentDistance;
@@ -253,11 +254,19 @@ public class AISystem extends EntitySystem{
         else if (aim.get(e).projectileType == 'u')
             ShootingSystem.shoot(getEngine(), EntityConstructors.generateGreenArrow(0, 0, pm.get(e).rotation, 1), pm.get(e), shm.get(e));
         else if (aim.get(e).projectileType == 'o')
-                ShootingSystem.shoot(getEngine(), EntityConstructors.generateOrangeArrow(0, 0, pm.get(e).rotation, 1), pm.get(e), shm.get(e));
+            ShootingSystem.shoot(getEngine(), EntityConstructors.generateOrangeArrow(0, 0, pm.get(e).rotation, 1), pm.get(e), shm.get(e));
         else if (aim.get(e).projectileType == 'B')
             ShootingSystem.shoot(getEngine(), EntityConstructors.generateBlueArrow(0, 0, pm.get(e).rotation, 1), pm.get(e), shm.get(e));
         else if (aim.get(e).projectileType == 'W')
             ShootingSystem.shoot(getEngine(), EntityConstructors.generateWhiteArrow(0, 0, pm.get(e).rotation, 1), pm.get(e), shm.get(e));
+        else if (aim.get(e).projectileType == '1')
+            ShootingSystem.shootOffset(-85, -85f, getEngine(), EntityConstructors.generateBlueBeam(0, 0, pm.get(e).rotation, 1), pm.get(e), shm.get(e));
+        else if (aim.get(e).projectileType == '2')
+            ShootingSystem.shootOffset(-85, -85f, getEngine(), EntityConstructors.generateRedSpinner(0, 0, pm.get(e).rotation), pm.get(e), shm.get(e));
+        else if (aim.get(e).projectileType == '3')
+            ShootingSystem.shootOffset(-85, -85f, getEngine(), EntityConstructors.generateGreenBeam(0, 0, pm.get(e).rotation, 1), pm.get(e), shm.get(e));
+        else if (aim.get(e).projectileType == '4')
+            ShootingSystem.shootOffset(-65, -65f, getEngine(), EntityConstructors.generateTurretlaser(0, 0, pm.get(e).rotation), pm.get(e), shm.get(e));
 
     }
-    }
+}

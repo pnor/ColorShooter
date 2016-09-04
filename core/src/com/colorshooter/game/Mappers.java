@@ -41,6 +41,8 @@ public class Mappers {
     public final static ComponentMapper<EventComponent> em = ComponentMapper.getFor(EventComponent.class);
     //Items
     public final static ComponentMapper<ItemComponent> itm = ComponentMapper.getFor(ItemComponent.class);
+    //ItemsReceivable
+    public final static ComponentMapper<ItemReceivableComponent> irm = ComponentMapper.getFor(ItemReceivableComponent.class);
     //Color
     public final static ComponentMapper<ColorComponent> colm = ComponentMapper.getFor(ColorComponent.class);
     //Points

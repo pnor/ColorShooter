@@ -1,5 +1,6 @@
 package com.colorshooter.game;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IntervalIteratingSystem;
 import com.colorshooter.game.systems.PositionSystem;
@@ -18,6 +19,10 @@ public class GameEntity extends Entity{
 
     public GameEntity(String n) {
         name = n;
+    }
+
+    public GameEntity() {
+        name = "";
     }
 
     public void setDisposed(boolean b) {
@@ -42,6 +47,10 @@ public class GameEntity extends Entity{
             hm.get(this).invincible = true;
         }
         setDisposed(false);
+    }
+
+    public String toString() {
+        return name;
     }
 
 }

@@ -36,9 +36,9 @@ public class MainMenu extends MenuScreen implements Screen{
             public void changed(ChangeEvent event, Actor actor) {
                 if (((Button) actor).isChecked()) {
                     if (actor == start)
-                        COLOR_SHOOTER.setScreen(1);
+                        COLOR_SHOOTER.setScreen(2);
                     if (actor == highScores)
-                        COLOR_SHOOTER.setScreen(10);
+                        COLOR_SHOOTER.setScreen(1);
                     if (actor == quit)
                         Gdx.app.exit();
                 }

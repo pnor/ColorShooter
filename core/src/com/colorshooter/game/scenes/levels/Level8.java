@@ -13,7 +13,7 @@ import static com.colorshooter.game.Mappers.*;
 /**
  * Created by pnore_000 on 8/22/2016.
  */
-public class Level8 extends GameScreen implements Screen {
+public class Level8 extends GameScreen {
 
     public Level8(ColorShooter game) {
         super(8, game);
@@ -22,18 +22,23 @@ public class Level8 extends GameScreen implements Screen {
     @Override
     public void show() {
         super.show();
-        setTimer(new GameTimer());
-        getTimer().setTime(70f);
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("Space4"));
 
         setPlayer(generatePlayer(678, 414));
 
-        GameEntity enemySpawn = generateEnemySpawnPoint(1000, 1000, "UFO", 7f, getEngine());
-        GameEntity enemySpawn2 = generateEnemySpawnPoint(0, 1000, "UFO", 8f, getEngine());
-        GameEntity enemySpawn3 = generateEnemySpawnPoint(0, 0, "GreenUFO", 12f, getEngine());
-        em.get(enemySpawn3).currentTime = 3f;
-        GameEntity enemySpawn4 = generateEnemySpawnPoint(950, 0, "YellowUFO", 13f, getEngine());
+        GameEntity enemy = generateRedEnemy(1300, 1000);
+        GameEntity enemy2 = generateYellowEnemy(1300, 800);
+        GameEntity enemy3 = generateRedEnemy(1300, -400);
+        GameEntity enemy4 = generateRedEnemy(1300, -100);
+
+        GameEntity enemySpawn = generateEnemySpawnPoint(1000, 1000, "UFO", 19f, getEngine());
+        em.get(enemySpawn).currentTime = 13f;
+        GameEntity enemySpawn2 = generateEnemySpawnPoint(0, 1000, "UFO", 19f, getEngine());
+        em.get(enemySpawn2).currentTime = 16f;
+        GameEntity enemySpawn3 = generateEnemySpawnPoint(0, 0, "GreenUFO", 24f, getEngine());
+        em.get(enemySpawn3).currentTime = 16f;
+        GameEntity enemySpawn4 = generateEnemySpawnPoint(950, 0, "YellowUFO", 20f, getEngine());
         em.get(enemySpawn4).currentTime = 13f;
 
         GameEntity color1 = generateItemSpawnPoint(350, 650, "Purple", 25f, getEngine());
@@ -53,6 +58,12 @@ public class Level8 extends GameScreen implements Screen {
         getEngine().addEntity(enemySpawn2);
         getEngine().addEntity(enemySpawn3);
         getEngine().addEntity(enemySpawn4);
+        getEngine().addEntity(enemy);
+        getEngine().addEntity(enemy2);
+        getEngine().addEntity(enemy3);
+        getEngine().addEntity(enemy4);
+
+
     }
 
     @Override

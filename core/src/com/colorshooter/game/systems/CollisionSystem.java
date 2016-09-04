@@ -87,8 +87,11 @@ public class CollisionSystem extends EntitySystem{
                 }
 
                 if (cm.get(entities.get(i)).collisionReaction == 3) {
-                    if (checkCollision(cm.get(entities.get(i)), cm.get(entities.get(j))))
+                    if (checkCollision(cm.get(entities.get(i)), cm.get(entities.get(j)))) {
                         pm.get(entities.get(i)).rotation += 165 + (float) (Math.random() * 30);
+                        if (lfm.has(entities.get(i)))
+                            lfm.get(entities.get(i)).currentTime += 0.3f;
+                    }
                 }
 
                 if (cm.get(entities.get(j)).collisionReaction == 2) {

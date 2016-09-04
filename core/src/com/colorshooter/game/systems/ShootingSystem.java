@@ -71,6 +71,28 @@ public class ShootingSystem extends EntitySystem{
         engine.addEntity(e);
     }
 
+    public static void shootOffset(float offsetX, float offsetY, Engine engine, GameEntity e, PositionComponent pos, ShootComponent shoot) {
+        if (!pm.has(e)) {
+            System.out.println("failed!!!");
+            return;
+        }
+        if (shoot.isAttacking) {
+            return;
+        }
+        PositionComponent pos2 = pm.get(e);
+        //pos2.x = pos.x + (pos.width * 1.2f) * (float) Math.cos(Math.toRadians(pos.rotation));
+        //pos2.y = (pos.y + (pos.originY * 0.8f)) + (pos.height * 1.15f) * (float) Math.sin(Math.toRadians(pos.rotation));
+
+        pos2.x = (pos.x + pos.originX - pos2.originX) + (pos.width + pos2.width / 4 + offsetX) * (float) Math.cos(Math.toRadians(pos.rotation));
+        pos2.y = (pos.y + pos.originY - pos2.originY) + (pos.height + pos2.height/ 4 + offsetY) * (float) Math.sin(Math.toRadians(pos.rotation));
+
+        if (cm.has(e)) {
+            CollisionSystem.setBoundingBoxLocation(cm.get(e), pos2.x, pos2.y, pos2.rotation);
+        }
+        shoot.isAttacking = true;
+        engine.addEntity(e);
+    }
+
     public Family getFamily() {
         return family;
     }

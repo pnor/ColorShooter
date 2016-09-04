@@ -17,7 +17,7 @@ import static com.colorshooter.game.Mappers.pm;
 /**
  * Created by pnore_000 on 8/27/2016.
  */
-public class BonusLevel3 extends GameScreen implements Screen {
+public class BonusLevel3 extends GameScreen {
     public BonusLevel3(ColorShooter game) {
         super(game);
     }

@@ -68,7 +68,7 @@ public class HUDTest extends GameScreen {
         collisionSystem = new CollisionSystem(7);
         playerInputSystem = new PlayerInputSystem(this, 2);
         shootingSystem = new ShootingSystem(4);
-        drawingSystem = new DrawingSystem(5, getBatch(), getShapes());
+        drawingSystem = new DrawingSystem(5, getBatch());
         healthSystem = new HealthSystem(ImageComponent.atlas, 3);
         damageSystem = new DamageSystem(6);
         aiSystem = new AISystem(this, 8);

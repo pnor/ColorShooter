@@ -13,7 +13,7 @@ import static com.colorshooter.game.Mappers.*;
 /**
  * Created by pnore_000 on 8/20/2016.
  */
-public class Level1 extends GameScreen implements Screen {
+public class Level1 extends GameScreen {
 
     public Level1(ColorShooter game) {
         super(1, game);
@@ -23,7 +23,7 @@ public class Level1 extends GameScreen implements Screen {
     public void show() {
         super.show();
         setTimer(new GameTimer());
-        getTimer().setTime(50f);
+        getTimer().setTime(45f);
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("Space1"));
 

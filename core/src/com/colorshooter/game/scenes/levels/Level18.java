@@ -16,7 +16,10 @@ import static com.colorshooter.game.Mappers.pm;
 /**
  * Created by pnore_000 on 8/27/2016.
  */
-public class Level18 extends GameScreen implements Screen{
+public class Level18 extends GameScreen{
+
+    private boolean added;
+    private GameTimer spawnTimer;
 
     public Level18(ColorShooter game) {
         super(18, game);
@@ -25,41 +28,43 @@ public class Level18 extends GameScreen implements Screen{
     @Override
     public void show() {
         super.show();
-        setTimer(new GameTimer());
-        getTimer().setTime(85f);
+        spawnTimer = new GameTimer(14f);
+
         setBackground(ImageComponent.backgroundAtlas.findRegion("RedSpace2"));
 
         setPlayer(generatePlayer(678, 414));
-        cm.get(getPlayer()).boundingBox.setOrigin(pm.get(getPlayer()).x + pm.get(getPlayer()).originX, pm.get(getPlayer()).y + pm.get(getPlayer()).originY);
 
-        GameEntity enemySpawn = generateEnemySpawnPoint(0, 0, "EnemyShipGold", 24f, getEngine());
-        em.get(enemySpawn).currentTime = 26f;
-        GameEntity enemySpawn2 = generateEnemySpawnPoint(0, 900, "EnemyShipGold", 25f, getEngine());
-        em.get(enemySpawn2).currentTime = 10f;
+        GameEntity enemy = generateEnemyShipGold(1200,1000);
 
         GameEntity color1 = generateItemSpawnPoint(550, 750, "Blue", 30f,  getEngine());
         em.get(color1).currentTime = 10f;
         GameEntity color2 = generateItemSpawnPoint(550, 250, "Red", 30f,  getEngine());
 
-        GameEntity powerUps = generateMovingItemSpawnPoint(300, 450, "Health", 6f,  getEngine());
-        GameEntity powerUps2 = generateMovingRandomPowerUp(220, 330, 7f,  getEngine());
+        GameEntity powerUps = generateItemSpawnPoint(200, 700, "Health", 6f,  getEngine());
+        GameEntity powerUps2 = generateRandomPowerUp(1100, 200, 7f,  getEngine());
 
-        GameEntity doubleUp = generateItemSpawnPoint(720, 400, "DoubleUp", 15f,  getEngine());
-        em.get(doubleUp).currentTime = 7f;
+        GameEntity doubleUp = generateItemSpawnPoint(650, 450, "DoubleUp", 15f,  getEngine());
+        em.get(doubleUp).currentTime = 4f;
 
         getEngine().addEntity(powerUps);
         getEngine().addEntity(powerUps2);
         getEngine().addEntity(color1);
         getEngine().addEntity(color2);
         getEngine().addEntity(getPlayer());
-        getEngine().addEntity(enemySpawn);
-        getEngine().addEntity(enemySpawn2);
+        getEngine().addEntity(enemy);
         getEngine().addEntity(doubleUp);
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
+        spawnTimer.decreaseTimer(delta);
+
+        if (!added && spawnTimer.getTime() <= 0f) {
+            getEngine().addEntity(generateEnemyShipGold(1200,1000));
+            getEngine().addEntity(generateEnemyShipGold(-100,-100));
+            added = true;
+        }
     }
 
     @Override

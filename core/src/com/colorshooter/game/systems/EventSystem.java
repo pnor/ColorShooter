@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.components.EventComponent;
 
@@ -38,7 +39,12 @@ public class EventSystem extends EntitySystem {
                 event.currentTime += dt;
                 if (event.currentTime >= event.targetTime) {
                     event.currentTime = 0f;
+                    try {
                         event.event.event((GameEntity) e, getEngine());
+                    } catch (NullPointerException exception) {
+                        System.out.println(exception + "// Entity " + e + " threw it");
+                        Gdx.app.exit();
+                    }
                     if (!event.repeat)
                         event.ticking = false;
                 }

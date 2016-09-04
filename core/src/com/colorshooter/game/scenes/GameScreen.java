@@ -14,17 +14,17 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.colorshooter.game.ColorShooter;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.GameTimer;
 import com.colorshooter.game.components.AIComponent;
 import com.colorshooter.game.components.ImageComponent;
+import com.colorshooter.game.components.ItemReceivableComponent;
 import com.colorshooter.game.components.PositionComponent;
 import com.colorshooter.game.systems.*;
 
@@ -38,24 +38,24 @@ public class GameScreen implements Screen {
     private final ColorShooter COLOR_SHOOTER;
 
     private Stage stage;
-    private ShapeRenderer shapes;
     private Engine engine;
 
-    private MovementSystem movementSystem;
-    private CollisionSystem collisionSystem;
-    private PlayerInputSystem playerInputSystem;
-    private DrawingSystem drawingSystem;
-    private ShootingSystem shootingSystem;
-    private HealthSystem healthSystem;
-    private DamageSystem damageSystem;
-    private AISystem aiSystem;
-    private LifetimeSystem lifetimeSystem;
-    private AnimationSystem animationSystem;
-    private EventSystem eventSystem;
-    private ItemSystem itemSystem;
-    private BouncingSystem bounceSystem;
-    private PoisonSystem poisSystem;
-    private FrozenSystem frozenSystem;
+    private static MovementSystem movementSystem;
+    private static CollisionSystem collisionSystem;
+    private static PlayerInputSystem playerInputSystem;
+    private static DrawingSystem drawingSystem;
+    private static ShootingSystem shootingSystem;
+    private static HealthSystem healthSystem;
+    private static DamageSystem damageSystem;
+    private static AISystem aiSystem;
+    private static LifetimeSystem lifetimeSystem;
+    private static AnimationSystem animationSystem;
+    private static EventSystem eventSystem;
+    private static ItemSystem itemSystem;
+    private static BouncingSystem bounceSystem;
+    private static PoisonSystem poisSystem;
+    private static FrozenSystem frozenSystem;
+    private static ItemReceivableSystem itemReceivableSystem;
 
     private TextureRegion background;
 
@@ -73,6 +73,7 @@ public class GameScreen implements Screen {
     private Label pointMultiplierLabel;
     private Label pointNum;
     private Label timeLabel;
+    private Label objectiveLabel;
 
     private static GameEntity player;
 
@@ -123,7 +124,6 @@ public class GameScreen implements Screen {
         oldScore = points;
 
         stage = new Stage();
-        shapes = new ShapeRenderer();
         engine = new Engine();
 
         stage.getViewport().apply();
@@ -142,21 +142,25 @@ public class GameScreen implements Screen {
         setUpHUD();
 
         //set up systems
-        movementSystem = new MovementSystem(1);
-        playerInputSystem = new PlayerInputSystem(this, 2);
-        healthSystem = new HealthSystem(ImageComponent.atlas, 3);
-        shootingSystem = new ShootingSystem(4);
-        drawingSystem = new DrawingSystem(5, getBatch(), getShapes());
-        damageSystem = new DamageSystem(6);
-        collisionSystem = new CollisionSystem(7);
-        aiSystem = new AISystem(this, 8);
-        lifetimeSystem = new LifetimeSystem(9);
-        animationSystem = new AnimationSystem(10);
-        eventSystem = new EventSystem(11);
-        itemSystem = new ItemSystem(12);
-        bounceSystem = new BouncingSystem(13);
-        poisSystem = new PoisonSystem(14);
-        frozenSystem = new FrozenSystem(15);
+        if (movementSystem == null) {
+            movementSystem = new MovementSystem(1);
+            playerInputSystem = new PlayerInputSystem(this, 2);
+            healthSystem = new HealthSystem(ImageComponent.atlas, 3);
+            shootingSystem = new ShootingSystem(4);
+            drawingSystem = new DrawingSystem(5, getBatch());
+            damageSystem = new DamageSystem(6);
+            collisionSystem = new CollisionSystem(7);
+            aiSystem = new AISystem(this, 8);
+            lifetimeSystem = new LifetimeSystem(9);
+            animationSystem = new AnimationSystem(10);
+            eventSystem = new EventSystem(11);
+            itemSystem = new ItemSystem(12);
+            bounceSystem = new BouncingSystem(13);
+            poisSystem = new PoisonSystem(14);
+            frozenSystem = new FrozenSystem(15);
+            itemReceivableSystem = new ItemReceivableSystem(16);
+        }
+
 
         engine.addSystem(movementSystem);
         engine.addSystem(playerInputSystem);
@@ -173,6 +177,8 @@ public class GameScreen implements Screen {
         engine.addSystem(bounceSystem);
         engine.addSystem(poisSystem);
         engine.addSystem(frozenSystem);
+        engine.addSystem(itemReceivableSystem);
+
     }
 
     @Override
@@ -199,14 +205,15 @@ public class GameScreen implements Screen {
         if (screenState == 3)
             return;
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && screenState == 1) {
-            if (bestMultiplier >= 3f)
-                lives += 1;
-            COLOR_SHOOTER.moveScreen();
-            return;
-        }
-
         if (screenState == 1) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+                if (bestMultiplier >= 3f)
+                    lives += 1;
+                if (!player.getDisposed() && hm.get(player).maxHealth == hm.get(player).health)
+                    points += 5000;
+                COLOR_SHOOTER.moveScreen();
+                return;
+            }
             rouletteScore();
             updateVictoryHUD();
             stage.draw();
@@ -272,7 +279,6 @@ public class GameScreen implements Screen {
         }
 
         screenState = 0;
-
     }
 
     @Override
@@ -284,6 +290,7 @@ public class GameScreen implements Screen {
         }
         engine.removeAllEntities();
 
+        /*
         movementSystem = null;
         collisionSystem = null;
         playerInputSystem = null;
@@ -299,6 +306,7 @@ public class GameScreen implements Screen {
         bounceSystem = null;
         poisSystem = null;
         frozenSystem = null;
+        */
     }
 
     @Override
@@ -308,8 +316,7 @@ public class GameScreen implements Screen {
 
     public void setUpHUD() {
         uiatlas = new TextureAtlas("uiskin.atlas");
-        skin = new Skin(Gdx.files.internal("uiskin.json"));
-        skin.addRegions(uiatlas);
+        skin = new Skin(Gdx.files.internal("uiskin.json"), uiatlas);
 
         icon = new Image(ImageComponent.atlas.findRegion("PlayerShip"));
         icon.setSize(65, 65);
@@ -319,8 +326,9 @@ public class GameScreen implements Screen {
         table.setFillParent(true);
 
         healthLabel = new Label("Health : 200 / 200", skin);
-        healthLabel.setFontScale(1.25f, 1.25f);
-        healthBar = new Image(new TextureAtlas("CSNinePatch.pack").createPatch("barpatch"));
+        healthLabel.setFontScale(1.25f);
+        //healthBar = new Image(new TextureAtlas("CSNinePatch.pack").createPatch("barpatch"));
+        healthBar = new Image(new Texture("GreenBar.png"));
         if (level >= 1) {
             levelLabel = new Label("Level:", skin);
             levelNum = new Label("" + level, skin);
@@ -338,26 +346,27 @@ public class GameScreen implements Screen {
         else if (level >= 17 && level <= 21)
             levelNum.setColor(Color.YELLOW);
         else if (level >= 22)
-            levelNum.setColor(Color.LIME);
+            levelNum.setColor(Color.PURPLE);
 
         life = new Label("Lives:", skin);
         lifeCount = new Label("-", skin);
         pointID = new Label("Points:", skin);
         pointNum = new Label("0", skin);
-        if (timer != null)
-            timeLabel = new Label(timer.toString(), skin);
-        else
-            timeLabel = new Label("-:--", skin);
+        timeLabel = new Label("-:--", skin);
+        timeLabel.setColor(Color.ORANGE);
 
         pointMultiplierLabel = new Label("" + pointMultiplier, skin);
         pointMultiplierLabel.setFontScale(2f);
 
+        objectiveLabel = new Label("Defeat All Enemies!", skin);
+
         //  BACKUP!!!
-        //table.center().setFillParent(true);
+        //table.setFillParent(true);
         table.top().left();
         table.padTop(22).padLeft(10);
         table.add(icon).size(65, 65);
         table.add(healthLabel).size(170f, 30f).padLeft(5);
+        //table.add(healthBar).size(170f, 30f).padLeft(5);
         if (level >= 1)
             table.add(levelLabel).padLeft(400);
         else
@@ -379,6 +388,9 @@ public class GameScreen implements Screen {
         table.add("Combo Multiplier").padTop(710);
         table.row();
         table.add(pointMultiplierLabel);
+        table.add();
+        table.add(objectiveLabel).colspan(5).right();
+
         /*
         table.add().fillX().expandY();
         table.add(healthBar);
@@ -418,11 +430,11 @@ public class GameScreen implements Screen {
             if (lastHealth != hm.get(player).health || lastMax != hm.get(player).maxHealth) {
                 lastHealth = hm.get(player).health;
                 lastMax = hm.get(player).maxHealth;
+                //table.getCell(healthBar).width(healthBar.getWidth() * lastHealth / lastMax);
                 if (lastHealth > 0)
                     healthLabel.setText("Health : " + lastHealth + " / " + lastMax);
                 else
                     healthLabel.setText("Health : " + 0 + " / " + lastMax);
-
             }
 
             if (!icon.equals(im.get(player).texRegion)) {
@@ -448,7 +460,6 @@ public class GameScreen implements Screen {
                 timeLabel.setText(timer.toString());
         }
 
-
         healthLabel.toFront();
         icon.toFront();
     }
@@ -472,7 +483,7 @@ public class GameScreen implements Screen {
         if (!player.getDisposed())
             table.add("Health : " + hm.get(player).health + " / " + hm.get(player).maxHealth);
         else {
-            icon.setDrawable(skin.getDrawable("GhostPlayerShip"));
+            icon = new Image(ImageComponent.atlas.findRegion("GhostPlayerShip"));
             table.add("Health : 0 / " + lastMax);
         }
         table.row();
@@ -481,12 +492,24 @@ public class GameScreen implements Screen {
         table.row();
         Label bestMultiLabel = new Label("Best Score Multiplier : " + bestMultiplier, skin);
         bestMultiLabel.setColor(1.25f  - (bestMultiplier / 4), 1f, 1.25f - (bestMultiplier / 4), 1f);
-        if (bestMultiplier > 3f) {
+
+        if (bestMultiplier > 3f || (!player.getDisposed() && hm.get(player).maxHealth == hm.get(player).health)) {
             table.add(bestMultiLabel);
             table.row();
-            Label bonusText = new Label("Multiplier Bonus! : + 1 Life", skin);
-            bonusText.setColor(Color.CYAN);
-            table.add(bonusText).padBottom(40f);
+            if (bestMultiplier > 3f) {
+                Label bonusText = new Label("Multiplier Bonus! : + 1 Life", skin);
+                bonusText.setColor(Color.CYAN);
+                table.add(bonusText);
+                table.row();
+            }
+            if (!player.getDisposed() && hm.get(player).maxHealth == hm.get(player).health) {
+                Label healthBonusText = new Label("Full Health Bonus! : + 5,000 Points", skin);
+                newScore += 5000;
+                healthBonusText.setColor(Color.CYAN);
+                table.add(healthBonusText);
+                table.row();
+            }
+            table.add().padBottom(40f);
             table.row();
         } else {
             table.add(bestMultiLabel).padBottom(40f);
@@ -550,10 +573,6 @@ public class GameScreen implements Screen {
         return stage.getBatch();
     }
 
-    public ShapeRenderer getShapes() {
-        return shapes;
-    }
-
     public void setBackground(TextureRegion tex) {
         background = tex;
 
@@ -581,13 +600,15 @@ public class GameScreen implements Screen {
                 screenState = 1;
                 newScore = points;
             }
-        } else if (timer == null) {
+        } else {
             if (engine.getEntitiesFor(Family.all(PositionComponent.class, AIComponent.class).get()).size() <= 0) {
                 currentVictoryTime += dt;
                 if (currentVictoryTime >= victoryEndTime) {
                     newScore = points;
                     screenState = 1;
                 }
+            } else {
+                currentVictoryTime = 0f;
             }
         }
     }
@@ -643,6 +664,9 @@ public class GameScreen implements Screen {
 
     public void setTimer(GameTimer t) {
         timer = t;
+        timeLabel.setColor(Color.WHITE);
+        objectiveLabel.setText("Survive the Clock");
+
     }
 
     public static float getPointMultiplier() {

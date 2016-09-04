@@ -11,7 +11,7 @@ import static com.colorshooter.game.EntityConstructors.*;
 /**
  * Created by pnore_000 on 8/26/2016.
  */
-public class Level16 extends GameScreen implements Screen{
+public class Level16 extends GameScreen{
 
     public Level16(ColorShooter game) {
         super(16, game);
@@ -27,9 +27,9 @@ public class Level16 extends GameScreen implements Screen{
 
         GameEntity boss = generateBossWisp(900, 800);
 
-        GameEntity powerUps = generateItemSpawnPoint(200, 200, "Health", 5f,  getEngine());
-        GameEntity powerUps2 = generateItemSpawnPoint(1100, 700, "MaxHealth", 7f,  getEngine());
-        GameEntity powerUps3 = generateItemSpawnPoint(200, 700, "MaxHealth", 8f,  getEngine());
+        GameEntity powerUps = generateItemSpawnPoint(200, 200, "Health", 6f,  getEngine());
+        GameEntity powerUps2 = generateItemSpawnPoint(1100, 700, "MaxHealth", 12f,  getEngine());
+        GameEntity powerUps3 = generateItemSpawnPoint(200, 700, "ShootUp", 9.2f,  getEngine());
         GameEntity powerUps4 = generateItemSpawnPoint(1100, 200, "ShootUp", 9f,  getEngine());
 
         GameEntity colors = generateRandomColorSpawnPoint(678, 450, 15f,  getEngine());
