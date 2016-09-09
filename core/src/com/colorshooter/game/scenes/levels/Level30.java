@@ -3,11 +3,15 @@ package com.colorshooter.game.scenes.levels;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.colorshooter.game.ColorShooter;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.GameEvent;
 import com.colorshooter.game.components.*;
 import com.colorshooter.game.scenes.GameScreen;
+import com.colorshooter.game.scenes.menus.EnterScoreMenu;
 
 import static com.colorshooter.game.EntityConstructors.*;
 import static com.colorshooter.game.EntityConstructors.generateRandomColorSpawnPoint;
@@ -152,7 +156,6 @@ public class Level30 extends GameScreen{
                             engine.addEntity(generateBlueBeam(pos.x + pos.originX, pos.y + pos.originY, pos.rotation - 45 + i * 15, 1));
                         }
                     }
-
                 }
             };
 
@@ -164,4 +167,10 @@ public class Level30 extends GameScreen{
         super.hide();
         this.dispose();
     }
+
+    @Override
+    public Screen getNextLevel() {
+        return new EnterScoreMenu(getLevel(), getGame());
+    }
+
 }

@@ -72,4 +72,9 @@ public class Level15 extends GameScreen{
         super.hide();
         this.dispose();
     }
+
+    @Override
+    public Screen getNextLevel() {
+        return new BonusLevel2(getGame());
+    }
 }

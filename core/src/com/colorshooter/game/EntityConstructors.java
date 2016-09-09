@@ -840,7 +840,7 @@ public class EntityConstructors {
             dam.tag = 'n';
 
         LifetimeComponent life = lfm.get(laser);
-        life.endTime = 0.8f;
+        life.endTime = 1f;
 
         return laser;
     }
@@ -2632,8 +2632,6 @@ public class EntityConstructors {
 
         return laser;
     }
-
-
 
     /*
     Enemy ------------------------------------------------------------------
@@ -4721,7 +4719,7 @@ public class EntityConstructors {
                     shm.get(e).attackDelay = 1f;
                     aim.get(e).projectileType = '2';
                 } else if (aim.get(e).projectileType == '2') {
-                    shm.get(e).attackDelay = 1.4f;
+                    shm.get(e).attackDelay = 1.6f;
                     aim.get(e).projectileType = '1';
                 }
             }

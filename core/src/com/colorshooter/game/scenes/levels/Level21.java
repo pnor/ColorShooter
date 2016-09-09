@@ -32,9 +32,9 @@ public class Level21 extends GameScreen{
         aim.get(boss2).projectileType = 'f';
         em.get(boss2).currentTime = 5f;
 
-        GameEntity powerUps = generateItemSpawnPoint(200, 200, "DoubleUp", 9f,  getEngine());
-        GameEntity powerUps2 = generateItemSpawnPoint(1100, 700, "DoubleUp", 9f,  getEngine());
-        GameEntity powerUps3 = generateItemSpawnPoint(200, 700, "MaxHealth", 6f,  getEngine());
+        GameEntity powerUps = generateItemSpawnPoint(200, 200, "DoubleUp", 6f,  getEngine());
+        GameEntity powerUps2 = generateItemSpawnPoint(1100, 700, "Health", 7f,  getEngine());
+        GameEntity powerUps3 = generateItemSpawnPoint(200, 700, "MaxHealth", 7f,  getEngine());
         GameEntity powerUps4 = generateRandomPowerUp(1100, 200, 5f,  getEngine());
 
         GameEntity colors = generateRandomColorSpawnPoint(678, 450, 10f,  getEngine());
@@ -58,5 +58,10 @@ public class Level21 extends GameScreen{
     public void hide() {
         super.hide();
         this.dispose();
+    }
+
+    @Override
+    public Screen getNextLevel() {
+        return new Level22(getGame());
     }
 }

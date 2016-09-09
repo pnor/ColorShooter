@@ -7,6 +7,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.colorshooter.game.EntityConstructors;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.GameEvent;
@@ -49,7 +50,8 @@ public class PlayerInputSystem extends EntitySystem{
         ImageComponent img;
 
         for (Entity e : entities) {
-            mouse.setLocation(Gdx.input.getX(), fixYCoordinates(Gdx.input.getY()));
+            //mouse.setLocation(Gdx.input.getX(), fixYCoordinates(Gdx.input.getY()));
+            setMouse();
 
             controller = pim.get(e);
             pos = pm.get(e);
@@ -110,8 +112,9 @@ public class PlayerInputSystem extends EntitySystem{
         }
     }
 
-    private float fixYCoordinates(float y) {
-        return screen.getStage().getHeight() - y;
+    private void setMouse() {
+        Vector2 mousePointer = screen.getStage().getViewport().unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
+        mouse.setLocation(mousePointer.x, mousePointer.y);
     }
 
     private boolean playerOutOfBounds(Entity e) {

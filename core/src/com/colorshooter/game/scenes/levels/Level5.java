@@ -90,4 +90,9 @@ public class Level5 extends GameScreen {
         super.hide();
         this.dispose();
     }
+
+    @Override
+    public Screen getNextLevel() {
+        return new BonusLevel1(getGame());
+    }
 }

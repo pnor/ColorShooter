@@ -31,7 +31,6 @@ public class BonusLevel3 extends GameScreen {
         setBackground(ImageComponent.backgroundAtlas.findRegion("Sunset"));
 
         setPlayer(generatePlayer(678, 414));
-        cm.get(getPlayer()).boundingBox.setOrigin(pm.get(getPlayer()).x + pm.get(getPlayer()).originX, pm.get(getPlayer()).y + pm.get(getPlayer()).originY);
 
         GameEntity enemySpawn = generateEnemySpawnPoint(1000,900, "GoldWisp", 3f,  getEngine());
         em.get(enemySpawn).currentTime = 3f;
@@ -64,5 +63,10 @@ public class BonusLevel3 extends GameScreen {
     public void hide() {
         super.hide();
         this.dispose();
+    }
+
+    @Override
+    public Screen getNextLevel() {
+        return new Level21(getGame());
     }
 }

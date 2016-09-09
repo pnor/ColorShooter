@@ -75,4 +75,9 @@ public class Level3 extends GameScreen {
         super.hide();
         this.dispose();
     }
+
+    @Override
+    public Screen getNextLevel() {
+        return new Level4(getGame());
+    }
 }

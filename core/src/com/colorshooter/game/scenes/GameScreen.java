@@ -19,6 +19,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.colorshooter.game.ColorShooter;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.GameTimer;
@@ -33,11 +35,8 @@ import static com.colorshooter.game.Mappers.*;
 /**
  * Created by pnore_000 on 7/4/2016.
  */
-public class GameScreen implements Screen {
+public class GameScreen extends DisplayScreen {
 
-    private final ColorShooter COLOR_SHOOTER;
-
-    private Stage stage;
     private Engine engine;
 
     private static MovementSystem movementSystem;
@@ -61,7 +60,6 @@ public class GameScreen implements Screen {
 
     private Table table;
     private TextureAtlas uiatlas;
-    private Skin skin;
     private Label healthLabel;
     private Label levelLabel;
     private Label levelNum;
@@ -77,8 +75,13 @@ public class GameScreen implements Screen {
 
     private static GameEntity player;
 
+    /**
+     * Tells what level this screen represents. <p>
+     * If the level is less than 1, then it is a bonus level
+     */
     private int level;
-    private static int lives = 3;
+    private static int lastLevel;
+    private static int lives = 1;
     private float currentRespawnTime;
     private float endRespawnTime;
     private GameTimer timer;
@@ -105,27 +108,36 @@ public class GameScreen implements Screen {
     private int lastHealth;
     private int lastMax;
 
+    /**
+     * Creates a GameScreen with an adjustable level
+     * @param i what the level will be
+     * @param game {@code Game} object, for moving screens, etc.
+     */
     public GameScreen(int i, ColorShooter game) {
-        super();
+        super(game);
         level = i;
-        COLOR_SHOOTER = game;
     }
 
+    /**
+     * Creates a GameScreen with the level set to Bonus
+     * @param game {@code Game} object, for moving screens, etc.
+     */
     public GameScreen(ColorShooter game) {
-        super();
+        super(game);
         level = -1;
-        COLOR_SHOOTER = game;
     }
 
     @Override
     public void show() {
         screenState = 0;
+        lastLevel = level;
         pointMultiplier = 1.0f;
         oldScore = points;
 
-        stage = new Stage();
         engine = new Engine();
+        stage.clear();
 
+        stage.getBatch().setColor(Color.WHITE);
         stage.getViewport().apply();
 
         if (player != null && !player.getDisposed()) {
@@ -147,7 +159,7 @@ public class GameScreen implements Screen {
             playerInputSystem = new PlayerInputSystem(this, 2);
             healthSystem = new HealthSystem(ImageComponent.atlas, 3);
             shootingSystem = new ShootingSystem(4);
-            drawingSystem = new DrawingSystem(5, getBatch());
+            drawingSystem = new DrawingSystem(5, getPlayer(),stage.getBatch());
             damageSystem = new DamageSystem(6);
             collisionSystem = new CollisionSystem(7);
             aiSystem = new AISystem(this, 8);
@@ -183,9 +195,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
-            Gdx.app.exit();
-
 
         if (background != null) {
            stage.getBatch().begin();
@@ -211,7 +220,7 @@ public class GameScreen implements Screen {
                     lives += 1;
                 if (!player.getDisposed() && hm.get(player).maxHealth == hm.get(player).health)
                     points += 5000;
-                COLOR_SHOOTER.moveScreen();
+                COLOR_SHOOTER.setScreen(getNextLevel());
                 return;
             }
             rouletteScore();
@@ -249,11 +258,6 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
-    }
-
-    @Override
     public void pause() {
         if (screenState != 3)
             screenState = 3;
@@ -283,35 +287,19 @@ public class GameScreen implements Screen {
 
     @Override
     public void hide() {
-        screenState = 1;
+        table.clear();
+
+        screenState = 3;
 
         for (EntitySystem system : getEngine().getSystems()) {
             engine.removeSystem(system);
         }
         engine.removeAllEntities();
-
-        /*
-        movementSystem = null;
-        collisionSystem = null;
-        playerInputSystem = null;
-        drawingSystem = null;
-        shootingSystem = null;
-        healthSystem = null;
-        damageSystem = null;
-        aiSystem = null;
-        lifetimeSystem = null;
-        animationSystem = null;
-        eventSystem = null;
-        itemSystem = null;
-        bounceSystem = null;
-        poisSystem = null;
-        frozenSystem = null;
-        */
     }
 
     @Override
     public void dispose() {
-        stage.dispose();
+
     }
 
     public void setUpHUD() {
@@ -328,7 +316,7 @@ public class GameScreen implements Screen {
         healthLabel = new Label("Health : 200 / 200", skin);
         healthLabel.setFontScale(1.25f);
         //healthBar = new Image(new TextureAtlas("CSNinePatch.pack").createPatch("barpatch"));
-        healthBar = new Image(new Texture("GreenBar.png"));
+        //healthBar = new Image(new Texture("GreenBar.png"));
         if (level >= 1) {
             levelLabel = new Label("Level:", skin);
             levelNum = new Label("" + level, skin);
@@ -464,10 +452,6 @@ public class GameScreen implements Screen {
         icon.toFront();
     }
 
-    public void drawHUD() {
-        table.draw(stage.getBatch(), 1);
-    }
-
     public void showVictoryHUD() {
         Label victoryText = new Label("Level Complete!", skin);
         victoryText.setColor(Color.CYAN);
@@ -553,12 +537,12 @@ public class GameScreen implements Screen {
             healthLabel.setColor(color);
     }
 
-    public String toString() {
-        return this.getClass().toString();
-    }
-
     public Stage getStage() {
         return stage;
+    }
+
+    public Table getTable() {
+        return table;
     }
 
     public void setStage(Stage stage1) {
@@ -580,6 +564,7 @@ public class GameScreen implements Screen {
 
     public void setPlayer(GameEntity p) {
         player = p;
+        drawingSystem.setPlayer(p);
     }
 
     public GameEntity getPlayer() {
@@ -611,6 +596,11 @@ public class GameScreen implements Screen {
                 currentVictoryTime = 0f;
             }
         }
+    }
+
+    public Screen getNextLevel() {
+        System.out.println("non overided!");
+        return null;
     }
 
     public void incrementRespawnTimer(float dt) {
@@ -650,12 +640,24 @@ public class GameScreen implements Screen {
         return screenState;
     }
 
-    public int getPoints() {
+    public static int getPoints() {
         return points;
     }
 
-    public void incrementPoints(int p) {
+    public static void setPoints(int p) {
+        points = p;
+    }
+
+    public static void incrementPoints(int p) {
         points += p;
+    }
+
+    public static int getLastLevel() {
+        return lastLevel;
+    }
+
+    public static void setLastLevel(int last) {
+        lastLevel = last;
     }
 
     public GameTimer getTimer() {
@@ -685,11 +687,19 @@ public class GameScreen implements Screen {
             bestMultiplier = pointMultiplier;
     }
 
-    public int getLives() {
+    public static int getLives() {
         return lives;
     }
 
-    public void setLives(int i) {
+    public static void setLives(int i) {
         lives = i;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public ColorShooter getGame() {
+        return COLOR_SHOOTER;
     }
 }

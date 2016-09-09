@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.colorshooter.game.ColorShooter;
 import com.colorshooter.game.scenes.MenuScreen;
+import com.colorshooter.game.scenes.levels.Level1;
 
 /**
  * Created by pnore_000 on 8/28/2016.
@@ -36,9 +37,9 @@ public class MainMenu extends MenuScreen implements Screen{
             public void changed(ChangeEvent event, Actor actor) {
                 if (((Button) actor).isChecked()) {
                     if (actor == start)
-                        COLOR_SHOOTER.setScreen(2);
+                        COLOR_SHOOTER.setScreen(new Level1(getGame()));
                     if (actor == highScores)
-                        COLOR_SHOOTER.setScreen(1);
+                        COLOR_SHOOTER.goToHighScores();
                     if (actor == quit)
                         Gdx.app.exit();
                 }
