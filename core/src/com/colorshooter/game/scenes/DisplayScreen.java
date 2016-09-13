@@ -3,7 +3,10 @@ package com.colorshooter.game.scenes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeType;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
@@ -29,7 +32,6 @@ public class DisplayScreen implements Screen, Disposable{
         uiatlas = new TextureAtlas("uiskin.atlas");
         skin.addRegions(uiatlas);
     }
-
 
     public DisplayScreen(ColorShooter cs) {
         COLOR_SHOOTER = cs;

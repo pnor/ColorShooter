@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.colorshooter.game.ColorShooter;
 import com.colorshooter.game.HighScore;
+import com.colorshooter.game.components.ImageComponent;
 import com.colorshooter.game.scenes.GameScreen;
 import com.colorshooter.game.scenes.MenuScreen;
 import com.colorshooter.game.scenes.levels.Level1;
@@ -49,6 +50,8 @@ public class EnterScoreMenu extends MenuScreen {
     @Override
     public void show() {
         super.show();
+        setBackgound(ImageComponent.backgroundAtlas.findRegion("PinkSpace1"));
+
         playerPoints = GameScreen.getPoints();
 
         highScores = getHighScores();

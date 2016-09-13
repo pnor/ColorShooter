@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.*;
 import com.colorshooter.game.ColorShooter;
 import com.colorshooter.game.HighScore;
+import com.colorshooter.game.components.ImageComponent;
 import com.colorshooter.game.scenes.MenuScreen;
 
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ public class HighScoreMenu extends MenuScreen{
     @Override
     public void show() {
         super.show();
+        setBackgound(ImageComponent.backgroundAtlas.findRegion("Space1"));
+
         scores = getHighScores();
 
         Label title = new Label("High Scores", skin);

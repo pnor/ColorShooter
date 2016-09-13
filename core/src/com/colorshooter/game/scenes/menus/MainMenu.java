@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.colorshooter.game.ColorShooter;
+import com.colorshooter.game.components.ImageComponent;
 import com.colorshooter.game.scenes.MenuScreen;
 import com.colorshooter.game.scenes.levels.Level1;
 
@@ -23,6 +24,8 @@ public class MainMenu extends MenuScreen implements Screen{
     @Override
     public void show() {
         super.show();
+        setBackgound(ImageComponent.backgroundAtlas.findRegion("ColorSpace"));
+
         table.center().setFillParent(true);
         table.add("Color Shooter").padBottom(20f);
 
