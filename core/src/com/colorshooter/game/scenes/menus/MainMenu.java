@@ -2,9 +2,13 @@ package com.colorshooter.game.scenes.menus;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.colorshooter.game.ColorShooter;
@@ -24,10 +28,22 @@ public class MainMenu extends MenuScreen implements Screen{
     @Override
     public void show() {
         super.show();
+
+        FreeTypeFontGenerator gen = new FreeTypeFontGenerator(Gdx.files.internal("arial.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
+
         setBackgound(ImageComponent.backgroundAtlas.findRegion("ColorSpace"));
 
         table.center().setFillParent(true);
-        table.add("Color Shooter").padBottom(20f);
+
+        param.size = 40;
+        param.borderColor = new Color(1, 1, 0.8f, 1f);
+        param.borderWidth = 1f;
+        BitmapFont title = gen.generateFont(param);
+        Label.LabelStyle labelStyle= new Label.LabelStyle(title, Color.WHITE);
+        Label titleLabel= new Label("Color Shooter", labelStyle);
+
+        table.add(titleLabel).padBottom(75f);
 
         final TextButton start = new TextButton("Start", skin, "toggle");
 
@@ -54,13 +70,15 @@ public class MainMenu extends MenuScreen implements Screen{
         quit.addListener(changeListener);
 
         table.row();
-        table.add(start).size(120f, 25f).padBottom(20f);
+        table.add(start).size(150f, 30f).padBottom(30f);
         table.row();
-        table.add(highScores).size(120f, 25f).padBottom(20f);
+        table.add(highScores).size(150f, 30f).padBottom(30f);
         table.row();
-        table.add(quit).size(120f, 25f).padBottom(20f);
+        table.add(quit).size(150f, 30f).padBottom(30f);
 
         stage.addActor(table);
+
+        gen.dispose();
     }
 
     @Override

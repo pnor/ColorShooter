@@ -8,23 +8,14 @@ import com.colorshooter.game.systems.PositionSystem;
 
 import java.util.ArrayList;
 
-import static com.colorshooter.game.Mappers.hm;
-import static com.colorshooter.game.Mappers.im;
+import static com.colorshooter.game.Mappers.*;
 
 /**
  * Created by pnore_000 on 7/2/2016.
  */
 public class GameEntity extends Entity {
-    public final String name;
     private boolean disposed = false;
 
-    public GameEntity(String n) {
-        name = n;
-    }
-
-    public GameEntity() {
-        name = "";
-    }
 
     public void setDisposed(boolean b) {
         disposed = b;
@@ -51,7 +42,16 @@ public class GameEntity extends Entity {
     }
 
     public String toString() {
-        return name;
+        //debug!
+        String output = "";
+        if (pim.has(this))
+            output = "Player Controlled Entity";
+        else if (aim.has(this))
+            output = "AI Controlled Entity";
+        else
+            output = "An Entity";
+
+        return output;
     }
 
 }

@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -303,6 +304,9 @@ public class GameScreen extends DisplayScreen {
     }
 
     public void setUpHUD() {
+        FreeTypeFontGenerator gen = new FreeTypeFontGenerator(Gdx.files.internal("arial.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
+
         uiatlas = new TextureAtlas("uiskin.atlas");
         skin = new Skin(Gdx.files.internal("uiskin.json"), uiatlas);
 
@@ -313,14 +317,14 @@ public class GameScreen extends DisplayScreen {
         table.setSize(getStage().getWidth(), getStage().getHeight());
         table.setFillParent(true);
 
-        healthLabel = new Label("Health : 200 / 200", skin);
-        healthLabel.setFontScale(1.25f);
+        param.size = 20;
+        healthLabel = new Label("Health : 200 / 200", new Label.LabelStyle(gen.generateFont(param), Color.WHITE));
         //healthBar = new Image(new TextureAtlas("CSNinePatch.pack").createPatch("barpatch"));
         //healthBar = new Image(new Texture("GreenBar.png"));
         if (level >= 1) {
             levelLabel = new Label("Level:", skin);
-            levelNum = new Label("" + level, skin);
-            levelNum.setFontScale(1.1f);
+            param.size = 20;
+            levelNum = new Label("" + level, new Label.LabelStyle(gen.generateFont(param), Color.WHITE));
         } else {
             levelLabel = new Label("Bonus!", skin);
         }
@@ -343,8 +347,8 @@ public class GameScreen extends DisplayScreen {
         timeLabel = new Label("-:--", skin);
         timeLabel.setColor(Color.ORANGE);
 
-        pointMultiplierLabel = new Label("" + pointMultiplier, skin);
-        pointMultiplierLabel.setFontScale(2f);
+        param.size = 30;
+        pointMultiplierLabel = new Label("" + pointMultiplier, new Label.LabelStyle(gen.generateFont(param), Color.WHITE));
 
         objectiveLabel = new Label("Defeat All Enemies!", skin);
 
@@ -365,7 +369,7 @@ public class GameScreen extends DisplayScreen {
         table.add(life).padLeft(5);
         table.add(lifeCount).padLeft(10);
         table.row();
-        table.add(pointID).padLeft(5);
+        table.add(pointID).padLeft(5).padBottom(10f).padTop(10f);
         table.add(pointNum).left();
         //table.add(healthBar);
         if (levelNum == null)
@@ -375,7 +379,7 @@ public class GameScreen extends DisplayScreen {
         table.row();
         table.add("Combo Multiplier").padTop(710);
         table.row();
-        table.add(pointMultiplierLabel);
+        table.add(pointMultiplierLabel).padTop(5f);
         table.add();
         table.add(objectiveLabel).colspan(5).right();
 
@@ -407,6 +411,7 @@ public class GameScreen extends DisplayScreen {
         table.add(healthBar);
         */
         stage.addActor(table);
+        gen.dispose();
     }
 
     private void updateHUD() {
@@ -453,44 +458,49 @@ public class GameScreen extends DisplayScreen {
     }
 
     public void showVictoryHUD() {
-        Label victoryText = new Label("Level Complete!", skin);
+        FreeTypeFontGenerator gen = new FreeTypeFontGenerator(Gdx.files.internal("arial.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
+
+        param.size = 30;
+        param.borderColor = new Color(0.2f, 0.2f, 1, 1);
+        param.borderWidth = 2;
+        Label victoryText = new Label("Level Complete!", new Label.LabelStyle(gen.generateFont(param), Color.WHITE));
         victoryText.setColor(Color.CYAN);
-        victoryText.setFontScale(1.3f);
         table.clearChildren();
         table.center();
         table.add(victoryText).padBottom(50f);
         table.row();
-        table.add(icon).padBottom(10f);
+        table.add(icon).padBottom(30f);
         table.row();
-        table.add("Lives : " + lives);
+        table.add("Lives : " + lives).padBottom(10f);
         table.row();
         if (!player.getDisposed())
-            table.add("Health : " + hm.get(player).health + " / " + hm.get(player).maxHealth);
+            table.add("Health : " + hm.get(player).health + " / " + hm.get(player).maxHealth).padBottom(10f);
         else {
             icon = new Image(ImageComponent.atlas.findRegion("GhostPlayerShip"));
-            table.add("Health : 0 / " + lastMax);
+            table.add("Health : 0 / " + lastMax).padBottom(10f);
         }
         table.row();
         pointNum.setText("" + oldScore);
-        table.add(pointNum);
+        table.add(pointNum).padBottom(10f);
         table.row();
         Label bestMultiLabel = new Label("Best Score Multiplier : " + bestMultiplier, skin);
         bestMultiLabel.setColor(1.25f  - (bestMultiplier / 4), 1f, 1.25f - (bestMultiplier / 4), 1f);
 
         if (bestMultiplier > 3f || (!player.getDisposed() && hm.get(player).maxHealth == hm.get(player).health)) {
-            table.add(bestMultiLabel);
+            table.add(bestMultiLabel).padBottom(10f);
             table.row();
             if (bestMultiplier > 3f) {
                 Label bonusText = new Label("Multiplier Bonus! : + 1 Life", skin);
                 bonusText.setColor(Color.CYAN);
-                table.add(bonusText);
+                table.add(bonusText).padBottom(10f);
                 table.row();
             }
             if (!player.getDisposed() && hm.get(player).maxHealth == hm.get(player).health) {
                 Label healthBonusText = new Label("Full Health Bonus! : + 5,000 Points", skin);
                 newScore += 5000;
                 healthBonusText.setColor(Color.CYAN);
-                table.add(healthBonusText);
+                table.add(healthBonusText).padBottom(10f);
                 table.row();
             }
             table.add().padBottom(40f);
@@ -502,6 +512,7 @@ public class GameScreen extends DisplayScreen {
         Label screenText = new Label("Press ENTER to continue", skin);
         screenText.setColor(Color.YELLOW);
         table.add(screenText);
+        gen.dispose();
     }
 
     public void updateVictoryHUD() {

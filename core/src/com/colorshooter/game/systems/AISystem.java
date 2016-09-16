@@ -66,6 +66,7 @@ public class AISystem extends EntitySystem {
                 }
             }
 
+
             //If no more players, stop running ai
             if (playerPos == null)
                 return;
@@ -79,6 +80,18 @@ public class AISystem extends EntitySystem {
                 }
             } else
                 pos.rotation = ai.targetRotation;
+
+            //stop enemy pushing
+            if (!ai.pushing) {
+                if (mm.has(e) && MovementSystem.getDistance(pos, (pm.get(closestPlayer)).x + (pm.get(closestPlayer)).originX, (pm.get(closestPlayer)).y + (pm.get(closestPlayer)).originY) <= ai.awarenessRadius) {
+                    float stopDistance = Math.max(pm.get(e).height, pm.get(e).width);
+                    float betweenDist = MovementSystem.getDistance(pos, (pm.get(closestPlayer)).x + (pm.get(closestPlayer)).originX, (pm.get(closestPlayer)).y + (pm.get(closestPlayer)).originY);
+                    if (mov.move && betweenDist <= stopDistance + 35f)
+                        mov.move = false;
+                    else if (betweenDist > stopDistance + 35f)
+                        mov.move = true;
+                }
+            }
 
             //bouncing
             if (bm.has(e)) {
@@ -104,7 +117,7 @@ public class AISystem extends EntitySystem {
                 }
             }
 
-            //ai types---
+            //ai types-----------------
             if (ai.AIType == 'r') {
                 ai.currenttime += dt;
                 if (ai.currenttime >= ai.targetTime) {
@@ -113,7 +126,6 @@ public class AISystem extends EntitySystem {
                         CollisionSystem.updateBoundingBox(cm.get(e), 0, 0, pos.rotation);
                     ai.currenttime = 0.0f;
                 }
-                //System.out.println("Distance: " + MovementSystem.getDistance(pos, (pm.get(closestPlayer)).x + (pm.get(closestPlayer)).originX, (pm.get(closestPlayer)).y + (pm.get(closestPlayer)).originY) + " Current Awareness: " + ai.awarenessRadius);
                 if (MovementSystem.getDistance(pos, (pm.get(closestPlayer)).x + (pm.get(closestPlayer)).originX, (pm.get(closestPlayer)).y + (pm.get(closestPlayer)).originY) <= ai.awarenessRadius) {
                     PositionSystem.lookAt(pos, playerPos.x + playerPos.originX, playerPos.y + playerPos.originY, cm.get(closestPlayer));
                     if (shm.has(e)) {

@@ -10,6 +10,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.colorshooter.game.components.*;
 import com.colorshooter.game.systems.*;
@@ -24,7 +25,7 @@ import static com.colorshooter.game.Mappers.*;
 public class EntityConstructors {
 
     /*
-    PLAYER Related -----------------------------------------------------------------
+    PLAYER -----------------------------------------------------------------
     --------------------------------------------------------------------------------
      */
     public static GameEntity generatePlayer(float x, float y) {
@@ -111,11 +112,145 @@ public class EntityConstructors {
     }
 
     /*
+    Base Entity Constructors -------------------------------------------------------
+    --------------------------------------------------------------------------------
+     */
+    private static GameEntity generateGenericEnemy(float x, float y) {
+        GameEntity enemy = new GameEntity();
+
+        enemy.add(new PositionComponent());
+        enemy.add(new CollisionComponent());
+        enemy.add(new MovementComponent());
+        enemy.add(new ImageComponent());
+        enemy.add(new AnimationComponent());
+        enemy.add(new AIComponent());
+        enemy.add(new ShootComponent());
+        enemy.add(new HealthComponent());
+        enemy.add(new BouncingComponent());
+
+        mm.get(enemy).move = true;
+
+        AnimationComponent anim = am.get(enemy);
+        anim.animate = true;
+        anim.repeat = true;
+        anim.currentAnimation = 0;
+        anim.currentIndex = 0;
+        anim.animationTime = 1f;
+
+        PositionComponent pos = pm.get(enemy);
+        pos.x = x;
+        pos.y = y;
+        pos.rotation = (float) Math.random() * 360;
+
+        cm.get(enemy).collisionReaction = 1;
+
+        AIComponent AI = aim.get(enemy);
+        AI.pushing = false;
+        AI.stopDistance = 30f;
+        AI.targetRotation = pm.get(enemy).rotation;
+
+        HealthComponent health = hm.get(enemy);
+        health.isAlive = true;
+        health.deathAction = 1;
+        health.tag = 'e';
+        health.invinciblityDuration = 0.09f;
+
+        bm.get(enemy).bounceDuration = 2f;
+
+        enemy.add(new PointsComponent());
+
+        return enemy;
+    }
+
+    private static GameEntity generateGenericWisp(float x, float y) {
+        GameEntity enemy = new GameEntity();
+
+        enemy.add(new PositionComponent());
+        enemy.add(new MovementComponent());
+        enemy.add(new ImageComponent());
+        enemy.add(new AIComponent());
+        enemy.add(new HealthComponent());
+        enemy.add(new DamageComponent());
+
+        MovementComponent mov = mm.get(enemy);
+        mov.move = true;
+
+        PositionComponent position = pm.get(enemy);
+        position.x = x;
+        position.y = y;
+        position.rotation = (float) Math.random() * 360;
+
+        AIComponent AI = aim.get(enemy);
+        AI.pushing = true;
+        AI.targetRotation = position.rotation;
+        AI.shoots = false;
+
+        HealthComponent health = hm.get(enemy);
+        health.isAlive = true;
+        health.invinciblityDuration = 0.09f;
+        health.tag = 'e';
+        health.deathAction = 0;
+
+        DamageComponent dam = dm.get(enemy);
+        dam.tag = 'p';
+
+        enemy.add(new PointsComponent());
+
+        return enemy;
+    }
+
+    private static GameEntity generateGenericShip(float x, float y) {
+        GameEntity enemy = new GameEntity();
+
+        enemy.add(new PositionComponent());
+        enemy.add(new CollisionComponent());
+        enemy.add(new MovementComponent());
+        enemy.add(new ImageComponent());
+        enemy.add(new AIComponent());
+        enemy.add(new ShootComponent());
+        enemy.add(new HealthComponent());
+        enemy.add(new BouncingComponent());
+
+        MovementComponent mov = mm.get(enemy);
+        mov.move = true;
+
+        im.get(enemy).rotate = true;
+
+        PositionComponent position = pm.get(enemy);
+        position.x = x;
+        position.y = y;
+        position.rotation = (float) Math.random() * 360;
+
+        CollisionComponent collision = cm.get(enemy);
+        collision.collisionReaction = 1;
+        collision.rotateBox = true;
+
+        AIComponent AI = aim.get(enemy);
+        AI.pushing = false;
+        AI.stopDistance = 50f;
+        AI.targetRotation = position.rotation;
+        AI.shoots = true;
+
+        HealthComponent health = hm.get(enemy);
+        health.isAlive = true;
+        health.invinciblityDuration = 0.09f;
+        health.tag = 'e';
+        health.deathAction = 1;
+
+        bm.get(enemy).bounceDuration = 1f;
+
+        enemy.add(new PointsComponent());
+
+        return enemy;
+    }
+
+
+    /*
     In-Animate Related -------------------------------------------------------------
     --------------------------------------------------------------------------------
      */
     public static GameEntity generateWall(float x, float y, float width, float height) {
-        GameEntity wall = new GameEntity("wall");
+        GameEntity wall = new GameEntity();
 
         wall.add(new PositionComponent());
         wall.add(new CollisionComponent());
@@ -142,7 +277,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateObject(float x, float y, float width, float height, TextureRegion t, boolean randomlyRotate) {
-        GameEntity obj = new GameEntity("object");
+        GameEntity obj = new GameEntity();
 
         obj.add(new PositionComponent());
         obj.add(new CollisionComponent());
@@ -180,7 +315,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generatePushableObject(float x, float y, float width, float height, TextureRegion t) {
-        GameEntity obj = new GameEntity("object");
+        GameEntity obj = new GameEntity();
 
         obj.add(new PositionComponent());
         obj.add(new CollisionComponent());
@@ -214,7 +349,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateMovingObject(float x, float y, float width, float height, TextureRegion t, float speed) {
-        GameEntity obj = new GameEntity("object");
+        GameEntity obj = new GameEntity();
 
         obj.add(new PositionComponent());
         obj.add(new CollisionComponent());
@@ -259,7 +394,7 @@ public class EntityConstructors {
 
     public static GameEntity generateLaser(float x, float y, float rotation, TextureRegion texReg, int hurtsPlayer) {
         //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
-        GameEntity laser = new GameEntity("laser");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new DamageComponent());
@@ -313,7 +448,7 @@ public class EntityConstructors {
      */
     public static GameEntity generateExplosionLaser(float x, float y, float rotation, int hurtsPlayer) {
         //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
-        GameEntity laser = new GameEntity("explosion laser");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new DamageComponent());
@@ -404,7 +539,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateExplosion(float x, float y) {
-        GameEntity explosion = new GameEntity("explosion");
+        GameEntity explosion = new GameEntity();
 
         explosion.add(new PositionComponent());
         explosion.add(new ImageComponent());
@@ -457,7 +592,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateBlueExplosion(float x, float y) {
-        GameEntity explosion = new GameEntity("blue explosion");
+        GameEntity explosion = new GameEntity();
 
         explosion.add(new PositionComponent());
         explosion.add(new ImageComponent());
@@ -510,7 +645,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateBigExplosion(float x, float y) {
-        GameEntity explosion = new GameEntity("explosion");
+        GameEntity explosion = new GameEntity();
 
         explosion.add(new PositionComponent());
         explosion.add(new ImageComponent());
@@ -563,7 +698,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generatePlayerExplosion(float x, float y) {
-        GameEntity explosion = new GameEntity("explosion");
+        GameEntity explosion = new GameEntity();
 
         explosion.add(new PositionComponent());
         explosion.add(new ImageComponent());
@@ -617,7 +752,7 @@ public class EntityConstructors {
 
     public static GameEntity generateMine(float x, float y, float rotation, int hurtsPlayer) {
         //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
-        GameEntity mine = new GameEntity("mine");
+        GameEntity mine = new GameEntity();
 
         mine.add(new PositionComponent());
         mine.add(new ImageComponent());
@@ -701,7 +836,7 @@ public class EntityConstructors {
 
     public static GameEntity generateRicochetLaser(float x, float y, float rotation, int hurtsPlayer) {
         //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
-        GameEntity laser = new GameEntity("ricochet");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new DamageComponent());
@@ -796,7 +931,7 @@ public class EntityConstructors {
 
     public static GameEntity generatePiercingArrow(float x, float y, float rotation, int hurtsPlayer) {
         //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
-        GameEntity laser = new GameEntity("pierce arrow");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new DamageComponent());
@@ -847,7 +982,7 @@ public class EntityConstructors {
 
     public static GameEntity generateHomingMissile(float x, float y, float rotation, int hurtsPlayer) {
         //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
-        GameEntity missile = new GameEntity("missile");
+        GameEntity missile = new GameEntity();
 
         missile.add(new PositionComponent());
         missile.add(new DamageComponent());
@@ -974,7 +1109,7 @@ public class EntityConstructors {
 
     public static GameEntity generatePinkLaser(float x, float y, float rotation, int hurtsPlayer) {
         //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
-        GameEntity laser = new GameEntity("pink player laser");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new DamageComponent());
@@ -1025,7 +1160,7 @@ public class EntityConstructors {
 
     public static GameEntity generateOrangeArrow(float x, float y, float rotation, int hurtsPlayer) {
         //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
-        GameEntity laser = new GameEntity("orange arrow");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new DamageComponent());
@@ -1077,7 +1212,7 @@ public class EntityConstructors {
 
     public static GameEntity generateOrangeArrowSeed(float x, float y, float rotation) {
         //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
-        GameEntity laser = new GameEntity("orange arrow seed");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new LifetimeComponent());
@@ -1114,7 +1249,7 @@ public class EntityConstructors {
 
     public static GameEntity generateWhiteBeam(float x, float y, float rotation, int hurtsPlayer) {
         //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
-        GameEntity laser = new GameEntity("White Beam");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new DamageComponent());
@@ -1137,7 +1272,7 @@ public class EntityConstructors {
         move.speedPerSecond = 1000f;
 
         DamageComponent dam = dm.get(laser);
-        dam.damage = 20;
+        dam.damage = 30;
         if (hurtsPlayer == 0)
             dam.tag = 'e';
         else if (hurtsPlayer == 1)
@@ -1157,7 +1292,7 @@ public class EntityConstructors {
      */
     public static GameEntity generateEnemyExplosionLaser(float x, float y, float rotation) {
         //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
-        GameEntity laser = new GameEntity("explosion laser");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new ImageComponent());
@@ -1232,7 +1367,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateSwirl(float x, float y, float rotation) {
-        GameEntity laser = new GameEntity("swirl");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new ImageComponent());
@@ -2638,44 +2773,23 @@ public class EntityConstructors {
     --------------------------------------------------------------------------------
      */
     public static GameEntity generateEnemy(float x, float y) {
-        GameEntity enemy = new GameEntity("enemy");
+        GameEntity enemy = generateGenericEnemy(x, y);
 
-        enemy.add(new PositionComponent());
-        enemy.add(new CollisionComponent());
-        enemy.add(new MovementComponent());
-        enemy.add(new ImageComponent());
-        enemy.add(new AnimationComponent());
-        enemy.add(new AIComponent());
-        enemy.add(new ShootComponent());
-        enemy.add(new HealthComponent());
-        enemy.add(new BouncingComponent());
-
-        MovementComponent mov = mm.get(enemy);
-        mov.speedPerSecond = 120f;
-        mov.move = true;
+        mm.get(enemy).speedPerSecond = 120f;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("UFO1");
 
         AnimationComponent anim = am.get(enemy);
-        anim.animate = true;
-        anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("UFO1");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("UFO1"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("UFO2"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("UFO3"));
-        anim.currentAnimation = 0;
-        anim.currentIndex = 0;
-        anim.animationTime = 1f;
 
         PositionComponent position = pm.get(enemy);
-        position.x = x;
-        position.y = y;
         position.height = img.texRegion.getRegionHeight();
         position.width = img.texRegion.getRegionWidth();
         PositionSystem.setOrigins(position);
-        position.rotation = (float) Math.random() * 360;
 
         CollisionComponent collision = cm.get(enemy);
         collision.boundingBox = new Polygon(new float[] {
@@ -2686,74 +2800,44 @@ public class EntityConstructors {
         });
         CollisionSystem.setBoundingBoxLocation(collision, 0, 0, position.rotation);
         collision.boundingBox.setOrigin(position.x + position.originX, position.y + position.originY);
-        collision.collisionReaction = 1;
 
         AIComponent AI = aim.get(enemy);
         AI.awarenessRadius = 200f;
         AI.AIType = 'r';
         AI.targetTime = 2f;
-        AI.targetRotation = position.rotation;
         AI.shoots = true;
         AI.projectileType = 'l';
 
         HealthComponent health = hm.get(enemy);
-        health.isAlive = true;
         health.maxHealth = 50;
         health.health = 50;
-        health.invinciblityDuration = 0.09f;
-        health.tag = 'e';
-        health.deathAction = 1;
 
         ShootComponent shoot = shm.get(enemy);
         shoot.attackDelay = 0.3f;
 
-        bm.get(enemy).bounceDuration = 2f;
-
-        enemy.add(new PointsComponent());
         pom.get(enemy).points = 100;
 
         return enemy;
     }
 
     public static GameEntity generateFasterEnemy(float x, float y) {
-        GameEntity enemy = new GameEntity("enemy");
+        GameEntity enemy = generateGenericEnemy(x, y);
 
-        enemy.add(new PositionComponent());
-        enemy.add(new CollisionComponent());
-        enemy.add(new MovementComponent());
-        enemy.add(new ImageComponent());
-        enemy.add(new AnimationComponent());
-        enemy.add(new AIComponent());
-        enemy.add(new ShootComponent());
-        enemy.add(new HealthComponent());
-        enemy.add(new BouncingComponent());
-
-        MovementComponent mov = mm.get(enemy);
-        mov.speedPerSecond = 240f;
-        mov.move = true;
+        mm.get(enemy).speedPerSecond = 240f;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("UFO1");
 
         AnimationComponent anim = am.get(enemy);
-        anim.animate = true;
-        anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("UFO1");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("UFO1"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("UFO2"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("UFO3"));
-        anim.currentAnimation = 0;
-        anim.currentIndex = 0;
-        anim.animationTime = 1f;
 
         PositionComponent position = pm.get(enemy);
-        position.x = x;
-        position.y = y;
         position.height = img.texRegion.getRegionHeight();
         position.width = img.texRegion.getRegionWidth();
         PositionSystem.setOrigins(position);
-        position.rotation = (float) Math.random() * 360;
 
         CollisionComponent collision = cm.get(enemy);
         collision.boundingBox = new Polygon(new float[] {
@@ -2764,74 +2848,44 @@ public class EntityConstructors {
         });
         CollisionSystem.setBoundingBoxLocation(collision, 0, 0, position.rotation);
         collision.boundingBox.setOrigin(position.x + position.originX, position.y + position.originY);
-        collision.collisionReaction = 1;
 
         AIComponent AI = aim.get(enemy);
         AI.awarenessRadius = 200f;
         AI.AIType = 'r';
         AI.targetTime = 2f;
-        AI.targetRotation = position.rotation;
         AI.shoots = true;
         AI.projectileType = 'l';
 
         HealthComponent health = hm.get(enemy);
-        health.isAlive = true;
         health.maxHealth = 50;
         health.health = 50;
-        health.invinciblityDuration = 0.09f;
-        health.tag = 'e';
-        health.deathAction = 1;
 
-        ShootComponent shoot = shm.get(enemy);
-        shoot.attackDelay = 0.3f;
+        shm.get(enemy).attackDelay = 0.3f;
 
-        bm.get(enemy).bounceDuration = 2f;
-
-        enemy.add(new PointsComponent());
         pom.get(enemy).points = 777;
 
         return enemy;
     }
 
     public static GameEntity generateBlueEnemy(float x, float y) {
-        GameEntity enemy = new GameEntity("blue enemy");
+        GameEntity enemy = generateGenericEnemy(x, y);
 
-        enemy.add(new PositionComponent());
-        enemy.add(new CollisionComponent());
-        enemy.add(new MovementComponent());
-        enemy.add(new ImageComponent());
-        enemy.add(new AnimationComponent());
-        enemy.add(new AIComponent());
-        enemy.add(new ShootComponent());
-        enemy.add(new HealthComponent());
-        enemy.add(new BouncingComponent());
-
-        MovementComponent mov = mm.get(enemy);
-        mov.speedPerSecond = 160f;
-        mov.move = true;
+        mm.get(enemy).speedPerSecond = 160f;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("BlueUFO1");
 
         AnimationComponent anim = am.get(enemy);
-        anim.animate = true;
-        anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("BlueUFO1");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("BlueUFO1"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("BlueUFO2"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("BlueUFO3"));
-        anim.currentAnimation = 0;
-        anim.currentIndex = 0;
         anim.animationTime = 1f;
 
         PositionComponent position = pm.get(enemy);
-        position.x = x;
-        position.y = y;
         position.height = img.texRegion.getRegionHeight();
         position.width = img.texRegion.getRegionWidth();
         PositionSystem.setOrigins(position);
-        position.rotation = (float) Math.random() * 360;
 
         CollisionComponent collision = cm.get(enemy);
         collision.boundingBox = new Polygon(new float[] {
@@ -2842,75 +2896,45 @@ public class EntityConstructors {
         });
         CollisionSystem.setBoundingBoxLocation(collision, 0, 0, position.rotation);
         collision.boundingBox.setOrigin(position.x + position.originX, position.y + position.originY);
-        collision.collisionReaction = 1;
 
         AIComponent AI = aim.get(enemy);
         AI.awarenessRadius = 300;
         AI.AIType = 'l';
         AI.targetTime = 4f;
-        AI.targetRotation = position.rotation;
         AI.shoots = true;
         AI.projectileType = 's';
 
         HealthComponent health = hm.get(enemy);
-        health.isAlive = true;
         health.maxHealth = 45;
         health.health = 45;
-        health.invinciblityDuration = 0.09f;
-        health.tag = 'e';
-        health.deathAction = 1;
 
         ShootComponent shoot = shm.get(enemy);
         shoot.attackDelay = 2.5f;
         shoot.isAttacking = true;
 
-        bm.get(enemy).bounceDuration = 3.5f;
-
-        enemy.add(new PointsComponent());
         pom.get(enemy).points = 250;
 
         return enemy;
     }
 
     public static GameEntity generateRedEnemy(float x, float y) {
-        GameEntity enemy = new GameEntity("red enemy");
+        GameEntity enemy = generateGenericEnemy(x, y);
 
-        enemy.add(new PositionComponent());
-        enemy.add(new CollisionComponent());
-        enemy.add(new MovementComponent());
-        enemy.add(new ImageComponent());
-        enemy.add(new AnimationComponent());
-        enemy.add(new AIComponent());
-        enemy.add(new ShootComponent());
-        enemy.add(new HealthComponent());
-        enemy.add(new BouncingComponent());
-
-        MovementComponent mov = mm.get(enemy);
-        mov.speedPerSecond = 130f;
-        mov.move = true;
+        mm.get(enemy).speedPerSecond = 130f;
 
         ImageComponent img = im.get(enemy);
-        img.texRegion = ImageComponent.atlas.findRegion("RedUFO1");
+        im.get(enemy).texRegion = ImageComponent.atlas.findRegion("RedUFO1");
 
         AnimationComponent anim = am.get(enemy);
-        anim.animate = true;
-        anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("RedUFO1");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("RedUFO1"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("RedUFO2"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("RedUFO3"));
-        anim.currentAnimation = 0;
-        anim.currentIndex = 0;
-        anim.animationTime = 1f;
 
         PositionComponent position = pm.get(enemy);
-        position.x = x;
-        position.y = y;
         position.height = img.texRegion.getRegionHeight();
         position.width = img.texRegion.getRegionWidth();
         PositionSystem.setOrigins(position);
-        position.rotation = (float) Math.random() * 360;
 
         CollisionComponent collision = cm.get(enemy);
         collision.boundingBox = new Polygon(new float[] {
@@ -2921,75 +2945,46 @@ public class EntityConstructors {
         });
         CollisionSystem.setBoundingBoxLocation(collision, 0, 0, position.rotation);
         collision.boundingBox.setOrigin(position.x + position.originX, position.y + position.originY);
-        collision.collisionReaction = 1;
 
         AIComponent AI = aim.get(enemy);
         AI.awarenessRadius = 370f;
+        AI.stopDistance = 360f;
         AI.AIType = 'e';
         AI.targetTime = 2f;
-        AI.targetRotation = position.rotation;
         AI.shoots = true;
         AI.projectileType = 'e';
 
         HealthComponent health = hm.get(enemy);
-        health.isAlive = true;
         health.maxHealth = 65;
         health.health = 65;
-        health.invinciblityDuration = 0.09f;
-        health.tag = 'e';
-        health.deathAction = 1;
 
-        ShootComponent shoot = shm.get(enemy);
-        shoot.attackDelay = 0.8f;
+        shm.get(enemy).attackDelay = 0.8f;
 
-        bm.get(enemy).bounceDuration = 2f;
-
-        enemy.add(new PointsComponent());
         pom.get(enemy).points = 200;
 
         return enemy;
     }
 
     public static GameEntity generateGreenEnemy(float x, float y) {
-        GameEntity enemy = new GameEntity("green enemy");
+        GameEntity enemy = generateGenericEnemy(x, y);
 
-        enemy.add(new PositionComponent());
-        enemy.add(new CollisionComponent());
-        enemy.add(new MovementComponent());
-        enemy.add(new ImageComponent());
-        enemy.add(new AnimationComponent());
-        enemy.add(new AIComponent());
-        enemy.add(new ShootComponent());
-        enemy.add(new HealthComponent());
         enemy.add(new EventComponent());
-        enemy.add(new BouncingComponent());
 
-        MovementComponent mov = mm.get(enemy);
-        mov.speedPerSecond = 150f;
-        mov.move = true;
+        mm.get(enemy).speedPerSecond = 150f;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("GreenUFO1");
 
         AnimationComponent anim = am.get(enemy);
-        anim.animate = true;
-        anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("GreenUFO1");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("GreenUFO1"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("GreenUFO2"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("GreenUFO3"));
-        anim.currentAnimation = 0;
-        anim.currentIndex = 0;
-        anim.animationTime = 1f;
 
         PositionComponent position = pm.get(enemy);
-        position.x = x;
-        position.y = y;
         position.height = img.texRegion.getRegionHeight();
         position.width = img.texRegion.getRegionWidth();
         PositionSystem.setOrigins(position);
-        position.rotation = (float) Math.random() * 360;
 
         CollisionComponent collision = cm.get(enemy);
         collision.boundingBox = new Polygon(new float[] {
@@ -3000,10 +2995,10 @@ public class EntityConstructors {
         });
         CollisionSystem.setBoundingBoxLocation(collision, 0, 0, position.rotation);
         collision.boundingBox.setOrigin(position.x + position.originX, position.y + position.originY);
-        collision.collisionReaction = 1;
 
         AIComponent AI = aim.get(enemy);
-        AI.awarenessRadius = 250f;
+        AI.awarenessRadius = 230f;
+        AI.stopDistance = 210f;
         AI.AIType = 'a';
         AI.targetTime = 1f;
         AI.targetRotation = position.rotation;
@@ -3011,15 +3006,10 @@ public class EntityConstructors {
         AI.projectileType = 'l';
 
         HealthComponent health = hm.get(enemy);
-        health.isAlive = true;
         health.maxHealth = 70;
         health.health = 70;
-        health.invinciblityDuration = 0.09f;
-        health.tag = 'e';
-        health.deathAction = 1;
 
-        ShootComponent shoot = shm.get(enemy);
-        shoot.attackDelay = 0.6f;
+        shm.get(enemy).attackDelay = 0.6f;
 
         EventComponent event = em.get(enemy);
         event.repeat = true;
@@ -3037,131 +3027,30 @@ public class EntityConstructors {
             }
         };
 
-        bm.get(enemy).bounceDuration = 1.5f;
-
-        enemy.add(new PointsComponent());
         pom.get(enemy).points = 300;
 
         return enemy;
     }
 
-    public static GameEntity generatePinkEnemy(float x, float y) {
-        GameEntity enemy = new GameEntity("pink enemy");
-
-        enemy.add(new PositionComponent());
-        enemy.add(new CollisionComponent());
-        enemy.add(new MovementComponent());
-        enemy.add(new ImageComponent());
-        enemy.add(new AnimationComponent());
-        enemy.add(new AIComponent());
-        enemy.add(new ShootComponent());
-        enemy.add(new HealthComponent());
-        enemy.add(new BouncingComponent());
-
-        MovementComponent mov = mm.get(enemy);
-        mov.speedPerSecond = 100f;
-        mov.move = true;
-
-        ImageComponent img = im.get(enemy);
-        img.texRegion = ImageComponent.atlas.findRegion("PinkUFO1");
-
-        AnimationComponent anim = am.get(enemy);
-        anim.animate = true;
-        anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
-        anim.baseTextureRegion = ImageComponent.atlas.findRegion("PinkUFO1");
-        anim.animations.get(0).add(ImageComponent.atlas.findRegion("PinkUFO1"));
-        anim.animations.get(0).add(ImageComponent.atlas.findRegion("PinkUFO2"));
-        anim.animations.get(0).add(ImageComponent.atlas.findRegion("PinkUFO3"));
-        anim.currentAnimation = 0;
-        anim.currentIndex = 0;
-        anim.animationTime = 1f;
-
-        PositionComponent position = pm.get(enemy);
-        position.x = x;
-        position.y = y;
-        position.height = img.texRegion.getRegionHeight();
-        position.width = img.texRegion.getRegionWidth();
-        PositionSystem.setOrigins(position);
-        position.rotation = (float) Math.random() * 360;
-
-        CollisionComponent collision = cm.get(enemy);
-        collision.boundingBox = new Polygon(new float[] {
-                position.x, position.y,
-                position.x + position.width, position.y,
-                position.x + position.width, position.y + position.height,
-                position.x, position.y + position.height
-        });
-        CollisionSystem.setBoundingBoxLocation(collision, 0, 0, position.rotation);
-        collision.boundingBox.setOrigin(position.x + position.originX, position.y + position.originY);
-        collision.collisionReaction = 1;
-
-        AIComponent AI = aim.get(enemy);
-        AI.awarenessRadius = 250f;
-        AI.AIType = 'a';
-        AI.targetTime = 1f;
-        AI.targetRotation = position.rotation;
-        AI.shoots = true;
-        AI.projectileType = 'p';
-
-        HealthComponent health = hm.get(enemy);
-        health.isAlive = true;
-        health.maxHealth = 90;
-        health.health = 90;
-        health.invinciblityDuration = 0.09f;
-        health.tag = 'e';
-        health.deathAction = 1;
-
-        ShootComponent shoot = shm.get(enemy);
-        shoot.attackDelay = 1.5f;
-
-        bm.get(enemy).bounceDuration = 0.7f;
-
-        enemy.add(new PointsComponent());
-        pom.get(enemy).points = 450;
-
-        return enemy;
-    }
-
     public static GameEntity generateYellowEnemy(float x, float y) {
-        GameEntity enemy = new GameEntity("yellow enemy");
-
-        enemy.add(new PositionComponent());
-        enemy.add(new CollisionComponent());
-        enemy.add(new MovementComponent());
-        enemy.add(new ImageComponent());
-        enemy.add(new AnimationComponent());
-        enemy.add(new AIComponent());
-        enemy.add(new ShootComponent());
-        enemy.add(new HealthComponent());
-        enemy.add(new BouncingComponent());
+        GameEntity enemy = generateGenericEnemy(x, y);
 
         MovementComponent mov = mm.get(enemy);
         mov.speedPerSecond = 220f;
-        mov.move = true;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("YellowUFO1");
 
         AnimationComponent anim = am.get(enemy);
-        anim.animate = true;
-        anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("YellowUFO1");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("YellowUFO1"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("YellowUFO2"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("YellowUFO3"));
-        anim.currentAnimation = 0;
-        anim.currentIndex = 0;
-        anim.animationTime = 1f;
 
         PositionComponent position = pm.get(enemy);
-        position.x = x;
-        position.y = y;
         position.height = img.texRegion.getRegionHeight();
         position.width = img.texRegion.getRegionWidth();
         PositionSystem.setOrigins(position);
-        position.rotation = (float) Math.random() * 360;
 
         CollisionComponent collision = cm.get(enemy);
         collision.boundingBox = new Polygon(new float[] {
@@ -3172,7 +3061,6 @@ public class EntityConstructors {
         });
         CollisionSystem.setBoundingBoxLocation(collision, 0, 0, position.rotation);
         collision.boundingBox.setOrigin(position.x + position.originX, position.y + position.originY);
-        collision.collisionReaction = 1;
 
         AIComponent AI = aim.get(enemy);
         AI.awarenessRadius = 150f;
@@ -3183,26 +3071,18 @@ public class EntityConstructors {
         AI.projectileType = 't';
 
         HealthComponent health = hm.get(enemy);
-        health.isAlive = true;
         health.maxHealth = 85;
         health.health = 85;
-        health.invinciblityDuration = 0.09f;
-        health.tag = 'e';
-        health.deathAction = 1;
 
-        ShootComponent shoot = shm.get(enemy);
-        shoot.attackDelay = 0.8f;
+        shm.get(enemy).attackDelay = 0.8f;
 
-        bm.get(enemy).bounceDuration = 1f;
-
-        enemy.add(new PointsComponent());
         pom.get(enemy).points = 400;
 
         return enemy;
     }
 
     public static GameEntity generateGhostUFO(float x, float y) {
-        GameEntity enemy = new GameEntity("ghost ufo");
+        GameEntity enemy = generateGenericEnemy(x, y);
 
         enemy.add(new PositionComponent());
         enemy.add(new MovementComponent());
@@ -3212,93 +3092,64 @@ public class EntityConstructors {
         enemy.add(new HealthComponent());
         enemy.add(new BouncingComponent());
 
-        MovementComponent mov = mm.get(enemy);
-        mov.speedPerSecond = 30f;
-        mov.move = true;
+        mm.get(enemy).speedPerSecond = 30f;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("GhostUFO1");
 
         PositionComponent position = pm.get(enemy);
-        position.x = x;
-        position.y = y;
         position.height = img.texRegion.getRegionHeight();
         position.width = img.texRegion.getRegionWidth();
         PositionSystem.setOrigins(position);
-        position.rotation = (float) Math.random() * 360;
 
         AIComponent AI = aim.get(enemy);
         AI.awarenessRadius = 400f;
         AI.AIType = 'r';
         AI.targetTime = 15f;
-        AI.targetRotation = position.rotation;
         AI.shoots = true;
         AI.projectileType = 'g';
 
         HealthComponent health = hm.get(enemy);
-        health.isAlive = true;
         health.maxHealth = 180;
         health.health = 180;
-        health.invinciblityDuration = 0.09f;
-        health.tag = 'e';
         health.deathAction = 4;
 
-        ShootComponent shoot = shm.get(enemy);
-        shoot.attackDelay = 0.2f;
+        shm.get(enemy).attackDelay = 0.2f;
 
-        bm.get(enemy).bounceDuration = 2f;
-
-        enemy.add(new PointsComponent());
         pom.get(enemy).points = 700;
 
         return enemy;
     }
 
     public static GameEntity generateMiniGhostUFO(float x, float y) {
-        GameEntity enemy = new GameEntity("minighost ufo");
+        GameEntity enemy = generateGenericEnemy(x, y);
 
-        enemy.add(new PositionComponent());
-        enemy.add(new MovementComponent());
-        enemy.add(new ImageComponent());
-        enemy.add(new AIComponent());
-        enemy.add(new ShootComponent());
-        enemy.add(new HealthComponent());
-        enemy.add(new BouncingComponent());
         enemy.add(new DamageComponent());
 
         MovementComponent mov = mm.get(enemy);
         mov.speedPerSecond = 290f;
-        mov.move = true;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("GhostUFO1");
 
         PositionComponent position = pm.get(enemy);
-        position.x = x;
-        position.y = y;
         position.height = img.texRegion.getRegionHeight() / 2;
         position.width = img.texRegion.getRegionWidth() / 2;
         PositionSystem.setOrigins(position);
-        position.rotation = (float) Math.random() * 360;
 
         AIComponent AI = aim.get(enemy);
         AI.awarenessRadius = 180f;
         AI.AIType = 'r';
         AI.targetTime = 0.7f;
-        AI.targetRotation = position.rotation;
         AI.shoots = true;
         AI.projectileType = 'g';
 
         HealthComponent health = hm.get(enemy);
-        health.isAlive = true;
         health.maxHealth = 40;
         health.health = 40;
-        health.invinciblityDuration = 0.09f;
-        health.tag = 'e';
         health.deathAction = 0;
 
-        ShootComponent shoot = shm.get(enemy);
-        shoot.attackDelay = 0.35f;
+        shm.get(enemy).attackDelay = 0.35f;
 
         DamageComponent dam = dm.get(enemy);
         dam.damage = 5;
@@ -3306,51 +3157,32 @@ public class EntityConstructors {
 
         bm.get(enemy).bounceDuration = 5f;
 
-        enemy.add(new PointsComponent());
         pom.get(enemy).points = 250;
 
         return enemy;
     }
 
     public static GameEntity generateFinalEnemy(float x, float y) {
-        GameEntity enemy = new GameEntity("final enemy");
+        GameEntity enemy = generateGenericEnemy(x, y);
 
-        enemy.add(new PositionComponent());
-        enemy.add(new CollisionComponent());
-        enemy.add(new MovementComponent());
-        enemy.add(new ImageComponent());
-        enemy.add(new AnimationComponent());
-        enemy.add(new AIComponent());
-        enemy.add(new HealthComponent());
         enemy.add(new EventComponent());
-        enemy.add(new BouncingComponent());
 
         MovementComponent mov = mm.get(enemy);
         mov.speedPerSecond = 100f;
-        mov.move = true;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("FinalUFO");
 
         AnimationComponent anim = am.get(enemy);
-        anim.animate = true;
-        anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("FinalUFO");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("FinalUFO"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("FinalUFO2"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("FinalUFO3"));
-        anim.currentAnimation = 0;
-        anim.currentIndex = 0;
-        anim.animationTime = 1f;
 
         PositionComponent position = pm.get(enemy);
-        position.x = x;
-        position.y = y;
         position.height = img.texRegion.getRegionHeight();
         position.width = img.texRegion.getRegionWidth();
         PositionSystem.setOrigins(position);
-        position.rotation = (float) Math.random() * 360;
 
         CollisionComponent collision = cm.get(enemy);
         collision.boundingBox = new Polygon(new float[] {
@@ -3367,15 +3199,11 @@ public class EntityConstructors {
         AI.awarenessRadius = 250f;
         AI.AIType = 'w';
         AI.targetTime = 4f;
-        AI.targetRotation = position.rotation;
         AI.shoots = false;
 
         HealthComponent health = hm.get(enemy);
-        health.isAlive = true;
         health.maxHealth = 170;
         health.health = 170;
-        health.invinciblityDuration = 0.09f;
-        health.tag = 'e';
         health.deathAction = 5;
 
         EventComponent event = em.get(enemy);
@@ -3387,103 +3215,71 @@ public class EntityConstructors {
             public void event(GameEntity e, Engine engine) {
                 PositionComponent pos = pm.get(e);
 
-                if (mm.get(e).speedPerSecond <= 350f) {
-                    mm.get(e).speedPerSecond += 50f;
-                    if (aim.get(e).targetTime >= 0.4)
-                        aim.get(e).targetTime -= 0.15;
-                }
+                mm.get(e).speedPerSecond = MathUtils.clamp((float) Math.random() * 200f + 150f, 150f, 360f);
+                aim.get(e).targetTime =  MathUtils.clamp((float) Math.random() * 3.6f + 0.3f, 0.3f, 4f);
 
                 im.get(e).texRegion = ImageComponent.atlas.findRegion("GhostUFO1");
 
                 for (int i = 0; i < 6; i++) {
                     engine.addEntity(generateGhostArrow(pos.x + pos.originX, pos.y + pos.originY, i * 60, 1));
                 }
+
+                if (bm.get(e).isBouncing)
+                    bm.get(e).isBouncing = false;
             }
         };
 
-        bm.get(enemy).bounceDuration = 1.5f;
-
-        enemy.add(new PointsComponent());
-        pom.get(enemy).points = 688;
+        pom.get(enemy).points = 830;
 
         return enemy;
     }
 
     public static GameEntity generateWisp(float x, float y) {
-        GameEntity enemy = new GameEntity("wisp");
-
-        enemy.add(new PositionComponent());
-        enemy.add(new MovementComponent());
-        enemy.add(new ImageComponent());
-        enemy.add(new AIComponent());
-        enemy.add(new HealthComponent());
-        enemy.add(new DamageComponent());
+        GameEntity enemy = generateGenericWisp(x, y);
 
         MovementComponent mov = mm.get(enemy);
         mov.speedPerSecond = 80f;
-        mov.move = true;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("Wisp");
 
         PositionComponent position = pm.get(enemy);
-        position.x = x;
-        position.y = y;
         position.height = img.texRegion.getRegionHeight();
         position.width = img.texRegion.getRegionWidth();
         PositionSystem.setOrigins(position);
-        position.rotation = (float) Math.random() * 360;
 
         AIComponent AI = aim.get(enemy);
         AI.awarenessRadius = 200f;
         AI.AIType = 'r';
         AI.targetTime = 4f;
-        AI.targetRotation = position.rotation;
-        AI.shoots = false;
 
         HealthComponent health = hm.get(enemy);
-        health.isAlive = true;
         health.maxHealth = 50;
         health.health = 50;
-        health.invinciblityDuration = 0.09f;
-        health.tag = 'e';
-        health.deathAction = 0;
 
         DamageComponent dam = dm.get(enemy);
         dam.damage = 20;
-        dam.tag = 'p';
 
-        enemy.add(new PointsComponent());
         pom.get(enemy).points = 100;
 
         return enemy;
     }
 
     public static GameEntity generatePoisonWisp(float x, float y) {
-        GameEntity enemy = new GameEntity("poison wisp");
+        GameEntity enemy = generateGenericWisp(x, y);
 
-        enemy.add(new PositionComponent());
-        enemy.add(new MovementComponent());
-        enemy.add(new ImageComponent());
-        enemy.add(new AIComponent());
-        enemy.add(new HealthComponent());
-        enemy.add(new DamageComponent());
         enemy.add(new CollisionComponent());
 
         MovementComponent mov = mm.get(enemy);
         mov.speedPerSecond = 90f;
-        mov.move = true;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("PoisonWisp");
 
         PositionComponent position = pm.get(enemy);
-        position.x = x;
-        position.y = y;
         position.height = img.texRegion.getRegionHeight();
         position.width = img.texRegion.getRegionWidth();
         PositionSystem.setOrigins(position);
-        position.rotation = (float) Math.random() * 360;
 
         CollisionComponent collision = cm.get(enemy);
         collision.boundingBox = new Polygon(new float[] {
@@ -3500,71 +3296,48 @@ public class EntityConstructors {
         AI.awarenessRadius = 400f;
         AI.AIType = 'r';
         AI.targetTime = 5f;
-        AI.targetRotation = position.rotation;
-        AI.shoots = false;
 
         HealthComponent health = hm.get(enemy);
         health.isAlive = true;
         health.maxHealth = 90;
         health.health = 90;
-        health.invinciblityDuration = 0.09f;
-        health.tag = 'e';
-        health.deathAction = 0;
 
         DamageComponent dam = dm.get(enemy);
         dam.damage = 8;
-        dam.tag = 'p';
 
-        enemy.add(new PointsComponent());
         pom.get(enemy).points = 200;
 
         return enemy;
     }
 
     public static GameEntity generateBigWisp(float x, float y) {
-        GameEntity enemy = new GameEntity("big wisp");
+        GameEntity enemy = generateGenericWisp(x, y);
 
-        enemy.add(new PositionComponent());
-        enemy.add(new MovementComponent());
-        enemy.add(new ImageComponent());
-        enemy.add(new AIComponent());
-        enemy.add(new HealthComponent());
-        enemy.add(new DamageComponent());
         enemy.add(new EventComponent());
 
         MovementComponent mov = mm.get(enemy);
         mov.speedPerSecond = 50f;
-        mov.move = true;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("BigWisp1");
 
         PositionComponent position = pm.get(enemy);
-        position.x = x;
-        position.y = y;
         position.height = img.texRegion.getRegionHeight();
         position.width = img.texRegion.getRegionWidth();
         PositionSystem.setOrigins(position);
-        position.rotation = (float) Math.random() * 360;
 
         AIComponent AI = aim.get(enemy);
         AI.awarenessRadius = 450f;
         AI.AIType = 'r';
         AI.targetTime = 10f;
-        AI.targetRotation = position.rotation;
-        AI.shoots = false;
 
         HealthComponent health = hm.get(enemy);
         health.isAlive = true;
         health.maxHealth = 190;
         health.health = 190;
-        health.invinciblityDuration = 0.09f;
-        health.tag = 'e';
-        health.deathAction = 0;
 
         DamageComponent dam = dm.get(enemy);
         dam.damage = 25;
-        dam.tag = 'p';
 
         EventComponent eve = em.get(enemy);
         eve.targetTime = 4f;
@@ -3604,22 +3377,15 @@ public class EntityConstructors {
             }
         };
 
-        enemy.add(new PointsComponent());
         pom.get(enemy).points = 550;
 
         return enemy;
     }
 
     public static GameEntity generateSwirlWisp(float x, float y) {
-        GameEntity enemy = new GameEntity("swirl wisp");
+        GameEntity enemy = generateGenericEnemy(x, y);
 
-        enemy.add(new PositionComponent());
-        enemy.add(new MovementComponent());
-        enemy.add(new ImageComponent());
         enemy.add(new AnimationComponent());
-        enemy.add(new AIComponent());
-        enemy.add(new HealthComponent());
-        enemy.add(new DamageComponent());
         enemy.add(new EventComponent());
         enemy.add(new ItemComponent());
         enemy.add(new ItemReceivableComponent());
@@ -3632,7 +3398,7 @@ public class EntityConstructors {
             @Override
             public void event(GameEntity e, Engine engine) {
                 if (mm.get(e).speedPerSecond >= 150f)
-                    mm.get(e).speedPerSecond -= 3.5f;
+                    mm.get(e).speedPerSecond -= 2.5f;
             }
         };
 
@@ -3641,23 +3407,18 @@ public class EntityConstructors {
 
         MovementComponent mov = mm.get(enemy);
         mov.speedPerSecond = 100f;
-        mov.move = true;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("SwirlWisp1");
 
         PositionComponent position = pm.get(enemy);
-        position.x = x;
-        position.y = y;
         position.height = img.texRegion.getRegionHeight();
         position.width = img.texRegion.getRegionWidth();
         PositionSystem.setOrigins(position);
-        position.rotation = (float) Math.random() * 360;
 
         AnimationComponent anim = am.get(enemy);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("SwirlWisp1");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("SwirlWisp1"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("SwirlWisp2"));
@@ -3669,15 +3430,10 @@ public class EntityConstructors {
         AI.awarenessRadius = 550f;
         AI.AIType = 'r';
         AI.targetTime = 10f;
-        AI.targetRotation = position.rotation;
-        AI.shoots = false;
 
         HealthComponent health = hm.get(enemy);
-        health.isAlive = true;
         health.maxHealth = 250;
         health.health = 250;
-        health.invinciblityDuration = 0.09f;
-        health.tag = 'e';
         health.deathAction = 5;
 
         EventComponent ev = em.get(enemy);
@@ -3695,132 +3451,25 @@ public class EntityConstructors {
 
         DamageComponent dam = dm.get(enemy);
         dam.damage = 45;
-        dam.tag = 'p';
 
-        enemy.add(new PointsComponent());
         pom.get(enemy).points = 1200;
 
         return enemy;
     }
 
-    public static GameEntity generateGoldWisp(float x, float y) {
-        GameEntity enemy = new GameEntity("gold wisp");
-
-        enemy.add(new PositionComponent());
-        enemy.add(new MovementComponent());
-        enemy.add(new ImageComponent());
-        enemy.add(new AIComponent());
-        enemy.add(new HealthComponent());
-
-        MovementComponent mov = mm.get(enemy);
-        mov.speedPerSecond = 390f;
-        mov.move = true;
-
-        ImageComponent img = im.get(enemy);
-        img.texRegion = ImageComponent.atlas.findRegion("GoldWisp");
-
-        PositionComponent position = pm.get(enemy);
-        position.x = x;
-        position.y = y;
-        position.height = img.texRegion.getRegionHeight();
-        position.width = img.texRegion.getRegionWidth();
-        PositionSystem.setOrigins(position);
-        position.rotation = (float) Math.random() * 360;
-
-        AIComponent AI = aim.get(enemy);
-        AI.awarenessRadius = 200f;
-        AI.AIType = 'w';
-        AI.targetTime = 2f;
-        AI.targetRotation = position.rotation;
-        AI.shoots = false;
-
-        HealthComponent health = hm.get(enemy);
-        health.isAlive = true;
-        health.maxHealth = 70;
-        health.health = 70;
-        health.invinciblityDuration = 0.09f;
-        health.tag = 'e';
-        health.deathAction = 3;
-
-        enemy.add(new PointsComponent());
-        pom.get(enemy).points = 2777;
-
-        return enemy;
-    }
-
-    public static GameEntity generatePlatinumWisp(float x, float y) {
-        GameEntity enemy = new GameEntity("platinum wisp");
-
-        enemy.add(new PositionComponent());
-        enemy.add(new MovementComponent());
-        enemy.add(new ImageComponent());
-        enemy.add(new AIComponent());
-        enemy.add(new HealthComponent());
-
-        MovementComponent mov = mm.get(enemy);
-        mov.speedPerSecond = 520f;
-        mov.move = true;
-
-        ImageComponent img = im.get(enemy);
-        img.texRegion = ImageComponent.atlas.findRegion("PlatinumWisp");
-
-        PositionComponent position = pm.get(enemy);
-        position.x = x;
-        position.y = y;
-        position.height = img.texRegion.getRegionHeight();
-        position.width = img.texRegion.getRegionWidth();
-        PositionSystem.setOrigins(position);
-        position.rotation = (float) Math.random() * 360;
-
-        AIComponent AI = aim.get(enemy);
-        AI.awarenessRadius = 200f;
-        AI.AIType = 'w';
-        AI.targetTime = 1.5f;
-        AI.targetRotation = position.rotation;
-        AI.shoots = false;
-
-        HealthComponent health = hm.get(enemy);
-        health.isAlive = true;
-        health.maxHealth = 230;
-        health.health = 230;
-        health.invinciblityDuration = 0.1f;
-        health.tag = 'e';
-        health.deathAction = 5;
-
-        enemy.add(new PointsComponent());
-        pom.get(enemy).points = 25777;
-
-        return enemy;
-    }
-
     public static GameEntity generateEnemyShipRed(float x, float y) {
-        GameEntity enemy = new GameEntity("enemy ship red");
-
-        enemy.add(new PositionComponent());
-        enemy.add(new CollisionComponent());
-        enemy.add(new MovementComponent());
-        enemy.add(new ImageComponent());
-        enemy.add(new AIComponent());
-        enemy.add(new ShootComponent());
-        enemy.add(new HealthComponent());
-        enemy.add(new BouncingComponent());
+        GameEntity enemy = generateGenericShip(x, y);
 
         MovementComponent mov = mm.get(enemy);
-        mov.speedPerSecond = 180f;
-        mov.move = true;
+        mov.speedPerSecond = 230f;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("EnemyShip");
-        img.rotate = true;
-
 
         PositionComponent position = pm.get(enemy);
-        position.x = x;
-        position.y = y;
         position.height = img.texRegion.getRegionHeight();
         position.width = img.texRegion.getRegionWidth();
         PositionSystem.setOrigins(position);
-        position.rotation = (float) Math.random() * 360;
 
         CollisionComponent collision = cm.get(enemy);
         collision.boundingBox = new Polygon(new float[] {
@@ -3831,64 +3480,40 @@ public class EntityConstructors {
         });
         CollisionSystem.setBoundingBoxLocation(collision, 0, 0, position.rotation);
         collision.boundingBox.setOrigin(position.x + position.originX, position.y + position.originY);
-        collision.collisionReaction = 1;
-        collision.rotateBox = true;
 
         AIComponent AI = aim.get(enemy);
         AI.awarenessRadius = 300f;
+        AI.stopDistance = 100f;
         AI.AIType = 'r';
         AI.targetTime = 5f;
-        AI.targetRotation = position.rotation;
-        AI.shoots = true;
         AI.projectileType = 'f';
 
         HealthComponent health = hm.get(enemy);
-        health.isAlive = true;
         health.maxHealth = 90;
         health.health = 90;
-        health.invinciblityDuration = 0.09f;
-        health.tag = 'e';
-        health.deathAction = 1;
 
-        ShootComponent shoot = shm.get(enemy);
-        shoot.attackDelay = 0.9f;
+        shm.get(enemy).attackDelay = 0.9f;
 
         bm.get(enemy).bounceDuration = 0.6f;
 
-        enemy.add(new PointsComponent());
         pom.get(enemy).points = 600;
 
         return enemy;
     }
 
     public static GameEntity generateEnemyShipBlue(float x, float y) {
-        GameEntity enemy = new GameEntity("enemy ship blue");
-
-        enemy.add(new PositionComponent());
-        enemy.add(new CollisionComponent());
-        enemy.add(new MovementComponent());
-        enemy.add(new ImageComponent());
-        enemy.add(new AIComponent());
-        enemy.add(new ShootComponent());
-        enemy.add(new HealthComponent());
-        enemy.add(new BouncingComponent());
+        GameEntity enemy = generateGenericShip(x, y);
 
         MovementComponent mov = mm.get(enemy);
         mov.speedPerSecond = 50f;
-        mov.move = true;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("EnemyShipIce");
-        img.rotate = true;
-
 
         PositionComponent position = pm.get(enemy);
-        position.x = x;
-        position.y = y;
         position.height = img.texRegion.getRegionHeight();
         position.width = img.texRegion.getRegionWidth();
         PositionSystem.setOrigins(position);
-        position.rotation = (float) Math.random() * 360;
 
         CollisionComponent collision = cm.get(enemy);
         collision.boundingBox = new Polygon(new float[] {
@@ -3899,64 +3524,40 @@ public class EntityConstructors {
         });
         CollisionSystem.setBoundingBoxLocation(collision, 0, 0, position.rotation);
         collision.boundingBox.setOrigin(position.x + position.originX, position.y + position.originY);
-        collision.collisionReaction = 1;
-        collision.rotateBox = true;
 
         AIComponent AI = aim.get(enemy);
         AI.awarenessRadius = 450f;
-        AI.AIType = 'r';
+        AI.AIType = 'x';
         AI.targetTime = 5f;
-        AI.targetRotation = position.rotation;
         AI.shoots = true;
         AI.projectileType = 'c';
 
         HealthComponent health = hm.get(enemy);
-        health.isAlive = true;
         health.maxHealth = 80;
         health.health = 80;
-        health.invinciblityDuration = 0.09f;
-        health.tag = 'e';
-        health.deathAction = 1;
 
-        ShootComponent shoot = shm.get(enemy);
-        shoot.attackDelay = 3f;
+        shm.get(enemy).attackDelay = 3f;
 
         bm.get(enemy).bounceDuration = 4f;
 
-        enemy.add(new PointsComponent());
         pom.get(enemy).points = 600;
 
         return enemy;
     }
 
     public static GameEntity generateEnemyShipYellow(float x, float y) {
-        GameEntity enemy = new GameEntity("enemy ship yellow");
-
-        enemy.add(new PositionComponent());
-        enemy.add(new CollisionComponent());
-        enemy.add(new MovementComponent());
-        enemy.add(new ImageComponent());
-        enemy.add(new AIComponent());
-        enemy.add(new ShootComponent());
-        enemy.add(new HealthComponent());
-        enemy.add(new BouncingComponent());
+        GameEntity enemy = generateGenericShip(x, y);
 
         MovementComponent mov = mm.get(enemy);
-        mov.speedPerSecond = 160f;
-        mov.move = true;
+        mov.speedPerSecond = 240f;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("EnemyShipThunder");
-        img.rotate = true;
-
 
         PositionComponent position = pm.get(enemy);
-        position.x = x;
-        position.y = y;
         position.height = img.texRegion.getRegionHeight();
         position.width = img.texRegion.getRegionWidth();
         PositionSystem.setOrigins(position);
-        position.rotation = (float) Math.random() * 360;
 
         CollisionComponent collision = cm.get(enemy);
         collision.boundingBox = new Polygon(new float[] {
@@ -3967,65 +3568,42 @@ public class EntityConstructors {
         });
         CollisionSystem.setBoundingBoxLocation(collision, 0, 0, position.rotation);
         collision.boundingBox.setOrigin(position.x + position.originX, position.y + position.originY);
-        collision.collisionReaction = 1;
-        collision.rotateBox = true;
 
         AIComponent AI = aim.get(enemy);
         AI.awarenessRadius = 400f;
+        AI.stopDistance = 200f;
         AI.AIType = 'x';
         AI.targetTime = 5f;
-        AI.targetRotation = position.rotation;
-        AI.shoots = true;
         AI.projectileType = 't';
 
         HealthComponent health = hm.get(enemy);
-        health.isAlive = true;
         health.maxHealth = 80;
         health.health = 80;
-        health.invinciblityDuration = 0.09f;
-        health.tag = 'e';
-        health.deathAction = 1;
 
-        ShootComponent shoot = shm.get(enemy);
-        shoot.attackDelay = 0.8f;
+        shm.get(enemy).attackDelay = 0.8f;
 
         bm.get(enemy).bounceDuration = 4f;
 
-        enemy.add(new PointsComponent());
         pom.get(enemy).points = 770;
 
         return enemy;
     }
 
     public static GameEntity generateEnemyShipGold(float x, float y) {
-        GameEntity enemy = new GameEntity("enemy ship gold");
+        GameEntity enemy = generateGenericShip(x, y);
 
-        enemy.add(new PositionComponent());
-        enemy.add(new CollisionComponent());
-        enemy.add(new MovementComponent());
-        enemy.add(new ImageComponent());
-        enemy.add(new AIComponent());
-        enemy.add(new ShootComponent());
-        enemy.add(new HealthComponent());
-        enemy.add(new BouncingComponent());
         enemy.add(new EventComponent());
 
         MovementComponent mov = mm.get(enemy);
-        mov.speedPerSecond = 210f;
-        mov.move = true;
+        mov.speedPerSecond = 280f;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("EnemyShipGold");
-        img.rotate = true;
-
 
         PositionComponent position = pm.get(enemy);
-        position.x = x;
-        position.y = y;
         position.height = img.texRegion.getRegionHeight();
         position.width = img.texRegion.getRegionWidth();
         PositionSystem.setOrigins(position);
-        position.rotation = (float) Math.random() * 360;
 
         CollisionComponent collision = cm.get(enemy);
         collision.boundingBox = new Polygon(new float[] {
@@ -4036,27 +3614,19 @@ public class EntityConstructors {
         });
         CollisionSystem.setBoundingBoxLocation(collision, 0, 0, position.rotation);
         collision.boundingBox.setOrigin(position.x + position.originX, position.y + position.originY);
-        collision.collisionReaction = 1;
-        collision.rotateBox = true;
 
         AIComponent AI = aim.get(enemy);
         AI.awarenessRadius = 450f;
         AI.AIType = 'f';
         AI.targetTime = 2f;
-        AI.targetRotation = position.rotation;
-        AI.shoots = true;
         AI.projectileType = 'f';
 
         HealthComponent health = hm.get(enemy);
-        health.isAlive = true;
         health.maxHealth = 360;
         health.health = 360;
-        health.invinciblityDuration = 0.11f;
-        health.tag = 'e';
         health.deathAction = 2;
 
-        ShootComponent shoot = shm.get(enemy);
-        shoot.attackDelay = 0.8f;
+        shm.get(enemy).attackDelay = 0.8f;
 
         bm.get(enemy).bounceDuration = 2f;
 
@@ -4099,7 +3669,6 @@ public class EntityConstructors {
             }
         };
 
-        enemy.add(new PointsComponent());
         pom.get(enemy).points = 2000;
 
         return enemy;
@@ -4391,6 +3960,98 @@ public class EntityConstructors {
 
         enemy.add(new PointsComponent());
         pom.get(enemy).points = 1000;
+
+        return enemy;
+    }
+
+    //Bonus Enemies
+
+    public static GameEntity generateGoldWisp(float x, float y) {
+        GameEntity enemy = new GameEntity();
+
+        enemy.add(new PositionComponent());
+        enemy.add(new MovementComponent());
+        enemy.add(new ImageComponent());
+        enemy.add(new AIComponent());
+        enemy.add(new HealthComponent());
+
+        MovementComponent mov = mm.get(enemy);
+        mov.speedPerSecond = 390f;
+        mov.move = true;
+
+        ImageComponent img = im.get(enemy);
+        img.texRegion = ImageComponent.atlas.findRegion("GoldWisp");
+
+        PositionComponent position = pm.get(enemy);
+        position.x = x;
+        position.y = y;
+        position.height = img.texRegion.getRegionHeight();
+        position.width = img.texRegion.getRegionWidth();
+        PositionSystem.setOrigins(position);
+        position.rotation = (float) Math.random() * 360;
+
+        AIComponent AI = aim.get(enemy);
+        AI.awarenessRadius = 200f;
+        AI.AIType = 'w';
+        AI.targetTime = 2f;
+        AI.targetRotation = position.rotation;
+        AI.shoots = false;
+
+        HealthComponent health = hm.get(enemy);
+        health.isAlive = true;
+        health.maxHealth = 70;
+        health.health = 70;
+        health.invinciblityDuration = 0.09f;
+        health.tag = 'e';
+        health.deathAction = 3;
+
+        enemy.add(new PointsComponent());
+        pom.get(enemy).points = 2777;
+
+        return enemy;
+    }
+
+    public static GameEntity generatePlatinumWisp(float x, float y) {
+        GameEntity enemy = new GameEntity("platinum wisp");
+
+        enemy.add(new PositionComponent());
+        enemy.add(new MovementComponent());
+        enemy.add(new ImageComponent());
+        enemy.add(new AIComponent());
+        enemy.add(new HealthComponent());
+
+        MovementComponent mov = mm.get(enemy);
+        mov.speedPerSecond = 520f;
+        mov.move = true;
+
+        ImageComponent img = im.get(enemy);
+        img.texRegion = ImageComponent.atlas.findRegion("PlatinumWisp");
+
+        PositionComponent position = pm.get(enemy);
+        position.x = x;
+        position.y = y;
+        position.height = img.texRegion.getRegionHeight();
+        position.width = img.texRegion.getRegionWidth();
+        PositionSystem.setOrigins(position);
+        position.rotation = (float) Math.random() * 360;
+
+        AIComponent AI = aim.get(enemy);
+        AI.awarenessRadius = 200f;
+        AI.AIType = 'w';
+        AI.targetTime = 1.5f;
+        AI.targetRotation = position.rotation;
+        AI.shoots = false;
+
+        HealthComponent health = hm.get(enemy);
+        health.isAlive = true;
+        health.maxHealth = 230;
+        health.health = 230;
+        health.invinciblityDuration = 0.1f;
+        health.tag = 'e';
+        health.deathAction = 5;
+
+        enemy.add(new PointsComponent());
+        pom.get(enemy).points = 25777;
 
         return enemy;
     }

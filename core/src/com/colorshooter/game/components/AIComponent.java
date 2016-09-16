@@ -35,6 +35,7 @@ public class AIComponent implements Component{
 
     //for what it shoots
     public boolean shoots;
+
     /**
      * l : basic laser <p>
      * e : exploding laser <p>
@@ -60,7 +61,7 @@ public class AIComponent implements Component{
      */
     public char projectileType;
     public boolean gradualTurning = true;
-
-
+    public boolean pushing = true;
+    public float stopDistance;
 
 }

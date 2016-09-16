@@ -36,7 +36,7 @@ public class MovementSystem extends EntitySystem{
             pos = pm.get(e);
             mov = mm.get(e);
 
-            if(mov.move)
+            if (mov.move)
                 moveBy(pos, mov.speedPerSecond * dt, cm.get(e));
 
             //Bouncing Movement
