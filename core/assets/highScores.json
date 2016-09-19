@@ -1,62 +1,62 @@
 [
 {
 	class: com.colorshooter.game.HighScore
-	name: WHITE
-	score: 1000000
+	name: ---
+	score: 0
 	lastLevel: 0
 }
 {
 	class: com.colorshooter.game.HighScore
-	name: PURPLE
-	score: 500000
+	name: ---
+	score: 0
 	lastLevel: 0
 }
 {
 	class: com.colorshooter.game.HighScore
-	name: PINK
-	score: 100000
+	name: ---
+	score: 0
 	lastLevel: 0
 }
 {
 	class: com.colorshooter.game.HighScore
-	name: RED
-	score: 50000
+	name: ---
+	score: 0
 	lastLevel: 0
 }
 {
 	class: com.colorshooter.game.HighScore
-	name: BLUE
-	score: 25000
+	name: ---
+	score: 0
 	lastLevel: 0
 }
 {
 	class: com.colorshooter.game.HighScore
-	name: GREEN
-	score: 10000
+	name: ---
+	score: 0
 	lastLevel: 0
 }
 {
 	class: com.colorshooter.game.HighScore
-	name: YELLOW
-	score: 5000
+	name: ---
+	score: 0
 	lastLevel: 0
 }
 {
 	class: com.colorshooter.game.HighScore
-	name: ORANGE
-	score: 100
+	name: ---
+	score: 0
 	lastLevel: 0
 }
 {
 	class: com.colorshooter.game.HighScore
-	name: BLACK
-	score: 10
+	name: ---
+	score: 0
 	lastLevel: 0
 }
 {
 	class: com.colorshooter.game.HighScore
-	name: GRAY
-	score: 1
+	name: ---
+	score: 0
 	lastLevel: 0
 }
 ]
