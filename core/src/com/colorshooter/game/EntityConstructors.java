@@ -29,7 +29,7 @@ public class EntityConstructors {
     --------------------------------------------------------------------------------
      */
     public static GameEntity generatePlayer(float x, float y) {
-        GameEntity player = new GameEntity("player");
+        GameEntity player = new GameEntity();
 
         player.add(new PlayerInputComponent());
         player.add(new PositionComponent());
@@ -146,7 +146,7 @@ public class EntityConstructors {
 
         AIComponent AI = aim.get(enemy);
         AI.pushing = false;
-        AI.stopDistance = 30f;
+        AI.stopDistance = 90f;
         AI.targetRotation = pm.get(enemy).rotation;
 
         HealthComponent health = hm.get(enemy);
@@ -506,8 +506,8 @@ public class EntityConstructors {
                     AnimationComponent anim = am.get(e);
                     anim.animate = true;
                     anim.repeat = true;
-                    anim.animations = new ArrayList<ArrayList<TextureRegion>>();
-                    anim.animations.add(new ArrayList<TextureRegion>());
+
+
                     anim.baseTextureRegion = ImageComponent.atlas.findRegion("DeathExplosion");
                     anim.animations.get(0).add(ImageComponent.atlas.findRegion("DeathExplosion"));
                     anim.animations.get(0).add(ImageComponent.atlas.findRegion("DeathExplosion2"));
@@ -554,7 +554,7 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(explosion);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("DeathExplosion");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("DeathExplosion"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("DeathExplosion2"));
@@ -607,7 +607,7 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(explosion);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("FinalDeathExplosion");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("FinalDeathExplosion"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("FinalDeathExplosion2"));
@@ -660,7 +660,7 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(explosion);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("BigExplosion");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("BigExplosion"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("BigExplosion2"));
@@ -713,7 +713,7 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(explosion);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("PlayerExplosion");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("PlayerExplosion"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("PlayerExplosion2"));
@@ -773,7 +773,7 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(mine);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("GMine1");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("GMine1"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("GMine2"));
@@ -803,11 +803,11 @@ public class EntityConstructors {
                 AnimationComponent anim = am.get(e);
                 anim.animate = true;
                 anim.repeat = true;
-                anim.animations = new ArrayList<ArrayList<TextureRegion>>();
-                anim.animations.add(new ArrayList<TextureRegion>());
+
+
                 anim.baseTextureRegion = ImageComponent.atlas.findRegion("BigExplosion");
-                anim.animations.get(0).add(ImageComponent.atlas.findRegion("BigExplosion"));
-                anim.animations.get(0).add(ImageComponent.atlas.findRegion("BigExplosion2"));
+                anim.animations.get(0).set(0, ImageComponent.atlas.findRegion("BigExplosion"));
+                anim.animations.get(0).set(1, ImageComponent.atlas.findRegion("BigExplosion2"));
                 anim.animations.get(0).add(ImageComponent.atlas.findRegion("BigExplosion3"));
                 anim.currentAnimation = 0;
                 anim.currentIndex = 0;
@@ -957,7 +957,7 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(laser);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("PierceArrow1");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("PierceArrow1"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("PierceArrow2"));
@@ -1020,7 +1020,7 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(missile);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("Missle1");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("Missle1"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("Missle2"));
@@ -1076,8 +1076,8 @@ public class EntityConstructors {
                     AnimationComponent anim = am.get(e);
                     anim.animate = true;
                     anim.repeat = true;
-                    anim.animations = new ArrayList<ArrayList<TextureRegion>>();
-                    anim.animations.add(new ArrayList<TextureRegion>());
+
+
                     anim.baseTextureRegion = ImageComponent.atlas.findRegion("DeathExplosion");
                     anim.animations.get(0).add(ImageComponent.atlas.findRegion("DeathExplosion"));
                     anim.animations.get(0).add(ImageComponent.atlas.findRegion("DeathExplosion2"));
@@ -1256,6 +1256,7 @@ public class EntityConstructors {
         laser.add(new ImageComponent());
         laser.add(new MovementComponent());
         laser.add(new LifetimeComponent());
+        laser.add(new EventComponent());
 
         ImageComponent img = im.get(laser);
         img.texRegion = ImageComponent.atlas.findRegion("WhiteBeam");
@@ -1272,7 +1273,7 @@ public class EntityConstructors {
         move.speedPerSecond = 1000f;
 
         DamageComponent dam = dm.get(laser);
-        dam.damage = 30;
+        dam.damage = 40;
         if (hurtsPlayer == 0)
             dam.tag = 'e';
         else if (hurtsPlayer == 1)
@@ -1281,10 +1282,102 @@ public class EntityConstructors {
             dam.tag = 'n';
 
         LifetimeComponent life = lfm.get(laser);
-        life.endTime = 2f;
+        life.endTime = 0.25f;
+
+        EventComponent ev = em.get(laser);
+        ev.targetTime = 0.24f;
+        ev.ticking = true;
+        ev.event = new GameEvent() {
+            @Override
+            public void event(GameEntity e, Engine engine) {
+                PositionComponent pos = pm.get(e);
+                for (int i = 0; i < 9; i++) {
+                    engine.addEntity(generateCurveWhiteBeam(pos.x + pos.originX, pos.y + pos.originY, i * 40, 0));
+                }
+            }
+        };
 
         return laser;
     }
+
+    public static GameEntity generateCurveWhiteBeam(float x, float y, float rotation, int hurtsPlayer) {
+        //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
+        GameEntity laser = new GameEntity();
+
+        laser.add(new PositionComponent());
+        laser.add(new DamageComponent());
+        laser.add(new ImageComponent());
+        laser.add(new MovementComponent());
+        laser.add(new LifetimeComponent());
+        laser.add(new EventComponent());
+        laser.add(new AnimationComponent());
+        laser.add(new CollisionComponent());
+
+        ImageComponent img = im.get(laser);
+        img.texRegion = ImageComponent.atlas.findRegion("Laser");
+        img.rotate = true;
+
+        AnimationComponent anim = am.get(laser);
+        anim.currentAnimation = 0;
+        anim.currentIndex = 0;
+        anim.baseTextureRegion = ImageComponent.atlas.findRegion("Laser");
+        anim.animations.get(0).add(ImageComponent.atlas.findRegion("Laser"));
+        anim.animations.get(0).add(ImageComponent.atlas.findRegion("LightBlueLaser"));
+        anim.animations.get(0).add(ImageComponent.atlas.findRegion("PinkLaser"));
+        anim.animations.get(0).add(ImageComponent.atlas.findRegion("YellowLaser"));
+        anim.animate = true;
+        anim.animationTime = 0.3f;
+        anim.repeat =  true;
+
+        PositionComponent pos = pm.get(laser);
+        pos.x = x; pos.y = y;
+        pos.width = img.texRegion.getRegionWidth();
+        pos.height = img.texRegion.getRegionHeight();
+        pos.rotation = rotation;
+        PositionSystem.setOrigins(pos);
+
+        MovementComponent move = mm.get(laser);
+        move.speedPerSecond = 80;
+
+        CollisionComponent col = cm.get(laser);
+        col.boundingBox = new Polygon(new float[] {
+                pos.x, pos.y,
+                pos.x + pos.width, pos.y,
+                pos.x + pos.width, pos.y + pos.height,
+                pos.x, pos.y + pos.height
+        });
+        col.boundingBox.setOrigin(pos.width / 2 + pos.x, pos.height / 2 + pos.y);
+        col.collisionReaction = 0;
+        col.unmovable = true;
+        col.rotateBox = true;
+
+        DamageComponent dam = dm.get(laser);
+        dam.damage = 15;
+        if (hurtsPlayer == 0)
+            dam.tag = 'e';
+        else if (hurtsPlayer == 1)
+            dam.tag = 'p';
+        else
+            dam.tag = 'n';
+
+        EventComponent ev = em.get(laser);
+        ev.targetTime = 0.1f;
+        ev.repeat = true;
+        ev.ticking = true;
+        ev.event = new GameEvent() {
+            @Override
+            public void event(GameEntity e, Engine engine) {
+                pm.get(e).rotation += 20;
+                mm.get(e).speedPerSecond += mm.get(e).speedPerSecond / 3;
+            }
+        };
+
+        LifetimeComponent life = lfm.get(laser);
+        life.endTime = 1f;
+
+        return laser;
+    }
+
 
     /*
     Enemy Related -------------------------------------------------------------
@@ -1335,8 +1428,8 @@ public class EntityConstructors {
                 AnimationComponent anim = am.get(e);
                 anim.animate = true;
                 anim.repeat = true;
-                anim.animations = new ArrayList<ArrayList<TextureRegion>>();
-                anim.animations.add(new ArrayList<TextureRegion>());
+
+
                 anim.baseTextureRegion = ImageComponent.atlas.findRegion("DeathExplosion");
                 anim.animations.get(0).add(ImageComponent.atlas.findRegion("DeathExplosion"));
                 anim.animations.get(0).add(ImageComponent.atlas.findRegion("DeathExplosion2"));
@@ -1407,8 +1500,8 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(laser);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations = new ArrayList<ArrayList<TextureRegion>>();
-        anim.animations.add(new ArrayList<TextureRegion>());
+
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("BEnemyProjectile1");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("BEnemyProjectile1"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("BEnemyProjectile2"));
@@ -1486,7 +1579,7 @@ public class EntityConstructors {
 
     public static GameEntity generateGhostLaser(float x, float y, float rotation, int hurtsPlayer) {
         //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
-        GameEntity laser = new GameEntity("ghost laser");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new DamageComponent());
@@ -1526,7 +1619,7 @@ public class EntityConstructors {
 
     public static GameEntity generateWispProjectile(float x, float y, float rotation, TextureRegion texReg, int hurtsPlayer) {
         //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
-        GameEntity laser = new GameEntity("laser");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new DamageComponent());
@@ -1564,7 +1657,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generatePoisonWispProjectile(float x, float y, float rotation) {
-        GameEntity laser = new GameEntity("poison wisp attack");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new ImageComponent());
@@ -1623,7 +1716,7 @@ public class EntityConstructors {
 
     public static GameEntity generateShockWave(float x, float y, float rotation, int hurtsPlayer) {
         //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
-        GameEntity laser = new GameEntity("shock wave");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new DamageComponent());
@@ -1650,7 +1743,7 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(laser);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("Spark1");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("Spark1"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("Spark2"));
@@ -1696,7 +1789,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateEnemyHomingMissile(float x, float y, float rotation) {
-        GameEntity missile = new GameEntity("missile");
+        GameEntity missile = new GameEntity();
 
         missile.add(new PositionComponent());
         missile.add(new DamageComponent());
@@ -1714,8 +1807,8 @@ public class EntityConstructors {
 
         PositionComponent pos = pm.get(missile);
         pos.x = x; pos.y = y;
-        pos.width = img.texRegion.getRegionWidth();
-        pos.height = img.texRegion.getRegionHeight();
+        pos.width = img.texRegion.getRegionWidth() + 5;
+        pos.height = img.texRegion.getRegionHeight() + 5;
         pos.rotation = rotation;
         PositionSystem.setOrigins(pos);
 
@@ -1736,7 +1829,7 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(missile);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("Missle1");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("Missle1"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("Missle2"));
@@ -1800,8 +1893,8 @@ public class EntityConstructors {
                     AnimationComponent anim = am.get(e);
                     anim.animate = true;
                     anim.repeat = true;
-                    anim.animations = new ArrayList<ArrayList<TextureRegion>>();
-                    anim.animations.add(new ArrayList<TextureRegion>());
+
+
                     anim.baseTextureRegion = ImageComponent.atlas.findRegion("DeathExplosion");
                     anim.animations.get(0).add(ImageComponent.atlas.findRegion("DeathExplosion"));
                     anim.animations.get(0).add(ImageComponent.atlas.findRegion("DeathExplosion2"));
@@ -1835,7 +1928,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateBubbleAttack(float x, float y, float rotation) {
-        GameEntity laser = new GameEntity("bubble attack");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new DamageComponent());
@@ -1860,8 +1953,6 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(laser);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations = new ArrayList<ArrayList<TextureRegion>>();
-        anim.animations.add(new ArrayList<TextureRegion>());
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("YBubble");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("YBubble"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("PBubble"));
@@ -1939,7 +2030,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateFireLaser(float x, float y, float rotation) {
-        GameEntity laser = new GameEntity("fire laser");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new ImageComponent());
@@ -1962,8 +2053,6 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(laser);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations = new ArrayList<ArrayList<TextureRegion>>();
-        anim.animations.add(new ArrayList<TextureRegion>());
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("Fire1");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("Fire1"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("Fire2"));
@@ -1998,11 +2087,11 @@ public class EntityConstructors {
                 AnimationComponent anim = am.get(e);
                 anim.animate = true;
                 anim.repeat = true;
-                anim.animations = new ArrayList<ArrayList<TextureRegion>>();
-                anim.animations.add(new ArrayList<TextureRegion>());
+
+
                 anim.baseTextureRegion = ImageComponent.atlas.findRegion("DeathExplosion");
-                anim.animations.get(0).add(ImageComponent.atlas.findRegion("DeathExplosion"));
-                anim.animations.get(0).add(ImageComponent.atlas.findRegion("DeathExplosion2"));
+                anim.animations.get(0).set(0, ImageComponent.atlas.findRegion("DeathExplosion"));
+                anim.animations.get(0).set(1, ImageComponent.atlas.findRegion("DeathExplosion2"));
                 anim.animations.get(0).add(ImageComponent.atlas.findRegion("DeathExplosion3"));
                 anim.currentAnimation = 0;
                 anim.currentIndex = 0;
@@ -2030,7 +2119,7 @@ public class EntityConstructors {
 
     public static GameEntity generateIceLaser(float x, float y, float rotation, int hurtsPlayer) {
         //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
-        GameEntity laser = new GameEntity("laser");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new DamageComponent());
@@ -2069,8 +2158,8 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(laser);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations = new ArrayList<ArrayList<TextureRegion>>();
-        anim.animations.add(new ArrayList<TextureRegion>());
+
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("Ice");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("Ice"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("Ice2"));
@@ -2107,7 +2196,7 @@ public class EntityConstructors {
 
     public static GameEntity generateThunderLaser(float x, float y, float rotation, int hurtsPlayer) {
         //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
-        GameEntity laser = new GameEntity("laser");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new DamageComponent());
@@ -2135,8 +2224,8 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(laser);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations = new ArrayList<ArrayList<TextureRegion>>();
-        anim.animations.add(new ArrayList<TextureRegion>());
+
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("Thunder1");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("Thunder1"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("Thunder2"));
@@ -2183,7 +2272,7 @@ public class EntityConstructors {
 
     public static GameEntity generateGreenArrow(float x, float y, float rotation, int hurtsPlayer) {
         //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
-        GameEntity laser = new GameEntity("green arrow");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new DamageComponent());
@@ -2222,7 +2311,7 @@ public class EntityConstructors {
 
     public static GameEntity generateBlueArrow(float x, float y, float rotation, int hurtsPlayer) {
         //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
-        GameEntity laser = new GameEntity("blue arrow");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new DamageComponent());
@@ -2273,7 +2362,7 @@ public class EntityConstructors {
 
     public static GameEntity generateWhiteArrow(float x, float y, float rotation, int hurtsPlayer) {
         //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
-        GameEntity laser = new GameEntity("laser");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new DamageComponent());
@@ -2338,7 +2427,7 @@ public class EntityConstructors {
 
     public static GameEntity generateGhostArrow(float x, float y, float rotation, int hurtsPlayer) {
         //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
-        GameEntity laser = new GameEntity("ghost arrow");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new DamageComponent());
@@ -2410,7 +2499,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateCoreLaser(float x, float y, float rotation) {
-        GameEntity laser = new GameEntity("core laser");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new ImageComponent());
@@ -2433,8 +2522,8 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(laser);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations = new ArrayList<ArrayList<TextureRegion>>();
-        anim.animations.add(new ArrayList<TextureRegion>());
+
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("Thunder1");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("Thunder1"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("Thunder2"));
@@ -2473,11 +2562,11 @@ public class EntityConstructors {
                     AnimationComponent anim = am.get(e);
                     anim.animate = true;
                     anim.repeat = true;
-                    anim.animations = new ArrayList<ArrayList<TextureRegion>>();
-                    anim.animations.add(new ArrayList<TextureRegion>());
+
+
                     anim.baseTextureRegion = ImageComponent.atlas.findRegion("Spark1");
-                    anim.animations.get(0).add(ImageComponent.atlas.findRegion("Spark1"));
-                    anim.animations.get(0).add(ImageComponent.atlas.findRegion("Spark2"));
+                    anim.animations.get(0).set(0, ImageComponent.atlas.findRegion("Spark1"));
+                    anim.animations.get(0).set(1, ImageComponent.atlas.findRegion("Spark2"));
                     anim.currentAnimation = 0;
                     anim.currentIndex = 0;
                     anim.animationTime = 0.15f;
@@ -2506,7 +2595,7 @@ public class EntityConstructors {
 
     public static GameEntity generateBlueBeam(float x, float y, float rotation, int hurtsPlayer) {
         //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
-        GameEntity laser = new GameEntity("Blue Beam");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new DamageComponent());
@@ -2533,7 +2622,7 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(laser);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("BlueBeam");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("BlueBeam"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("BlueBeam2"));
@@ -2569,7 +2658,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateRedSpinner(float x, float y, float rotation) {
-        GameEntity laser = new GameEntity("red spinner");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new ImageComponent());
@@ -2592,8 +2681,8 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(laser);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations = new ArrayList<ArrayList<TextureRegion>>();
-        anim.animations.add(new ArrayList<TextureRegion>());
+
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("RedSpin");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("RedSpin"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("RedSpin2"));
@@ -2632,7 +2721,7 @@ public class EntityConstructors {
 
     public static GameEntity generateGreenBeam(float x, float y, float rotation, int hurtsPlayer) {
         //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
-        GameEntity laser = new GameEntity("Green Beam");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new DamageComponent());
@@ -2659,7 +2748,7 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(laser);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("GreenBeam");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("GreenBeam"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("GreenBeam2"));
@@ -2696,7 +2785,7 @@ public class EntityConstructors {
 
     public static GameEntity generateTurretlaser(float x, float y, float rotation) {
         //hurtsPlayer: 0 -> hurts enemy  1 -> hurts player 2 -> hurts all
-        GameEntity laser = new GameEntity("turret laser");
+        GameEntity laser = new GameEntity();
 
         laser.add(new PositionComponent());
         laser.add(new ImageComponent());
@@ -2736,8 +2825,6 @@ public class EntityConstructors {
                 AnimationComponent anim = am.get(e);
                 anim.animate = true;
                 anim.repeat = true;
-                anim.animations = new ArrayList<ArrayList<TextureRegion>>();
-                anim.animations.add(new ArrayList<TextureRegion>());
                 anim.baseTextureRegion = ImageComponent.atlas.findRegion("Laser");
                 anim.animations.get(0).add(ImageComponent.atlas.findRegion("Laser"));
                 anim.animations.get(0).add(ImageComponent.atlas.findRegion("LightBlueLaser"));
@@ -2948,7 +3035,6 @@ public class EntityConstructors {
 
         AIComponent AI = aim.get(enemy);
         AI.awarenessRadius = 370f;
-        AI.stopDistance = 360f;
         AI.AIType = 'e';
         AI.targetTime = 2f;
         AI.shoots = true;
@@ -2998,7 +3084,7 @@ public class EntityConstructors {
 
         AIComponent AI = aim.get(enemy);
         AI.awarenessRadius = 230f;
-        AI.stopDistance = 210f;
+        AI.stopDistance = 235f;
         AI.AIType = 'a';
         AI.targetTime = 1f;
         AI.targetRotation = position.rotation;
@@ -3036,7 +3122,7 @@ public class EntityConstructors {
         GameEntity enemy = generateGenericEnemy(x, y);
 
         MovementComponent mov = mm.get(enemy);
-        mov.speedPerSecond = 220f;
+        mov.speedPerSecond = 250f;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("YellowUFO1");
@@ -3063,7 +3149,7 @@ public class EntityConstructors {
         collision.boundingBox.setOrigin(position.x + position.originX, position.y + position.originY);
 
         AIComponent AI = aim.get(enemy);
-        AI.awarenessRadius = 150f;
+        AI.awarenessRadius = 350f;
         AI.AIType = 'l';
         AI.targetTime = 1f;
         AI.targetRotation = position.rotation;
@@ -3082,7 +3168,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateGhostUFO(float x, float y) {
-        GameEntity enemy = generateGenericEnemy(x, y);
+        GameEntity enemy = new GameEntity();
 
         enemy.add(new PositionComponent());
         enemy.add(new MovementComponent());
@@ -3092,64 +3178,93 @@ public class EntityConstructors {
         enemy.add(new HealthComponent());
         enemy.add(new BouncingComponent());
 
-        mm.get(enemy).speedPerSecond = 30f;
+        MovementComponent mov = mm.get(enemy);
+        mov.speedPerSecond = 30f;
+        mov.move = true;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("GhostUFO1");
 
         PositionComponent position = pm.get(enemy);
+        position.x = x;
+        position.y = y;
         position.height = img.texRegion.getRegionHeight();
         position.width = img.texRegion.getRegionWidth();
         PositionSystem.setOrigins(position);
+        position.rotation = (float) Math.random() * 360;
 
         AIComponent AI = aim.get(enemy);
         AI.awarenessRadius = 400f;
         AI.AIType = 'r';
         AI.targetTime = 15f;
+        AI.targetRotation = position.rotation;
         AI.shoots = true;
         AI.projectileType = 'g';
 
         HealthComponent health = hm.get(enemy);
+        health.isAlive = true;
         health.maxHealth = 180;
         health.health = 180;
+        health.invinciblityDuration = 0.09f;
+        health.tag = 'e';
         health.deathAction = 4;
 
-        shm.get(enemy).attackDelay = 0.2f;
+        ShootComponent shoot = shm.get(enemy);
+        shoot.attackDelay = 0.2f;
 
+        bm.get(enemy).bounceDuration = 2f;
+
+        enemy.add(new PointsComponent());
         pom.get(enemy).points = 700;
 
         return enemy;
     }
 
     public static GameEntity generateMiniGhostUFO(float x, float y) {
-        GameEntity enemy = generateGenericEnemy(x, y);
+        GameEntity enemy = new GameEntity();
 
+        enemy.add(new PositionComponent());
+        enemy.add(new MovementComponent());
+        enemy.add(new ImageComponent());
+        enemy.add(new AIComponent());
+        enemy.add(new ShootComponent());
+        enemy.add(new HealthComponent());
+        enemy.add(new BouncingComponent());
         enemy.add(new DamageComponent());
 
         MovementComponent mov = mm.get(enemy);
         mov.speedPerSecond = 290f;
+        mov.move = true;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("GhostUFO1");
 
         PositionComponent position = pm.get(enemy);
+        position.x = x;
+        position.y = y;
         position.height = img.texRegion.getRegionHeight() / 2;
         position.width = img.texRegion.getRegionWidth() / 2;
         PositionSystem.setOrigins(position);
+        position.rotation = (float) Math.random() * 360;
 
         AIComponent AI = aim.get(enemy);
         AI.awarenessRadius = 180f;
         AI.AIType = 'r';
         AI.targetTime = 0.7f;
+        AI.targetRotation = position.rotation;
         AI.shoots = true;
         AI.projectileType = 'g';
 
         HealthComponent health = hm.get(enemy);
+        health.isAlive = true;
         health.maxHealth = 40;
         health.health = 40;
+        health.invinciblityDuration = 0.09f;
+        health.tag = 'e';
         health.deathAction = 0;
 
-        shm.get(enemy).attackDelay = 0.35f;
+        ShootComponent shoot = shm.get(enemy);
+        shoot.attackDelay = 0.35f;
 
         DamageComponent dam = dm.get(enemy);
         dam.damage = 5;
@@ -3157,6 +3272,7 @@ public class EntityConstructors {
 
         bm.get(enemy).bounceDuration = 5f;
 
+        enemy.add(new PointsComponent());
         pom.get(enemy).points = 250;
 
         return enemy;
@@ -3237,6 +3353,16 @@ public class EntityConstructors {
     public static GameEntity generateWisp(float x, float y) {
         GameEntity enemy = generateGenericWisp(x, y);
 
+        enemy.add(new AnimationComponent());
+
+        AnimationComponent anim = am.get(enemy);
+        anim.animate = true;
+        anim.repeat = true;
+        anim.animationTime = 0.3f;
+        anim.baseTextureRegion = ImageComponent.atlas.findRegion(("Wisp"));
+        anim.animations.get(0).add(ImageComponent.atlas.findRegion("Wisp"));
+        anim.animations.get(0).add(ImageComponent.atlas.findRegion("Wisp2"));
+
         MovementComponent mov = mm.get(enemy);
         mov.speedPerSecond = 80f;
 
@@ -3268,7 +3394,16 @@ public class EntityConstructors {
     public static GameEntity generatePoisonWisp(float x, float y) {
         GameEntity enemy = generateGenericWisp(x, y);
 
+        enemy.add(new AnimationComponent());
         enemy.add(new CollisionComponent());
+
+        AnimationComponent anim = am.get(enemy);
+        anim.animate = true;
+        anim.repeat = true;
+        anim.animationTime = 0.3f;
+        anim.baseTextureRegion = ImageComponent.atlas.findRegion(("PoisonWisp"));
+        anim.animations.get(0).add(ImageComponent.atlas.findRegion("PoisonWisp"));
+        anim.animations.get(0).add(ImageComponent.atlas.findRegion("PoisonWisp2"));
 
         MovementComponent mov = mm.get(enemy);
         mov.speedPerSecond = 90f;
@@ -3356,7 +3491,6 @@ public class EntityConstructors {
                     AnimationComponent anim = am.get(e);
                     anim.animate = true;
                     anim.repeat = true;
-                    anim.animations.add(new ArrayList<TextureRegion>());
                     anim.baseTextureRegion = ImageComponent.atlas.findRegion("BigWisp0");
                     anim.animations.get(0).add(ImageComponent.atlas.findRegion("BigWisp0"));
                     anim.animations.get(0).add(ImageComponent.atlas.findRegion("BigWisp3"));
@@ -3383,7 +3517,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateSwirlWisp(float x, float y) {
-        GameEntity enemy = generateGenericEnemy(x, y);
+        GameEntity enemy = generateGenericWisp(x, y);
 
         enemy.add(new AnimationComponent());
         enemy.add(new EventComponent());
@@ -3461,7 +3595,7 @@ public class EntityConstructors {
         GameEntity enemy = generateGenericShip(x, y);
 
         MovementComponent mov = mm.get(enemy);
-        mov.speedPerSecond = 230f;
+        mov.speedPerSecond = 280f;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("EnemyShip");
@@ -3482,8 +3616,8 @@ public class EntityConstructors {
         collision.boundingBox.setOrigin(position.x + position.originX, position.y + position.originY);
 
         AIComponent AI = aim.get(enemy);
-        AI.awarenessRadius = 300f;
-        AI.stopDistance = 100f;
+        AI.awarenessRadius = 450f;
+        AI.stopDistance = 300f;
         AI.AIType = 'r';
         AI.targetTime = 5f;
         AI.projectileType = 'f';
@@ -3505,7 +3639,7 @@ public class EntityConstructors {
         GameEntity enemy = generateGenericShip(x, y);
 
         MovementComponent mov = mm.get(enemy);
-        mov.speedPerSecond = 50f;
+        mov.speedPerSecond = 200f;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("EnemyShipIce");
@@ -3527,7 +3661,8 @@ public class EntityConstructors {
 
         AIComponent AI = aim.get(enemy);
         AI.awarenessRadius = 450f;
-        AI.AIType = 'x';
+        AI.stopDistance = 200f;
+        AI.AIType = 'r';
         AI.targetTime = 5f;
         AI.shoots = true;
         AI.projectileType = 'c';
@@ -3549,7 +3684,7 @@ public class EntityConstructors {
         GameEntity enemy = generateGenericShip(x, y);
 
         MovementComponent mov = mm.get(enemy);
-        mov.speedPerSecond = 240f;
+        mov.speedPerSecond = 330f;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("EnemyShipThunder");
@@ -3570,9 +3705,9 @@ public class EntityConstructors {
         collision.boundingBox.setOrigin(position.x + position.originX, position.y + position.originY);
 
         AIComponent AI = aim.get(enemy);
-        AI.awarenessRadius = 400f;
-        AI.stopDistance = 200f;
-        AI.AIType = 'x';
+        AI.awarenessRadius = 700f;
+        AI.stopDistance = 500f;
+        AI.AIType = 'f';
         AI.targetTime = 5f;
         AI.projectileType = 't';
 
@@ -3580,7 +3715,7 @@ public class EntityConstructors {
         health.maxHealth = 80;
         health.health = 80;
 
-        shm.get(enemy).attackDelay = 0.8f;
+        shm.get(enemy).attackDelay = 0.45f;
 
         bm.get(enemy).bounceDuration = 4f;
 
@@ -3595,7 +3730,7 @@ public class EntityConstructors {
         enemy.add(new EventComponent());
 
         MovementComponent mov = mm.get(enemy);
-        mov.speedPerSecond = 280f;
+        mov.speedPerSecond = 290f;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("EnemyShipGold");
@@ -3617,6 +3752,7 @@ public class EntityConstructors {
 
         AIComponent AI = aim.get(enemy);
         AI.awarenessRadius = 450f;
+        AI.stopDistance = 240f;
         AI.AIType = 'f';
         AI.targetTime = 2f;
         AI.projectileType = 'f';
@@ -3675,7 +3811,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateTurret(float x, float y) {
-        GameEntity enemy = new GameEntity("turret");
+        GameEntity enemy = new GameEntity();
 
         enemy.add(new PositionComponent());
         enemy.add(new CollisionComponent());
@@ -3734,8 +3870,68 @@ public class EntityConstructors {
         return enemy;
     }
 
+    public static GameEntity generateYellowTurret(float x, float y) {
+        GameEntity enemy = new GameEntity();
+
+        enemy.add(new PositionComponent());
+        enemy.add(new CollisionComponent());
+        enemy.add(new ImageComponent());
+        enemy.add(new AIComponent());
+        enemy.add(new ShootComponent());
+        enemy.add(new HealthComponent());
+
+        ImageComponent img = im.get(enemy);
+        img.texRegion = ImageComponent.atlas.findRegion("YellowTurret");
+        img.rotate = true;
+
+
+        PositionComponent position = pm.get(enemy);
+        position.x = x;
+        position.y = y;
+        position.height = img.texRegion.getRegionHeight();
+        position.width = img.texRegion.getRegionWidth();
+        PositionSystem.setOrigins(position);
+        position.rotation = (float) Math.random() * 360;
+
+        CollisionComponent collision = cm.get(enemy);
+        collision.boundingBox = new Polygon(new float[] {
+                position.x +10, position.y + 10,
+                position.x + position.width -10, position.y + 10,
+                position.x + position.width - 10, position.y + position.height - 10,
+                position.x + 10, position.y + position.height - 10
+        });
+        CollisionSystem.setBoundingBoxLocation(collision, 0, 0, position.rotation);
+        collision.boundingBox.setOrigin(position.x + position.originX, position.y + position.originY);
+        collision.collisionReaction = 1;
+        collision.unmovable = true;
+
+        AIComponent AI = aim.get(enemy);
+        AI.awarenessRadius = 300f;
+        AI.AIType = 'f';
+        AI.targetTime = 2f;
+        AI.targetRotation = position.rotation;
+        AI.shoots = true;
+        AI.projectileType = '5';
+
+        HealthComponent health = hm.get(enemy);
+        health.isAlive = true;
+        health.maxHealth = 700;
+        health.health = 700;
+        health.invinciblityDuration = 0.09f;
+        health.tag = 'e';
+        health.deathAction = 1;
+
+        ShootComponent shoot = shm.get(enemy);
+        shoot.attackDelay = 0.7f;
+
+        enemy.add(new PointsComponent());
+        pom.get(enemy).points = 10000;
+
+        return enemy;
+    }
+
     public static GameEntity generateBlueTurret(float x, float y) {
-        GameEntity enemy = new GameEntity("blue turret");
+        GameEntity enemy = new GameEntity();
 
         enemy.add(new PositionComponent());
         enemy.add(new CollisionComponent());
@@ -3761,7 +3957,6 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(enemy);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("BlueTurret");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("BlueTurret"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("BlueTurret2"));
@@ -3806,8 +4001,9 @@ public class EntityConstructors {
         return enemy;
     }
 
+
     public static GameEntity generateCore(float x, float y) {
-        GameEntity enemy = new GameEntity("core");
+        GameEntity enemy = new GameEntity();
 
         enemy.add(new PositionComponent());
         enemy.add(new CollisionComponent());
@@ -3829,7 +4025,7 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(enemy);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("Core");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("Core"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("Core2"));
@@ -3897,7 +4093,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generatePodShip(float x, float y) {
-        GameEntity enemy = new GameEntity("pod red");
+        GameEntity enemy = new GameEntity();
 
         enemy.add(new PositionComponent());
         enemy.add(new CollisionComponent());
@@ -4012,7 +4208,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generatePlatinumWisp(float x, float y) {
-        GameEntity enemy = new GameEntity("platinum wisp");
+        GameEntity enemy = new GameEntity();
 
         enemy.add(new PositionComponent());
         enemy.add(new MovementComponent());
@@ -4059,7 +4255,7 @@ public class EntityConstructors {
     //bosses
 
     public static GameEntity generateBossWisp(float x, float y) {
-        GameEntity enemy = new GameEntity("boss wisp");
+        GameEntity enemy = new GameEntity();
 
         enemy.add(new PositionComponent());
         enemy.add(new MovementComponent());
@@ -4089,7 +4285,7 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(enemy);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("BossWisp");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("BossWisp"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("BossWisp2"));
@@ -4157,7 +4353,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateBossUFO(float x, float y) {
-        GameEntity enemy = new GameEntity("boss enemy");
+        GameEntity enemy = new GameEntity();
 
         enemy.add(new PositionComponent());
         enemy.add(new CollisionComponent());
@@ -4180,7 +4376,7 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(enemy);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("BossUFO1");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("BossUFO1"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("BossUFO2"));
@@ -4252,7 +4448,7 @@ public class EntityConstructors {
                     mm.get(e).speedPerSecond = 40f;
                 } else if (ai.projectileType == 'h') {
                     for (int i = 0; i < 9; i++) {
-                        engine.addEntity(generateWeakLaser(pos.x + pos.originX, pos.y + pos.originY, i * 40,ImageComponent.atlas.findRegion("EnemyLaser"), 1));
+                        engine.addEntity(generateGhostLaser(pos.x + pos.originX, pos.y + pos.originY, i * 40, 1));
                     }
                     ai.projectileType = 'm';
                     shm.get(e).attackDelay = 1f;
@@ -4304,7 +4500,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateBossTurret(float x, float y) {
-        GameEntity enemy = new GameEntity("boss turret");
+        GameEntity enemy = new GameEntity();
 
         enemy.add(new PositionComponent());
         enemy.add(new CollisionComponent());
@@ -4330,7 +4526,7 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(enemy);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("BossTurret");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("BossTurret"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("BossTurret2"));
@@ -4393,7 +4589,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateBossShip(float x, float y) {
-        GameEntity enemy = new GameEntity("boss ship");
+        GameEntity enemy = new GameEntity();
 
         enemy.add(new PositionComponent());
         enemy.add(new CollisionComponent());
@@ -4516,7 +4712,7 @@ public class EntityConstructors {
    -----------------------------------------------------------------------------
     */
     public static GameEntity generateHealingItem(float x, float y) {
-        GameEntity healer = new GameEntity("health");
+        GameEntity healer = new GameEntity();
 
         healer.add(new PositionComponent());
         healer.add(new ItemComponent());
@@ -4530,7 +4726,7 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(healer);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("Life1");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("Life1"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("Life2"));
@@ -4562,7 +4758,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateMaxHealingItem(float x, float y) {
-        GameEntity healer = new GameEntity("max health");
+        GameEntity healer = new GameEntity();
 
         healer.add(new PositionComponent());
         healer.add(new ItemComponent());
@@ -4576,7 +4772,7 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(healer);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("MaxLife");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("MaxLife"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("MaxLife2"));
@@ -4609,7 +4805,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateSuperShootUp(float x, float y) {
-        GameEntity shot = new GameEntity("super shoot up");
+        GameEntity shot = new GameEntity();
 
         shot.add(new PositionComponent());
         shot.add(new ItemComponent());
@@ -4623,7 +4819,7 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(shot);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("SuperShootUp");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("SuperShootUp"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("SuperShootUp2"));
@@ -4660,7 +4856,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateShootUp(float x, float y) {
-        GameEntity shot = new GameEntity("shoot up");
+        GameEntity shot = new GameEntity();
 
         shot.add(new PositionComponent());
         shot.add(new ItemComponent());
@@ -4674,7 +4870,7 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(shot);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("ShootUp");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("ShootUp"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("ShootUp2"));
@@ -4709,7 +4905,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateSpeedUp(float x, float y) {
-        GameEntity speed = new GameEntity("Speed Up");
+        GameEntity speed = new GameEntity();
 
         speed.add(new PositionComponent());
         speed.add(new ItemComponent());
@@ -4723,7 +4919,7 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(speed);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("SpeedUp");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("SpeedUp"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("SpeedUp2"));
@@ -4760,7 +4956,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateColorPowerUp(float x, float y, String color) {
-        GameEntity power = new GameEntity("color");
+        GameEntity power = new GameEntity();
 
         power.add(new PositionComponent());
         power.add(new ItemComponent());
@@ -4778,7 +4974,7 @@ public class EntityConstructors {
 
         if (color.equals("Red")) {
             img.texRegion = ImageComponent.atlas.findRegion("RedPower1");
-            anim.animations.add(new ArrayList<TextureRegion>());
+
             anim.baseTextureRegion = ImageComponent.atlas.findRegion("RedPower1");
             anim.animations.get(0).add(ImageComponent.atlas.findRegion("RedPower1"));
             anim.animations.get(0).add(ImageComponent.atlas.findRegion("RedPower2"));
@@ -4791,7 +4987,7 @@ public class EntityConstructors {
             };
         } else if (color.equals("Blue")) {
             img.texRegion = ImageComponent.atlas.findRegion("BluePower1");
-            anim.animations.add(new ArrayList<TextureRegion>());
+
             anim.baseTextureRegion = ImageComponent.atlas.findRegion("BluePower1");
             anim.animations.get(0).add(ImageComponent.atlas.findRegion("BluePower1"));
             anim.animations.get(0).add(ImageComponent.atlas.findRegion("BluePower2"));
@@ -4805,7 +5001,7 @@ public class EntityConstructors {
 
         } else if (color.equals("Green")) {
             img.texRegion = ImageComponent.atlas.findRegion("GreenPower1");
-            anim.animations.add(new ArrayList<TextureRegion>());
+
             anim.baseTextureRegion = ImageComponent.atlas.findRegion("GreenPower1");
             anim.animations.get(0).add(ImageComponent.atlas.findRegion("GreenPower1"));
             anim.animations.get(0).add(ImageComponent.atlas.findRegion("GreenPower2"));
@@ -4818,7 +5014,7 @@ public class EntityConstructors {
             };
         } else if (color.equals("Yellow")) {
             img.texRegion = ImageComponent.atlas.findRegion("YellowPower1");
-            anim.animations.add(new ArrayList<TextureRegion>());
+
             anim.baseTextureRegion = ImageComponent.atlas.findRegion("YellowPower1");
             anim.animations.get(0).add(ImageComponent.atlas.findRegion("YellowPower1"));
             anim.animations.get(0).add(ImageComponent.atlas.findRegion("YellowPower2"));
@@ -4831,7 +5027,7 @@ public class EntityConstructors {
             };
         } else if (color.equals("Pink")) {
             img.texRegion = ImageComponent.atlas.findRegion("PinkPower1");
-            anim.animations.add(new ArrayList<TextureRegion>());
+
             anim.baseTextureRegion = ImageComponent.atlas.findRegion("PinkPower1");
             anim.animations.get(0).add(ImageComponent.atlas.findRegion("PinkPower1"));
             anim.animations.get(0).add(ImageComponent.atlas.findRegion("PinkPower2"));
@@ -4844,7 +5040,7 @@ public class EntityConstructors {
             };
         } else if (color.equals("Purple")) {
             img.texRegion = ImageComponent.atlas.findRegion("PurplePower1");
-            anim.animations.add(new ArrayList<TextureRegion>());
+
             anim.baseTextureRegion = ImageComponent.atlas.findRegion("PurplePower1");
             anim.animations.get(0).add(ImageComponent.atlas.findRegion("PurplePower1"));
             anim.animations.get(0).add(ImageComponent.atlas.findRegion("PurplePower2"));
@@ -4857,7 +5053,7 @@ public class EntityConstructors {
             };
         } else if (color.equals("Orange")) {
             img.texRegion = ImageComponent.atlas.findRegion("OrangePower1");
-            anim.animations.add(new ArrayList<TextureRegion>());
+
             anim.baseTextureRegion = ImageComponent.atlas.findRegion("OrangePower1");
             anim.animations.get(0).add(ImageComponent.atlas.findRegion("OrangePower1"));
             anim.animations.get(0).add(ImageComponent.atlas.findRegion("OrangePower2"));
@@ -4866,6 +5062,19 @@ public class EntityConstructors {
                 public void event(GameEntity e, Engine engine) {
                     if (colm.has(e))
                         colm.get(e).color = 'o';
+                }
+            };
+        } else if (color.equals("White")) {
+            img.texRegion = ImageComponent.atlas.findRegion("WhitePower1");
+
+            anim.baseTextureRegion = ImageComponent.atlas.findRegion("WhitePower1");
+            anim.animations.get(0).add(ImageComponent.atlas.findRegion("WhitePower1"));
+            anim.animations.get(0).add(ImageComponent.atlas.findRegion("WhitePower2"));
+            item.event = new GameEvent() {
+                @Override
+                public void event(GameEntity e, Engine engine) {
+                    if (colm.has(e))
+                        colm.get(e).color = 'w';
                 }
             };
         }
@@ -4885,7 +5094,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateDoubleUp(float x, float y) {
-        GameEntity healer = new GameEntity("double up");
+        GameEntity healer = new GameEntity();
 
         healer.add(new PositionComponent());
         healer.add(new ItemComponent());
@@ -4899,7 +5108,7 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(healer);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("DoubleUp");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("DoubleUp"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("DoubleUp2"));
@@ -4932,7 +5141,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateGhostPlayerShip(float x, float y) {
-        GameEntity player = new GameEntity("other player ghost");
+        GameEntity player = new GameEntity();
 
         player.add(new PlayerInputComponent());
         player.add(new PositionComponent());
@@ -4996,7 +5205,7 @@ public class EntityConstructors {
     --------------------------------------------------------------------------------
      */
     public static GameEntity generateFloatingShock(float x, float y, float width, float height, float speed, int hurtsPlayer) {
-        GameEntity shock = new GameEntity("random shock");
+        GameEntity shock = new GameEntity();
 
         shock.add(new PositionComponent());
         shock.add(new ImageComponent());
@@ -5022,7 +5231,7 @@ public class EntityConstructors {
         AnimationComponent anim = am.get(shock);
         anim.animate = true;
         anim.repeat = true;
-        anim.animations.add(new ArrayList<TextureRegion>());
+
         anim.baseTextureRegion = ImageComponent.atlas.findRegion("Spark1");
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("Spark1"));
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("Spark2"));
@@ -5049,7 +5258,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateFloatingPoison(float x, float y, float width, float height, float speed) {
-        GameEntity pois = new GameEntity("random poison");
+        GameEntity pois = new GameEntity();
 
         pois.add(new PositionComponent());
         pois.add(new ImageComponent());
@@ -5098,7 +5307,7 @@ public class EntityConstructors {
     -----------------------------------------------------------------------------
      */
     public static GameEntity generateEnemySpawnPoint(float x, float y, String spawned, float freq, Engine engine) {
-        GameEntity spawn = new GameEntity("spawn");
+        GameEntity spawn = new GameEntity();
 
         spawn.add(new PositionComponent());
         spawn.add(new EventComponent());
@@ -5156,12 +5365,12 @@ public class EntityConstructors {
                     engine.addEntity(generateGhostUFO(p.x, p.y));
                 }
             };
-        } else if (spawned.equals("PinkUFO")) {
+        } else if (spawned.equals("PinkUFO")) {//!!!
             event.event = new GameEvent() {
                 @Override
                 public void event(GameEntity e, Engine engine) {
                     PositionComponent p = pm.get(e);
-                    engine.addEntity(generatePinkEnemy(p.x, p.y));
+                    engine.addEntity(generateFasterEnemy(p.x, p.y));
                 }
             };
         } else if (spawned.equals("RedUFO")) {
@@ -5289,7 +5498,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateRandomEnemySpawnPoint(float x, float y, float freq, Engine engine) {
-        GameEntity spawn = new GameEntity("spawn");
+        GameEntity spawn = new GameEntity();
 
         spawn.add(new PositionComponent());
         spawn.add(new EventComponent());
@@ -5325,8 +5534,10 @@ public class EntityConstructors {
                     PositionComponent p = pm.get(e);
                     engine.addEntity(generateGhostUFO(p.x, p.y));
                 } else if (i == 4) {
-                    PositionComponent p = pm.get(e);
-                    engine.addEntity(generatePinkEnemy(p.x, p.y));
+                    if ((int) Math.random() == 1) {
+                        PositionComponent p = pm.get(e);
+                        engine.addEntity(generateEnemyShipGold(p.x, p.y));
+                    }
                 } else if (i == 5) {
                     PositionComponent p = pm.get(e);
                     engine.addEntity(generateRedEnemy(p.x, p.y));
@@ -5356,7 +5567,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateRandomUFOSpawnPoint(float x, float y, float freq, boolean includeGhost, Engine engine) {
-        GameEntity spawn = new GameEntity("spawn");
+        GameEntity spawn = new GameEntity();
 
         spawn.add(new PositionComponent());
         spawn.add(new EventComponent());
@@ -5431,7 +5642,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateRandomWispSpawnPoint(float x, float y, float freq, boolean includeBigWisp, Engine engine) {
-        GameEntity spawn = new GameEntity("spawn");
+        GameEntity spawn = new GameEntity();
 
         spawn.add(new PositionComponent());
         spawn.add(new EventComponent());
@@ -5488,7 +5699,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateRandomShipSpawnPoint(float x, float y, float freq, Engine engine) {
-        GameEntity spawn = new GameEntity("spawn");
+        GameEntity spawn = new GameEntity();
 
         spawn.add(new PositionComponent());
         spawn.add(new EventComponent());
@@ -5528,7 +5739,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateItemSpawnPoint(float x, float y, String spawned, float freq, Engine engine) {
-        GameEntity spawn = new GameEntity("spawn");
+        GameEntity spawn = new GameEntity();
 
         spawn.add(new PositionComponent());
         spawn.add(new EventComponent());
@@ -5626,6 +5837,14 @@ public class EntityConstructors {
                     engine.addEntity(generateColorPowerUp(p.x, p.y, "Orange"));
                 }
             };
+        }  else if (spawned.equals("White")) {
+            event.event = new GameEvent() {
+                @Override
+                public void event(GameEntity e, Engine engine) {
+                    PositionComponent p = pm.get(e);
+                    engine.addEntity(generateColorPowerUp(p.x, p.y, "White"));
+                }
+            };
         } else if (spawned.equals("SuperShootUp")) {
             event.event = new GameEvent() {
                 @Override
@@ -5656,7 +5875,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateRandomItemSpawnPoint(float x, float y, float freq, Engine engine) {
-        GameEntity spawn = new GameEntity("spawn");
+        GameEntity spawn = new GameEntity();
 
         spawn.add(new PositionComponent());
         spawn.add(new EventComponent());
@@ -5717,7 +5936,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateRandomColorSpawnPoint(float x, float y, float freq, Engine engine) {
-        GameEntity spawn = new GameEntity("spawn");
+        GameEntity spawn = new GameEntity();
 
         spawn.add(new PositionComponent());
         spawn.add(new EventComponent());
@@ -5766,7 +5985,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateRandomPowerUp(float x, float y, float freq, Engine engine) {
-        GameEntity spawn = new GameEntity("spawn");
+        GameEntity spawn = new GameEntity();
 
         spawn.add(new PositionComponent());
         spawn.add(new EventComponent());
@@ -5810,7 +6029,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateMovingItemSpawnPoint(float x, float y, String spawned, float freq, Engine engine) {
-        GameEntity spawn = new GameEntity("spawn");
+        GameEntity spawn = new GameEntity();
 
         spawn.add(new PositionComponent());
         spawn.add(new EventComponent());
@@ -5919,6 +6138,14 @@ public class EntityConstructors {
                     engine.addEntity(generateColorPowerUp(p.x, p.y, "Orange"));
                 }
             };
+        } else if (spawned.equals("White")) {
+            event.event = new GameEvent() {
+                @Override
+                public void event(GameEntity e, Engine engine) {
+                    PositionComponent p = pm.get(e);
+                    engine.addEntity(generateColorPowerUp(p.x, p.y, "White"));
+                }
+            };
         } else if (spawned.equals("SuperShootUp")) {
             event.event = new GameEvent() {
                 @Override
@@ -5949,7 +6176,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateMovingRandomPowerUp(float x, float y, float freq, Engine engine) {
-        GameEntity spawn = new GameEntity("spawn");
+        GameEntity spawn = new GameEntity();
 
         spawn.add(new PositionComponent());
         spawn.add(new EventComponent());
@@ -6003,7 +6230,7 @@ public class EntityConstructors {
     }
 
     public static GameEntity generateMovingRandomColorSpawnPoint(float x, float y, float freq, Engine engine) {
-        GameEntity spawn = new GameEntity("spawn");
+        GameEntity spawn = new GameEntity();
 
         spawn.add(new PositionComponent());
         spawn.add(new EventComponent());

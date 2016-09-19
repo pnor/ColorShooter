@@ -10,9 +10,7 @@ import com.colorshooter.game.scenes.DisplayScreen;
 import com.colorshooter.game.scenes.GameScreen;
 import com.colorshooter.game.scenes.MenuScreen;
 import com.colorshooter.game.scenes.levels.*;
-import com.colorshooter.game.scenes.menus.EnterScoreMenu;
-import com.colorshooter.game.scenes.menus.HighScoreMenu;
-import com.colorshooter.game.scenes.menus.MainMenu;
+import com.colorshooter.game.scenes.menus.*;
 
 import static com.colorshooter.game.Mappers.hm;
 
@@ -74,8 +72,12 @@ public class ColorShooter extends Game {
 	public void render () {
 		int lastIndex = index;
 
-		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
-			Gdx.app.exit();
+		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+			if (getScreen() instanceof MainMenu)
+				Gdx.app.exit();
+			else
+				setScreen(new MainMenu(this));
+		}
 
 		//screen moving with dpad
 		if (Gdx.input.isKeyJustPressed(Input.Keys.DPAD_LEFT)) {
@@ -107,21 +109,20 @@ public class ColorShooter extends Game {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		if (getScreen() instanceof GameScreen && ((GameScreen) getScreen()).getScreenState() == 2) {
-			if (((GameScreen) getScreen()).getLives() < 1) {
+			if (GameScreen.getLives() < 1) {
 				Array<HighScore> highScores = ((DisplayScreen) getScreen()).getHighScores();
 				if (highScores.size < 10 || GameScreen.getPoints() >= highScores.get(highScores.size - 1).getScore()) {
 					GameScreen.setLives(3);
 					setScreen(new EnterScoreMenu(((GameScreen) getScreen()).getLevel(), this));
 				}
 				else {
-					GameScreen.setPoints(0);
 					GameScreen.setLives(3);
-					setScreen(new MainMenu(this));
+					setScreen(new DeathMenu(((GameScreen) getScreen()).getLevel(), this));
 				}
 			} else {
 				getScreen().show();
 				((GameScreen) getScreen()).reset();
-				((GameScreen) getScreen()).incrementPoints((int) (-10000));
+				GameScreen.incrementPoints(-10000);
 				hm.get(((GameScreen) getScreen()).getPlayer()).invincible = true;
 			}
 		} else {
@@ -154,13 +155,6 @@ public class ColorShooter extends Game {
 		super.setScreen(SCREENS[index]);
 	} */
 
-	public void goToMenu() {
-		setScreen(new MenuScreen(this));
-	}
-
-	public void goToHighScores() {
-		setScreen(new HighScoreMenu(this));
-	}
 
 }
 

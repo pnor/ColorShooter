@@ -84,11 +84,10 @@ public class AISystem extends EntitySystem {
             //stop enemy pushing
             if (!ai.pushing) {
                 if (mm.has(e) && MovementSystem.getDistance(pos, (pm.get(closestPlayer)).x + (pm.get(closestPlayer)).originX, (pm.get(closestPlayer)).y + (pm.get(closestPlayer)).originY) <= ai.awarenessRadius) {
-                    float stopDistance = Math.max(pm.get(e).height, pm.get(e).width);
                     float betweenDist = MovementSystem.getDistance(pos, (pm.get(closestPlayer)).x + (pm.get(closestPlayer)).originX, (pm.get(closestPlayer)).y + (pm.get(closestPlayer)).originY);
-                    if (mov.move && betweenDist <= stopDistance + 35f)
+                    if (mov.move && betweenDist <= ai.stopDistance)
                         mov.move = false;
-                    else if (betweenDist > stopDistance + 35f)
+                    else if (betweenDist > ai.stopDistance)
                         mov.move = true;
                 }
             }
@@ -279,6 +278,8 @@ public class AISystem extends EntitySystem {
             ShootingSystem.shootOffset(-85, -85f, getEngine(), EntityConstructors.generateGreenBeam(0, 0, pm.get(e).rotation, 1), pm.get(e), shm.get(e));
         else if (aim.get(e).projectileType == '4')
             ShootingSystem.shootOffset(-65, -65f, getEngine(), EntityConstructors.generateTurretlaser(0, 0, pm.get(e).rotation), pm.get(e), shm.get(e));
+        else if (aim.get(e).projectileType == '5')
+            ShootingSystem.shootOffset(-85, -85f, getEngine(), EntityConstructors.generateThunderLaser(0, 0, pm.get(e).rotation, 1), pm.get(e), shm.get(e));
 
     }
 }

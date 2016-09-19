@@ -81,7 +81,6 @@ public class Level23 extends GameScreen {
             getEngine().removeEntity(powerUps);
             getEngine().removeEntity(powerUps2);
             removed = true;
-
         }
     }
 

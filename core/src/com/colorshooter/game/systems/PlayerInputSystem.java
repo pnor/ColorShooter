@@ -175,7 +175,7 @@ public class PlayerInputSystem extends EntitySystem{
             }
             else if (color.color == 'w') {
                 im.get(e).texRegion = ImageComponent.atlas.findRegion("PlayerShipWhite");
-                shm.get(e).attackDelay = 0.02f;
+                shm.get(e).attackDelay = 0.45f;
             }
         }
         color.oldColor = color.color;

@@ -50,8 +50,8 @@ public class Level27 extends GameScreen {
 
 
         GameEntity colors = generateMovingItemSpawnPoint(618, 294, "Pink", 25f, getEngine());
-        GameEntity colors2 = generateMovingItemSpawnPoint(738, 434, "Orange", 32f, getEngine());
-        GameEntity colors3 = generateMovingItemSpawnPoint(618, 694, "Green", 45f, getEngine());
+        GameEntity colors2 = generateMovingItemSpawnPoint(738, 434, "Orange", 38f, getEngine());
+        GameEntity colors3 = generateMovingItemSpawnPoint(618, 694, "White", 45f, getEngine());
 
         GameEntity cube = generateMovingObject(900, 900, 100, 100, ImageComponent.atlas.findRegion("Cube"), 100f);
         GameEntity cube2 = generateMovingObject(-100, -100, 100, 100, ImageComponent.atlas.findRegion("Cube"), 100f);

@@ -15,6 +15,10 @@ import static com.colorshooter.game.Mappers.*;
  */
 public class Level8 extends GameScreen {
 
+    private boolean removed;
+    private GameTimer endSpawns;
+    private GameEntity enemySpawn, enemySpawn2, enemySpawn3, enemySpawn4;
+
     public Level8(ColorShooter game) {
         super(8, game);
     }
@@ -22,6 +26,8 @@ public class Level8 extends GameScreen {
     @Override
     public void show() {
         super.show();
+
+        endSpawns = new GameTimer(60f);
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("Space4"));
 
@@ -32,13 +38,13 @@ public class Level8 extends GameScreen {
         GameEntity enemy3 = generateRedEnemy(1300, -400);
         GameEntity enemy4 = generateRedEnemy(1300, -100);
 
-        GameEntity enemySpawn = generateEnemySpawnPoint(1000, 1000, "UFO", 19f, getEngine());
+        enemySpawn = generateEnemySpawnPoint(1000, 1000, "UFO", 19f, getEngine());
         em.get(enemySpawn).currentTime = 13f;
-        GameEntity enemySpawn2 = generateEnemySpawnPoint(0, 1000, "UFO", 19f, getEngine());
+        enemySpawn2 = generateEnemySpawnPoint(0, 1000, "UFO", 19f, getEngine());
         em.get(enemySpawn2).currentTime = 16f;
-        GameEntity enemySpawn3 = generateEnemySpawnPoint(0, 0, "GreenUFO", 24f, getEngine());
+        enemySpawn3 = generateEnemySpawnPoint(0, 0, "GreenUFO", 24f, getEngine());
         em.get(enemySpawn3).currentTime = 16f;
-        GameEntity enemySpawn4 = generateEnemySpawnPoint(950, 0, "YellowUFO", 20f, getEngine());
+        enemySpawn4 = generateEnemySpawnPoint(950, 0, "YellowUFO", 20f, getEngine());
         em.get(enemySpawn4).currentTime = 13f;
 
         GameEntity color1 = generateItemSpawnPoint(350, 650, "Purple", 25f, getEngine());
@@ -63,12 +69,19 @@ public class Level8 extends GameScreen {
         getEngine().addEntity(enemy3);
         getEngine().addEntity(enemy4);
 
-
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
+        endSpawns.decreaseTimer(delta);
+        if (!removed && endSpawns.getTime() <= 0) {
+            getEngine().removeEntity(enemySpawn);
+            getEngine().removeEntity(enemySpawn2);
+            getEngine().removeEntity(enemySpawn3);
+            getEngine().removeEntity(enemySpawn4);
+            removed = true;
+        }
     }
 
     @Override

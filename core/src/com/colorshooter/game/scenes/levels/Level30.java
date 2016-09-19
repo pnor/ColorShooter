@@ -44,13 +44,13 @@ public class Level30 extends GameScreen{
         GameEntity sub1 = generateTurret(1300, 560);
         GameEntity sub2 = generateTurret(1300, 260);
 
-        GameEntity sub3 = generateTurret(1200, 500);
+        GameEntity sub3 = generateYellowTurret(1200, 500);
         GameEntity sub4 = generateTurret(1200, 300);
         GameEntity sub5 = generateTurret(1240, 700);
-        GameEntity sub6 = generateTurret(1240, 100);
+        GameEntity sub6 = generateYellowTurret(1240, 100);
 
-        GameEntity sub7 = generateTurret(850, 510);
-        GameEntity sub8 = generateTurret(850, 290);
+        GameEntity sub7 = generateYellowTurret(850, 510);
+        GameEntity sub8 = generateYellowTurret(850, 290);
 
         GameEntity sub9 = generateBlueTurret(960, 660);
         shm.get(sub9).isAttacking = true;
@@ -117,24 +117,26 @@ public class Level30 extends GameScreen{
         getEngine().addEntity(powerUps4);
         getEngine().addEntity(colors);
         getEngine().addEntity(colors2);
+
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
-        if (!phase2 && getEngine().getEntitiesFor(Family.all(AIComponent.class).get()).size() <= 3) {
+        if (!phase2 && ((!boss.getDisposed() && getEngine().getEntitiesFor(Family.all(AIComponent.class).get()).size() <= 3) || (!boss.getDisposed() && hm.get(boss).health < 2000))) {
             phase2 = true;
 
             aim.get(boss).projectileType = '1';
+            am.get(boss).animationTime = 0.09f;
             EventComponent ev = em.get(boss);
-            ev.currentTime = 5f;
-            ev.targetTime = 5f;
+            ev.currentTime = 4f;
+            ev.targetTime = 4f;
             ev.event = new GameEvent() {
                 @Override
                 public void event(GameEntity e, Engine engine) {
                     PositionComponent pos = pm.get(e);
 
-                    int choice = (int) (Math.random() * 4);
+                    int choice = (int) (Math.random() * 5);
 
                     if (choice == 0) {
                         aim.get(e).awarenessRadius = 1600;
@@ -152,8 +154,8 @@ public class Level30 extends GameScreen{
                         aim.get(e).awarenessRadius = 1600;
                         shm.get(e).attackDelay = 0.65f;
                         aim.get(e).projectileType = '1';
-                        for (int i = 0; i < 6; i++) {
-                            engine.addEntity(generateBlueBeam(pos.x + pos.originX, pos.y + pos.originY, pos.rotation - 45 + i * 15, 1));
+                        for (int i = 0; i < 9; i++) {
+                            engine.addEntity(generateBlueBeam(pos.x + pos.originX, pos.y + pos.originY, pos.rotation - 45 + i * 10, 1));
                         }
                     }
                 }

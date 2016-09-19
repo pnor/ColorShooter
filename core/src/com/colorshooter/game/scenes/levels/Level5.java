@@ -16,21 +16,9 @@ import static com.colorshooter.game.Mappers.*;
  */
 public class Level5 extends GameScreen {
 
-    private MovementSystem movementSystem;
-    private CollisionSystem collisionSystem;
-    private PlayerInputSystem playerInputSystem;
-    private DrawingSystem drawingSystem;
-    private ShootingSystem shootingSystem;
-    private HealthSystem healthSystem;
-    private DamageSystem damageSystem;
-    private AISystem aiSystem;
-    private LifetimeSystem lifetimeSystem;
-    private AnimationSystem animationSystem;
-    private EventSystem eventSystem;
-    private ItemSystem itemSystem;
-    private BouncingSystem bounceSystem;
-    private PoisonSystem poisSystem;
-    private FrozenSystem frozenSystem;
+    private boolean removed;
+    private GameTimer endSpawns;
+    private GameEntity enemySpawn, enemySpawn2, enemySpawn3, enemySpawn4;
 
     public Level5(ColorShooter game) {
         super(5, game);
@@ -39,6 +27,7 @@ public class Level5 extends GameScreen {
     @Override
     public void show() {
         super.show();
+        endSpawns = new GameTimer(60f);
         setBackground(ImageComponent.backgroundAtlas.findRegion("BlueSpace1"));
 
         setPlayer(generatePlayer(678, 414));
@@ -48,13 +37,13 @@ public class Level5 extends GameScreen {
         GameEntity enemy3 = generateRedEnemy(-100,900);
         GameEntity enemy4 = generateEnemy(-100,-100);
 
-        GameEntity enemySpawn = generateEnemySpawnPoint(1000,900, "BlueUFO", 17f,  getEngine());
+        enemySpawn = generateEnemySpawnPoint(1000,900, "BlueUFO", 17f,  getEngine());
         em.get(enemySpawn).currentTime = 6f;
-        GameEntity enemySpawn2 = generateEnemySpawnPoint(100,900, "UFO", 20f,  getEngine());
+        enemySpawn2 = generateEnemySpawnPoint(100,900, "UFO", 20f,  getEngine());
         em.get(enemySpawn2).currentTime = 6f;
-        GameEntity enemySpawn3 = generateEnemySpawnPoint(0, 0, "BlueUFO", 18f,  getEngine());
+        enemySpawn3 = generateEnemySpawnPoint(0, 0, "BlueUFO", 18f,  getEngine());
         em.get(enemySpawn3).currentTime = 3f;
-        GameEntity enemySpawn4 = generateEnemySpawnPoint(500, -40, "RedUFO", 18f,  getEngine());
+        enemySpawn4 = generateEnemySpawnPoint(500, -40, "RedUFO", 18f,  getEngine());
 
         GameEntity color1 = generateItemSpawnPoint(750, 550, "Yellow", 20f,  getEngine());
         em.get(color1).currentTime = 10f;
@@ -83,6 +72,15 @@ public class Level5 extends GameScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
+        endSpawns.decreaseTimer(delta);
+
+        if (!removed && endSpawns.getTime() <= 0) {
+            getEngine().removeEntity(enemySpawn);
+            getEngine().removeEntity(enemySpawn2);
+            getEngine().removeEntity(enemySpawn3);
+            getEngine().removeEntity(enemySpawn4);
+            removed = true;
+        }
     }
 
     @Override

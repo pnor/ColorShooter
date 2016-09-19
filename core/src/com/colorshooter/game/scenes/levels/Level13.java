@@ -24,7 +24,7 @@ public class Level13 extends GameScreen {
     public void show() {
         super.show();
 
-        setBackground(ImageComponent.backgroundAtlas.findRegion("GraySpace1"));
+        setBackground(ImageComponent.backgroundAtlas.findRegion("GraySpace2"));
 
         setPlayer(generatePlayer(678, 414));
 
@@ -39,8 +39,8 @@ public class Level13 extends GameScreen {
 
         GameEntity enemySpawn = generateEnemySpawnPoint(1000,900, "PoisonWisp", 25f,  getEngine());
         em.get(enemySpawn).currentTime = 24f;
-        GameEntity enemySpawn2 = generateEnemySpawnPoint(0, 0, "GreenUFO", 20f,  getEngine());
-        em.get(enemySpawn2).currentTime = 18f;
+        GameEntity enemySpawn2 = generateEnemySpawnPoint(0, 0, "GreenUFO", 50f,  getEngine());
+        em.get(enemySpawn2).currentTime = 40f;
 
         GameEntity color1 = generateItemSpawnPoint(550, 750, "Blue", 15f,  getEngine());
         em.get(color1).currentTime = 10f;

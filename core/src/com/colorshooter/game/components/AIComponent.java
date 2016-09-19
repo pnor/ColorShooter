@@ -57,7 +57,8 @@ public class AIComponent implements Component{
      * 1 : blue beam <p>
      * 2 : spinning red <p>
      * 3 : green beam <p>
-     * 4 : Turret Laser <p></p>
+     * 4 : Turret Laser <p>
+     * 5 : offset Thunder Laser<p>
      */
     public char projectileType;
     public boolean gradualTurning = true;

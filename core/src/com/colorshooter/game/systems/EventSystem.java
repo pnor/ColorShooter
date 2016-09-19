@@ -39,12 +39,9 @@ public class EventSystem extends EntitySystem {
                 event.currentTime += dt;
                 if (event.currentTime >= event.targetTime) {
                     event.currentTime = 0f;
-                    try {
+                    //try {
                         event.event.event((GameEntity) e, getEngine());
-                    } catch (NullPointerException exception) {
-                        System.out.println(exception + "// Entity " + e + " threw it");
-                        Gdx.app.exit();
-                    }
+
                     if (!event.repeat)
                         event.ticking = false;
                 }

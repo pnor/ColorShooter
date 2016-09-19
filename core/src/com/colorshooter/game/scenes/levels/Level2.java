@@ -29,9 +29,8 @@ public class Level2 extends GameScreen {
 
         GameEntity enemy = generateEnemy(500, 1000);
         GameEntity enemy2 = generateEnemy(500, -100);
-        GameEntity enemySpawn = generateEnemySpawnPoint(1000,900, "UFO", 15f,  getEngine());
-        em.get(enemySpawn).currentTime = 12f;
-        GameEntity enemySpawn2 = generateEnemySpawnPoint(0, 0, "UFO", 16f,  getEngine());
+        GameEntity enemySpawn = generateEnemySpawnPoint(1000,900, "UFO", 25f,  getEngine());
+        em.get(enemySpawn).currentTime = 22f;
 
         GameEntity powerUps = generateItemSpawnPoint(550, 450, "Health", 8f,  getEngine());
         em.get(powerUps).currentTime = 5f;
@@ -47,7 +46,6 @@ public class Level2 extends GameScreen {
         getEngine().addEntity(powerUps4);
         getEngine().addEntity(getPlayer());
         getEngine().addEntity(enemySpawn);
-        getEngine().addEntity(enemySpawn2);
         getEngine().addEntity(enemy);
         getEngine().addEntity(enemy2);
 

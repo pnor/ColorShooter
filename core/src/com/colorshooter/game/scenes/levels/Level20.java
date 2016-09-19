@@ -28,7 +28,7 @@ public class Level20 extends GameScreen{
         setTimer(new GameTimer());
         getTimer().setTime(85f);
 
-        setBackground(ImageComponent.backgroundAtlas.findRegion("RedSpace1"));
+        setBackground(ImageComponent.backgroundAtlas.findRegion("GraySpace2"));
 
         setPlayer(generatePlayer(678, 414));
         cm.get(getPlayer()).boundingBox.setOrigin(pm.get(getPlayer()).x + pm.get(getPlayer()).originX, pm.get(getPlayer()).y + pm.get(getPlayer()).originY);
@@ -48,10 +48,10 @@ public class Level20 extends GameScreen{
 
         GameEntity doubleUp = generateItemSpawnPoint(650, 200, "DoubleUp", 20f,  getEngine());
 
-        GameEntity object1 = generateObject(400, 200, 120, 120, ImageComponent.atlas.findRegion("Asteroid"), true);
-        GameEntity object2 = generateObject(300, 600, 120, 120, ImageComponent.atlas.findRegion("Asteroid2"), true);
-        GameEntity object3 = generateObject(900, 200, 120, 120, ImageComponent.atlas.findRegion("Asteroid"), true);
-        GameEntity object4 = generateObject(1000, 600, 120, 120, ImageComponent.atlas.findRegion("Asteroid2"), true);
+        GameEntity object1 = generateMovingObject(300, 300, ImageComponent.atlas.findRegion("SpaceJunk").getRegionWidth(), ImageComponent.atlas.findRegion("SpaceJunk").getRegionHeight(), ImageComponent.atlas.findRegion("SpaceJunk"), 60f);
+        GameEntity object2 = generateMovingObject(800, 800, ImageComponent.atlas.findRegion("SpaceJunk").getRegionWidth(), ImageComponent.atlas.findRegion("SpaceJunk").getRegionHeight(), ImageComponent.atlas.findRegion("SpaceJunk"), 60f);
+        GameEntity object3 = generateMovingObject(900, 100, ImageComponent.atlas.findRegion("SpaceJunk").getRegionWidth(), ImageComponent.atlas.findRegion("SpaceJunk").getRegionHeight(), ImageComponent.atlas.findRegion("SpaceJunk"), 60f);
+        GameEntity object4 = generateMovingObject(200, 750, ImageComponent.atlas.findRegion("SpaceJunk").getRegionWidth(), ImageComponent.atlas.findRegion("SpaceJunk").getRegionHeight(), ImageComponent.atlas.findRegion("SpaceJunk"), 60f);
 
         getEngine().addEntity(powerUps);
         getEngine().addEntity(powerUps2);

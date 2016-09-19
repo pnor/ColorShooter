@@ -49,6 +49,8 @@ public class MainMenu extends MenuScreen implements Screen{
 
         final TextButton highScores = new TextButton("High Scores", skin, "toggle");
 
+        final TextButton howToPlay = new TextButton("How to Play", skin, "toggle");
+
         final TextButton quit = new TextButton("Quit", skin, "toggle");
 
         ChangeListener changeListener = new ChangeListener() {
@@ -58,7 +60,9 @@ public class MainMenu extends MenuScreen implements Screen{
                     if (actor == start)
                         COLOR_SHOOTER.setScreen(new Level1(getGame()));
                     if (actor == highScores)
-                        COLOR_SHOOTER.goToHighScores();
+                        COLOR_SHOOTER.setScreen(new HighScoreMenu(getGame()));
+                    if (actor == howToPlay)
+                        COLOR_SHOOTER.setScreen(new HowToPlayScreen(getGame()));
                     if (actor == quit)
                         Gdx.app.exit();
                 }
@@ -67,12 +71,15 @@ public class MainMenu extends MenuScreen implements Screen{
 
         start.addListener(changeListener);
         highScores.addListener(changeListener);
+        howToPlay.addListener(changeListener);
         quit.addListener(changeListener);
 
         table.row();
         table.add(start).size(150f, 30f).padBottom(30f);
         table.row();
         table.add(highScores).size(150f, 30f).padBottom(30f);
+        table.row();
+        table.add(howToPlay).size(150f, 30f).padBottom(30f);
         table.row();
         table.add(quit).size(150f, 30f).padBottom(30f);
 

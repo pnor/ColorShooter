@@ -32,12 +32,12 @@ public class Level19 extends GameScreen {
         setPlayer(generatePlayer(678, 414));
         cm.get(getPlayer()).boundingBox.setOrigin(pm.get(getPlayer()).x + pm.get(getPlayer()).originX, pm.get(getPlayer()).y + pm.get(getPlayer()).originY);
 
-        GameEntity enemySpawn = generateRandomUFOSpawnPoint(1000,900, 3f, false, getEngine());
-        GameEntity enemySpawn2 = generateRandomUFOSpawnPoint(0,0, 4f, false,   getEngine());
+        GameEntity enemySpawn = generateRandomUFOSpawnPoint(1000,900, 3.5f, false, getEngine());
+        GameEntity enemySpawn2 = generateRandomUFOSpawnPoint(0,0, 6f, false,   getEngine());
         em.get(enemySpawn2).currentTime = 1f;
         GameEntity enemySpawn3 = generateEnemySpawnPoint(0, 900, "EnemyShipBlue", 5f, getEngine());
-        em.get(enemySpawn3).currentTime = 3f;
-        GameEntity enemySpawn4 = generateEnemySpawnPoint(500, -40, "EnemyShipRed", 4f,  getEngine());
+        em.get(enemySpawn3).currentTime = 0.6f;
+        GameEntity enemySpawn4 = generateEnemySpawnPoint(500, -40, "EnemyShipRed", 5f,  getEngine());
 
         GameEntity color1 = generateItemSpawnPoint(550, 650, "Orange", 30f,  getEngine());
         em.get(color1).currentTime = 28f;

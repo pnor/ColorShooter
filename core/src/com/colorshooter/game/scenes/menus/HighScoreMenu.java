@@ -2,20 +2,14 @@ package com.colorshooter.game.scenes.menus;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.*;
 import com.colorshooter.game.ColorShooter;
 import com.colorshooter.game.HighScore;
 import com.colorshooter.game.components.ImageComponent;
 import com.colorshooter.game.scenes.MenuScreen;
-
-import java.util.ArrayList;
 
 /**
  * @author pnore_000
@@ -31,15 +25,34 @@ public class HighScoreMenu extends MenuScreen{
     @Override
     public void show() {
         super.show();
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("arial.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
+
         setBackgound(ImageComponent.backgroundAtlas.findRegion("Space1"));
 
         scores = getHighScores();
 
-        Label title = new Label("High Scores", skin);
-        title.setFontScale(1.2f);
+        Label title;
+        param.size = 25;
+        param.shadowColor = Color.BLUE;
+        param.shadowOffsetX = 2;
+        param.shadowOffsetY = 2;
+        Label.LabelStyle lblStyle = new Label.LabelStyle(generator.generateFont(param), Color.WHITE);
+        title = new Label("High Scores", lblStyle);
         title.setColor(Color.CYAN);
-        Label[] scoreLabels = new Label[scores.size * 3];
 
+        Label name;
+        param.size = 20;
+        param.shadowOffsetX = 0;
+        param.shadowOffsetY = 0;
+        lblStyle = new Label.LabelStyle(generator.generateFont(param), Color.WHITE);
+        name = new Label("Name", lblStyle);
+
+        Label score = new Label("Score", lblStyle);
+
+        Label lastLevel = new Label("Last Level", lblStyle);
+
+        Label[] scoreLabels = new Label[scores.size * 3];
 
         table.center().setFillParent(true);
         table.add(title).padBottom(20f).colspan(3);
@@ -48,9 +61,9 @@ public class HighScoreMenu extends MenuScreen{
         table.add().width(200f);
         table.add().width(200f);
         table.row();
-        table.add("Name").height(50f).align(Align.center);
-        table.add("Score").height(50f);
-        table.add("Last Level").height(50f);
+        table.add(name).height(50f).align(Align.center);
+        table.add(score).height(50f);
+        table.add(lastLevel).height(50f);
         table.row();
 
         int j;
@@ -73,6 +86,7 @@ public class HighScoreMenu extends MenuScreen{
         }
 
         stage.addActor(table);
+        generator.dispose();
     }
 
     @Override

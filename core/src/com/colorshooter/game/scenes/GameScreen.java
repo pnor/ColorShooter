@@ -82,7 +82,7 @@ public class GameScreen extends DisplayScreen {
      */
     private int level;
     private static int lastLevel;
-    private static int lives = 1;
+    private static int lives = 3;
     private float currentRespawnTime;
     private float endRespawnTime;
     private GameTimer timer;
@@ -158,7 +158,7 @@ public class GameScreen extends DisplayScreen {
         if (movementSystem == null) {
             movementSystem = new MovementSystem(1);
             playerInputSystem = new PlayerInputSystem(this, 2);
-            healthSystem = new HealthSystem(ImageComponent.atlas, 3);
+            healthSystem = new HealthSystem(3);
             shootingSystem = new ShootingSystem(4);
             drawingSystem = new DrawingSystem(5, getPlayer(),stage.getBatch());
             damageSystem = new DamageSystem(6);

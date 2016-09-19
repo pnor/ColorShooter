@@ -39,9 +39,10 @@ public class Level24 extends GameScreen{
         GameEntity enemySpawn2 = generateRandomUFOSpawnPoint(500,900, 4f, true, getEngine());
 
         GameEntity powerUps = generateItemSpawnPoint(300, 550, "Health", 8f,  getEngine());
-        GameEntity powerUps2 = generateItemSpawnPoint(500, 350, "SuperShootUp", 7f,  getEngine());
+        GameEntity powerUps2 = generateItemSpawnPoint(500, 350, "SpeedUp", 7f,  getEngine());
 
-        GameEntity colors = generateItemSpawnPoint(618, 294, "Purple", 35f, getEngine());
+        GameEntity colors = generateItemSpawnPoint(558, 294, "White", 35f, getEngine());
+        em.get(colors).currentTime = 30f;
         GameEntity colors2 = generateItemSpawnPoint(738, 434, "Yellow", 25f, getEngine());
         GameEntity colors3 = generateItemSpawnPoint(618, 694, "Orange", 55f, getEngine());
 

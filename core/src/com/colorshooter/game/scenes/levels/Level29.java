@@ -10,9 +10,7 @@ import com.colorshooter.game.scenes.GameScreen;
 import static com.colorshooter.game.EntityConstructors.*;
 import static com.colorshooter.game.EntityConstructors.generateItemSpawnPoint;
 import static com.colorshooter.game.EntityConstructors.generateMovingObject;
-import static com.colorshooter.game.Mappers.cm;
-import static com.colorshooter.game.Mappers.em;
-import static com.colorshooter.game.Mappers.pm;
+import static com.colorshooter.game.Mappers.*;
 
 /**
  * Created by pnore_000 on 8/31/2016.
@@ -37,10 +35,9 @@ public class Level29 extends GameScreen{
         setTimer(new GameTimer());
         getTimer().setTime(120f);
 
-        setBackground(ImageComponent.backgroundAtlas.findRegion("Space1"));
+        setBackground(ImageComponent.backgroundAtlas.findRegion("CubeSpace4"));
 
         setPlayer(generatePlayer(678, 414));
-        cm.get(getPlayer()).boundingBox.setOrigin(pm.get(getPlayer()).x + pm.get(getPlayer()).originX, pm.get(getPlayer()).y + pm.get(getPlayer()).originY);
 
         GameEntity enemySpawn = generateEnemySpawnPoint(500,900, "Core", 30f, getEngine());
         em.get(enemySpawn).currentTime = 28f;

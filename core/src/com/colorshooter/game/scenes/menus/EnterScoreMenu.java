@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -50,15 +51,19 @@ public class EnterScoreMenu extends MenuScreen {
     @Override
     public void show() {
         super.show();
-        setBackgound(ImageComponent.backgroundAtlas.findRegion("PinkSpace1"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("arial.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
+
+        setBackgound(ImageComponent.backgroundAtlas.findRegion("HighScores"));
 
         playerPoints = GameScreen.getPoints();
 
         highScores = getHighScores();
 
-        Label title = new Label("New High Score!", skin);
-        title.setFontScale(1.5f);
-        playerPointLabel = new Label("" + playerPoints, skin);
+        param.size = 25;
+        Label title = new Label("New High Score!", new Label.LabelStyle(generator.generateFont(param), Color.WHITE));
+        param.size = 20;
+        playerPointLabel = new Label("" + playerPoints, new Label.LabelStyle(generator.generateFont(param), Color.WHITE));
         playerPointLabel.setColor(Color.YELLOW);
         nameText = new TextField("ABC", skin);
         confirm = new TextButton("Confirm", skin, "toggle");
@@ -103,6 +108,7 @@ public class EnterScoreMenu extends MenuScreen {
         table.row();
 
         stage.addActor(table);
+        generator.dispose();
     }
 
     @Override
@@ -119,11 +125,6 @@ public class EnterScoreMenu extends MenuScreen {
         if (nameText.getText().length() > 10) {
             nameText.setText(nameText.getText().substring(0, 10));
         }
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
     }
 
     public Array<HighScore> sortHighScores(Array<HighScore> array, int start, int end) {

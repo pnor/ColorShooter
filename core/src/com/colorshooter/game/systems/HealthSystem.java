@@ -21,11 +21,9 @@ import static com.colorshooter.game.Mappers.pm;
 public class HealthSystem extends EntitySystem{
     private Family family;
     private ImmutableArray<Entity> entities;
-    //private TextureAtlas atlas;
 
-    public HealthSystem(TextureAtlas a, int priority) {
+    public HealthSystem(int priority) {
         super(priority);
-        //atlas = a;
     }
 
     @Override

@@ -9,6 +9,11 @@ import java.util.ArrayList;
  * Created by pnore_000 on 8/1/2016.
  */
 public class AnimationComponent implements Component{
+    public AnimationComponent() {
+        animations = new ArrayList<ArrayList<TextureRegion>>();
+        animations.add(new ArrayList<TextureRegion>());
+    }
+
     public boolean animate;
     public boolean repeat;
 
@@ -17,7 +22,7 @@ public class AnimationComponent implements Component{
 
     public TextureRegion baseTextureRegion; //default texture region
 
-    public ArrayList<ArrayList<TextureRegion>> animations = new ArrayList<ArrayList<TextureRegion>>();
+    public ArrayList<ArrayList<TextureRegion>> animations;
     public int currentAnimation; //refers to which array list
     public int currentIndex; // refers to which index array list
 }
