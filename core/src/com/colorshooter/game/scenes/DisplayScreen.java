@@ -72,12 +72,19 @@ public class DisplayScreen implements Screen, Disposable{
 
     }
 
+    /**
+     * Disposes all the disposable static fields.
+     */
     public static void release() {
         stage.dispose();
         skin.dispose();
         uiatlas.dispose();
     }
 
+    /**
+     * Gets an {@code Array} of {@code HighScore} objects from the file highScores.json
+     * @return An {@code Array} of {@code HighScore}
+     */
     public Array<HighScore> getHighScores() {
         Array<HighScore> returnArray;
 

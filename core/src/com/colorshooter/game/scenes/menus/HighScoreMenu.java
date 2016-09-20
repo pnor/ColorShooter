@@ -33,7 +33,7 @@ public class HighScoreMenu extends MenuScreen{
         scores = getHighScores();
 
         Label title;
-        param.size = 25;
+        param.size = 35;
         param.shadowColor = Color.BLUE;
         param.shadowOffsetX = 2;
         param.shadowOffsetY = 2;

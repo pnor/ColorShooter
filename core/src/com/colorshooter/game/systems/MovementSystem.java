@@ -54,6 +54,13 @@ public class MovementSystem extends EntitySystem{
         }
     }
 
+    /**
+     * Moves a {@code PositionComponent} by the amount of x and y.
+     * @param pos {@code PositionComponent}
+     * @param x amount to move
+     * @param y amount to move
+     * @param col {@code CollisionComponent}
+     */
     public static void moveBy(PositionComponent pos, float x, float y, CollisionComponent col){
         pos.x += x;
         pos.y += y;
@@ -62,16 +69,37 @@ public class MovementSystem extends EntitySystem{
         }
     }
 
+    /**
+     * Moves a {@code PositionComponent} by a speed value and the {@code PositionComponent}'s rotation
+     * @param pos {@code PositionComponent}
+     * @param speed speed
+     * @param col {@code CollisionComponent}
+     */
     public static void moveBy(PositionComponent pos, float speed, CollisionComponent col) {
         float theta = (float) Math.toRadians(pos.rotation);
         moveNormalized(pos, (float) Math.cos(theta), (float) Math.sin(theta), speed, col);
     }
 
+    /**
+     * Moves a {@code PositionComponent} by a rotation and speed
+     * @param pos {@code PositionComponent}
+     * @param rotation rotation to move by
+     * @param speed speed
+     * @param col {@code CollisionComponent}
+     */
     public static void moveByRotation(PositionComponent pos, float rotation, float speed, CollisionComponent col) {
         float theta = (float) Math.toRadians(rotation);
         moveNormalized(pos, (float) Math.cos(theta), (float) Math.sin(theta), speed, col);
     }
 
+    /**
+     * Moves a {@code PositionComponent} to a set point by a speed value
+     * @param pos {@code PositionComponent}
+     * @param x x-coordinate
+     * @param y y-coordinate
+     * @param speed speed
+     * @param col {@code CollisionComponent}
+     */
     public static void moveTowards(PositionComponent pos, float x,  float y, float speed, CollisionComponent col) {
         float theta = (float) Math.atan2(y - (pos.y + pos.originY), x - (pos.x + pos.originX));
         moveNormalized(pos, (float) Math.cos(theta), (float) Math.sin(theta), speed, col);
@@ -85,6 +113,13 @@ public class MovementSystem extends EntitySystem{
         moveBy(pos, normal.x, normal.y, col);
     }
 
+    /**
+     * Gets the distance between a {@code PositionComponent} and a point
+     * @param pos {@code PositionComponent}
+     * @param x x-coordinate
+     * @param y y-coordinate
+     * @return the distance
+     */
     public static float getDistance(PositionComponent pos, float x, float y) {
         return (float) Math.sqrt(Math.pow(x - (pos.x + pos.originX), 2) + Math.pow(y - (pos.y + pos.originY), 2));
     }

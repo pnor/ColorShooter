@@ -112,11 +112,19 @@ public class PlayerInputSystem extends EntitySystem{
         }
     }
 
+    /**
+     * Sets the mouse's location
+     */
     private void setMouse() {
         Vector2 mousePointer = screen.getStage().getViewport().unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
         mouse.setLocation(mousePointer.x, mousePointer.y);
     }
 
+    /**
+     * Checks whether the player is out of bounds
+     * @param e Entity
+     * @return Whether player is out of bounds
+     */
     private boolean playerOutOfBounds(Entity e) {
         PositionComponent pos = pm.get(e);
         return (pos.x < 0 || pos.y < 0 || screen.getStage().getWidth() - pos.x + pos.width < 100 || screen.getStage().getHeight() - pos.y + pos.height < 100);
@@ -126,6 +134,12 @@ public class PlayerInputSystem extends EntitySystem{
         return family;
     }
 
+    /**
+     * Checks if the mouse's location is inside the player
+     * @param mouse the Mouse location
+     * @param e Entity
+     * @return Whether the mouse's location is inside the player
+     */
     private boolean checkMouseInsidePlayer(Point2D.Float mouse, GameEntity e) {
         PositionComponent pos = pm.get(e);
         return Math.abs(pos.x + pos.originX - mouse.x) <= 5 && Math.abs(pos.y + pos.originY - mouse.y) <= 5;
@@ -135,6 +149,10 @@ public class PlayerInputSystem extends EntitySystem{
         entities = engine.getEntitiesFor(family);
     }
 
+    /**
+     * Updates the player's color. Changes the image and the attack delay between firing.
+     * @param e Entity
+     */
     public void updateColor(Entity e) {
         if (!colm.has(e))
             return;
@@ -181,6 +199,10 @@ public class PlayerInputSystem extends EntitySystem{
         color.oldColor = color.color;
     }
 
+    /**
+     * Updates the player's image.
+     * @param e Entity
+     */
     public static void updatePlayerImage(Entity e) {
         if (!colm.has(e))
             return;
@@ -206,6 +228,10 @@ public class PlayerInputSystem extends EntitySystem{
             im.get(e).texRegion = ImageComponent.atlas.findRegion("PlayerShipWhite");
     }
 
+    /**
+     * Player shoots depending on the value of {@code color}
+     * @param e Entity shooting
+     */
     public void playerShoot(Entity e) {
         ColorComponent color = colm.get(e);
         if (color == null || color.color == 'x')

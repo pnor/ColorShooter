@@ -118,26 +118,58 @@ public class CollisionSystem extends EntitySystem{
         }
     }
 
+    /**
+     * Moves the {@code BoundingBox} by x and y
+     * @param col {@code CollisionComponent} of the Entity
+     * @param x amount to move
+     * @param y amount to move
+     * @param rotation new rotation
+     */
     public static void updateBoundingBox(CollisionComponent col, float x, float y, float rotation) {
         col.boundingBox.translate(x, y);
         if  (col.rotateBox)
             col.boundingBox.setRotation(rotation);
     }
 
+    /**
+     * Updates the {@code BoundingBox} with a new location
+     * @param col {@code CollisionComponent} of the Entity
+     * @param x new x
+     * @param y new y
+     * @param rotation new rotation
+     */
     public static void setBoundingBoxLocation(CollisionComponent col, float x, float y, float rotation) {
         col.boundingBox.setPosition(x, y);
         if (col.rotateBox)
             col.boundingBox.setRotation(rotation);
     }
 
+    /**
+     * Checks if 2 {@code CollisionComponent}s are colliding
+     * @param col {@code CollisionComponent}
+     * @param col2 {@code CollisionComponent}
+     * @return whether 2 {@code CollisionComponent}s are colliding
+     */
     public static boolean checkCollision(CollisionComponent col, CollisionComponent col2) {
         return Intersector.overlapConvexPolygons(col.boundingBox, col2.boundingBox);
     }
 
+    /**
+     * Checks if 2 arrays of vertices representing a collision box are colliding
+     * @param verts1 array of float values
+     * @param verts2 array of float values
+     * @return whether 2 arrays of vertices representing a collision box are colliding
+     */
     public static boolean checkCollision(float[] verts1, float[] verts2) {
         return Intersector.overlapConvexPolygons(verts1, verts2, new Intersector.MinimumTranslationVector());
     }
 
+    /**
+     * Checks if 2 {@code CollisionComponent}s are colliding. If they are, moves them out of collision range
+     * @param e Entity
+     * @param e2 Entity
+     * @return whether they where colliding
+     */
     public boolean stopCollision(Entity e, Entity e2) {
         Intersector.MinimumTranslationVector min = new Intersector.MinimumTranslationVector();
         boolean collide = Intersector.overlapConvexPolygons(cm.get(e).boundingBox, cm.get(e2).boundingBox, min);

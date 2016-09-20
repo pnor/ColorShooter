@@ -33,6 +33,7 @@ public class AISystem extends EntitySystem {
         screen = s;
     }
 
+    @Override
     public void addedToEngine(Engine engine) {
         entities = engine.getEntitiesFor(family);
         players = engine.getEntitiesFor(playerFamily);
@@ -231,10 +232,10 @@ public class AISystem extends EntitySystem {
         return (GameEntity) players.get(smallestIndex);
     }
 
-    public boolean checkPosition(PositionComponent pos) {
-        return (pos.x > screen.getStage().getWidth() || pos.x + pos.width < 0) || (pos.y > screen.getStage().getHeight() || pos.y + pos.height < 0);
-    }
-
+    /**
+     * Shoot a a projectile based on the value of {@code projectileType}
+     * @param e Entity Shooting
+     */
     public void shootProjectile(Entity e) {
         if (aim.get(e).projectileType == 'l')
             ShootingSystem.shoot(getEngine(), EntityConstructors.generateLaser(0, 0, pm.get(e).rotation, ImageComponent.atlas.findRegion("EnemyLaser"), 1), pm.get(e), shm.get(e));
@@ -280,6 +281,5 @@ public class AISystem extends EntitySystem {
             ShootingSystem.shootOffset(-65, -65f, getEngine(), EntityConstructors.generateTurretlaser(0, 0, pm.get(e).rotation), pm.get(e), shm.get(e));
         else if (aim.get(e).projectileType == '5')
             ShootingSystem.shootOffset(-85, -85f, getEngine(), EntityConstructors.generateThunderLaser(0, 0, pm.get(e).rotation, 1), pm.get(e), shm.get(e));
-
     }
 }

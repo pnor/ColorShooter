@@ -16,8 +16,6 @@ import static com.colorshooter.game.Mappers.hm;
 
 public class ColorShooter extends Game {
 
-	private int index;
-
 	public void create() {
 		setScreen(new MainMenu(this));
 	}
@@ -27,16 +25,18 @@ public class ColorShooter extends Game {
 	}
 
 	public void render () {
-		int lastIndex = index;
 
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 			if (getScreen() instanceof MainMenu)
 				Gdx.app.exit();
-			else
+			else {
 				setScreen(new MainMenu(this));
+				GameScreen.setPoints(0);
+			}
 		}
 
 		//screen moving with dpad
+
 		if (Gdx.input.isKeyJustPressed(Input.Keys.DPAD_LEFT)) {
 			setScreen(new MainMenu(this));
 		}
@@ -53,6 +53,7 @@ public class ColorShooter extends Game {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
 			setScreen(new HighScoreMenu(this));
 		}
+
 
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

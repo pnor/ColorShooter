@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -215,6 +216,7 @@ public class GameScreen extends DisplayScreen {
         if (screenState == 3)
             return;
 
+
         if (screenState == 1) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                 if (bestMultiplier >= 3f)
@@ -231,16 +233,17 @@ public class GameScreen extends DisplayScreen {
         }
 
         checkVictory(delta);
+
+        if (screenState == 1) {
+            showVictoryHUD();
+            return;
+        }
+
         checkDeath(delta);
         incrementMultiTimer(delta);
         if (timer != null)
             timer.decreaseTimer(delta);
         updateHUD();
-
-        if (getScreenState() == 1) {
-            showVictoryHUD();
-            return;
-        }
 
         getEngine().update(delta);
         stage.draw();
@@ -298,11 +301,9 @@ public class GameScreen extends DisplayScreen {
         engine.removeAllEntities();
     }
 
-    @Override
-    public void dispose() {
-
-    }
-
+    /**
+     * Sets up the in-game HUD
+     */
     public void setUpHUD() {
         FreeTypeFontGenerator gen = new FreeTypeFontGenerator(Gdx.files.internal("arial.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -326,7 +327,8 @@ public class GameScreen extends DisplayScreen {
             param.size = 20;
             levelNum = new Label("" + level, new Label.LabelStyle(gen.generateFont(param), Color.WHITE));
         } else {
-            levelLabel = new Label("Bonus!", skin);
+            param.size = 26;
+            levelLabel = new Label("Bonus!", new Label.LabelStyle(gen.generateFont(param), Color.WHITE));
         }
 
         if (level <= 0)
@@ -339,6 +341,8 @@ public class GameScreen extends DisplayScreen {
             levelNum.setColor(Color.YELLOW);
         else if (level >= 22)
             levelNum.setColor(Color.PURPLE);
+        else if (level == 30)
+            levelNum.setColor(Color.RED);
 
         life = new Label("Lives:", skin);
         lifeCount = new Label("-", skin);
@@ -350,10 +354,10 @@ public class GameScreen extends DisplayScreen {
         param.size = 30;
         pointMultiplierLabel = new Label("" + pointMultiplier, new Label.LabelStyle(gen.generateFont(param), Color.WHITE));
 
-        objectiveLabel = new Label("Defeat All Enemies!", skin);
+        param.size = 20;
+        objectiveLabel = new Label("Defeat All Enemies!", new Label.LabelStyle(gen.generateFont(param), Color.WHITE));
 
         //  BACKUP!!!
-        //table.setFillParent(true);
         table.top().left();
         table.padTop(22).padLeft(10);
         table.add(icon).size(65, 65);
@@ -414,6 +418,9 @@ public class GameScreen extends DisplayScreen {
         gen.dispose();
     }
 
+    /**
+     * Updates the HUD when the game is running to keep it up to date.
+     */
     private void updateHUD() {
         pointMultiplierLabel.setText("" + pointMultiplier);
         pointMultiplierLabel.setColor(1f, 1.25f - (pointMultiplier / 4), 1.25f - (pointMultiplier / 4), 1f);
@@ -457,6 +464,9 @@ public class GameScreen extends DisplayScreen {
         icon.toFront();
     }
 
+    /**
+     * Displays the victory screen shown when the level's win criteria is met.
+     */
     public void showVictoryHUD() {
         FreeTypeFontGenerator gen = new FreeTypeFontGenerator(Gdx.files.internal("arial.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -466,6 +476,23 @@ public class GameScreen extends DisplayScreen {
         param.borderWidth = 2;
         Label victoryText = new Label("Level Complete!", new Label.LabelStyle(gen.generateFont(param), Color.WHITE));
         victoryText.setColor(Color.CYAN);
+
+        if (!player.getDisposed()) {
+            healthLabel.setText("Health : " + hm.get(player).health + " / " + hm.get(player).maxHealth);
+            healthLabel.setColor(1f, (float) hm.get(player).health / hm.get(player).maxHealth, (float) hm.get(player).health / hm.get(player).maxHealth, 1f);
+            table.add(healthLabel).padBottom(10f);
+        } else {
+            icon = new Image(ImageComponent.atlas.findRegion("GhostPlayerShip"));
+            healthLabel.setText("Health : 0 / " + lastMax);
+            healthLabel.setColor(Color.RED);
+        }
+        param.size = 18;
+        param.borderWidth = 0;
+        healthLabel.setStyle(new Label.LabelStyle(gen.generateFont(param), Color.WHITE));
+
+        Label bestMultiLabel = new Label("Best Score Multiplier : " + bestMultiplier, skin);
+        bestMultiLabel.setColor(1.25f  - (bestMultiplier / 4), 1f, 1.25f - (bestMultiplier / 4), 1f);
+
         table.clearChildren();
         table.center();
         table.add(victoryText).padBottom(50f);
@@ -474,19 +501,12 @@ public class GameScreen extends DisplayScreen {
         table.row();
         table.add("Lives : " + lives).padBottom(10f);
         table.row();
-        if (!player.getDisposed())
-            table.add("Health : " + hm.get(player).health + " / " + hm.get(player).maxHealth).padBottom(10f);
-        else {
-            icon = new Image(ImageComponent.atlas.findRegion("GhostPlayerShip"));
-            table.add("Health : 0 / " + lastMax).padBottom(10f);
-        }
+        table.add(healthLabel).padBottom(10f);
         table.row();
         pointNum.setText("" + oldScore);
         table.add(pointNum).padBottom(10f);
         table.row();
-        Label bestMultiLabel = new Label("Best Score Multiplier : " + bestMultiplier, skin);
-        bestMultiLabel.setColor(1.25f  - (bestMultiplier / 4), 1f, 1.25f - (bestMultiplier / 4), 1f);
-
+        //Bonuses
         if (bestMultiplier > 3f || (!player.getDisposed() && hm.get(player).maxHealth == hm.get(player).health)) {
             table.add(bestMultiLabel).padBottom(10f);
             table.row();
@@ -509,16 +529,24 @@ public class GameScreen extends DisplayScreen {
             table.add(bestMultiLabel).padBottom(40f);
             table.row();
         }
+
+
         Label screenText = new Label("Press ENTER to continue", skin);
         screenText.setColor(Color.YELLOW);
         table.add(screenText);
         gen.dispose();
     }
 
+    /**
+     * Updates the victory screen.
+     */
     public void updateVictoryHUD() {
         pointNum.setText("" + oldScore);
     }
 
+    /**
+     * Repeatedly adds a value (1, 10, 100, or 1000) to the displayed score to create the roulette effect.
+     */
     public void rouletteScore() {
         if (newScore > oldScore) {
             if (newScore - oldScore > 10000)
@@ -543,9 +571,117 @@ public class GameScreen extends DisplayScreen {
         }
     }
 
-    public void colorHUD(Color color) {
+    /**
+     * Changes the color of certain Labels in the in-game HUD
+     * @param color Color to color the hud with
+     */
+    private void colorHUD(Color color) {
         if (!color.equals(healthLabel.getColor()))
             healthLabel.setColor(color);
+    }
+
+    /**
+     * Checks if the player is disposed
+     * @param dt delta time
+     * @return if the player is dead
+     */
+    public boolean checkDeath(float dt) {
+        if (player.getDisposed()) {
+            incrementRespawnTimer(dt);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if the player has met the win criteria for the level. If the level does not have a {@code GameTimer}, then
+     * the {@code screenState} will be changed when all the enemies have been killed.  If the level has a
+     * {@code GameTimer}, then the {@code screenState} will be changed when the time is finished.
+     */
+    public void checkVictory(float dt) {
+        if (timer != null) {
+            if (timer.checkIfFinished()) {
+                screenState = 1;
+                newScore = points;
+            }
+        } else {
+            if (engine.getEntitiesFor(Family.all(PositionComponent.class, AIComponent.class).get()).size() <= 0) {
+                currentVictoryTime += dt;
+                if (currentVictoryTime >= victoryEndTime) {
+                    newScore = points;
+                    screenState = 1;
+                }
+            } else {
+                currentVictoryTime = 0f;
+            }
+        }
+    }
+
+    /**
+     * To be Overridden. Returns the next {@code Screen} the game should go to.
+     * @return the next {@code Screen}
+     */
+    public Screen getNextLevel() {
+        System.out.println("non overided!");
+        return null;
+    }
+
+    /**
+     * Ticks the time until the level is reset
+     * @param dt time
+     */
+    public void incrementRespawnTimer(float dt) {
+        currentRespawnTime += dt;
+        if (currentRespawnTime >= endRespawnTime) {
+            screenState = 2;
+        }
+    }
+
+    /**
+     * Ticks the time until the Score Multiplier resets
+     * @param dt time
+     */
+    public void incrementMultiTimer(float dt) {
+        currentMultiTime += dt;
+        if (currentMultiTime >= endMultiTime) {
+            pointMultiplier = 1f;
+            currentMultiTime = 0f;
+        }
+    }
+
+    /**
+     * resets the Score Multiplier
+     */
+    public void resetMultiTimer() {
+        currentMultiTime = 0f;
+    }
+
+    /**
+     * Resets the level after the player dies.
+     */
+    public void reset() {
+        lives -= 1;
+        pointMultiplier = 1f;
+        screenState = 0;
+    }
+
+    /**
+     * Resets the respawn timer.
+     */
+    public void resetRespawnTimer() {
+        currentRespawnTime = 0f;
+    }
+
+    /**
+     * Increments the point Multiplier.  The amount is truncated to 1 decimal point.
+     * @param n Amount the point multiplier will be increased by.
+     */
+    public void incrementPointMultiplier(float n) {
+        pointMultiplier += n;
+        pointMultiplier = Math.round(pointMultiplier * 100);
+        pointMultiplier /= 100;
+        if (pointMultiplier > bestMultiplier)
+            bestMultiplier = pointMultiplier;
     }
 
     public Stage getStage() {
@@ -582,67 +718,6 @@ public class GameScreen extends DisplayScreen {
         return player;
     }
 
-    public boolean checkDeath(float dt) {
-        if (player.getDisposed()) {
-            incrementRespawnTimer(dt);
-            return true;
-        }
-        return false;
-    }
-
-    public void checkVictory(float dt) {
-        if (timer != null) {
-            if (timer.checkIfFinished()) {
-                screenState = 1;
-                newScore = points;
-            }
-        } else {
-            if (engine.getEntitiesFor(Family.all(PositionComponent.class, AIComponent.class).get()).size() <= 0) {
-                currentVictoryTime += dt;
-                if (currentVictoryTime >= victoryEndTime) {
-                    newScore = points;
-                    screenState = 1;
-                }
-            } else {
-                currentVictoryTime = 0f;
-            }
-        }
-    }
-
-    public Screen getNextLevel() {
-        System.out.println("non overided!");
-        return null;
-    }
-
-    public void incrementRespawnTimer(float dt) {
-        currentRespawnTime += dt;
-        if (currentRespawnTime >= endRespawnTime) {
-            screenState = 2;
-        }
-    }
-
-    public void incrementMultiTimer(float dt) {
-        currentMultiTime += dt;
-        if (currentMultiTime >= endMultiTime) {
-            pointMultiplier = 1f;
-            currentMultiTime = 0f;
-        }
-    }
-
-    public void resetMultiTimer() {
-        currentMultiTime = 0f;
-    }
-
-    public void reset() {
-        lives -= 1;
-        pointMultiplier = 1f;
-        screenState = 0;
-    }
-
-    public void resetRespawnTimer() {
-        currentRespawnTime = 0f;
-    }
-
     public void setScreenState(int s) {
        screenState = s;
     }
@@ -663,14 +738,6 @@ public class GameScreen extends DisplayScreen {
         points += p;
     }
 
-    public static int getLastLevel() {
-        return lastLevel;
-    }
-
-    public static void setLastLevel(int last) {
-        lastLevel = last;
-    }
-
     public GameTimer getTimer() {
         return timer;
     }
@@ -688,14 +755,6 @@ public class GameScreen extends DisplayScreen {
 
     public static void setPointMultiplier(float n) {
         pointMultiplier = n;
-    }
-
-    public void incrementPointMultiplier(float n) {
-        pointMultiplier += n;
-        pointMultiplier = Math.round(pointMultiplier * 100);
-        pointMultiplier /= 100;
-        if (pointMultiplier > bestMultiplier)
-            bestMultiplier = pointMultiplier;
     }
 
     public static int getLives() {

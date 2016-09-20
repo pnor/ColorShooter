@@ -36,12 +36,16 @@ public class MainMenu extends MenuScreen implements Screen{
 
         table.center().setFillParent(true);
 
-        param.size = 40;
-        param.borderColor = new Color(1, 1, 0.8f, 1f);
+        param.size = 80;
+        param.color = new Color(1f, 0.95f, 0.95f, 1);
+        param.borderColor = Color.WHITE; //new Color(1, 1, 0.8f, 1f);
         param.borderWidth = 1f;
+        param.shadowColor = Color.BLUE;
+        param.shadowOffsetY = -4;
+        param.shadowOffsetX = -3;
         BitmapFont title = gen.generateFont(param);
         Label.LabelStyle labelStyle= new Label.LabelStyle(title, Color.WHITE);
-        Label titleLabel= new Label("Color Shooter", labelStyle);
+        Label titleLabel= new Label("Color Wars", labelStyle);
 
         table.add(titleLabel).padBottom(75f);
 
@@ -87,35 +91,4 @@ public class MainMenu extends MenuScreen implements Screen{
 
         gen.dispose();
     }
-
-    @Override
-    public void render(float delta) {
-        super.render(delta);
-    }
-
-    @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-    }
-
 }

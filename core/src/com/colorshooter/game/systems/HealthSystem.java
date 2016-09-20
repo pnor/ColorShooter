@@ -100,6 +100,10 @@ public class HealthSystem extends EntitySystem{
         }
     }
 
+    /**
+     * Checks if a {@code HealthComponent} is alive. If not, sets {@code isAlive to false}.
+     * @param heal {@code HealthComponent}
+     */
     public void checkIfAlive(HealthComponent heal) {
         if (heal.health <= 0) {
             heal.isAlive = false;

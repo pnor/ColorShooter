@@ -127,7 +127,14 @@ public class EnterScoreMenu extends MenuScreen {
         }
     }
 
-    public Array<HighScore> sortHighScores(Array<HighScore> array, int start, int end) {
+    /**
+     * Sorts an {@code Array} of {@code HighScore} by point value using quicksort. Sorts from greatest to least
+     * @param array {@code Array} of {@code HighScore} to be sorted
+     * @param start where to start
+     * @param end where to end
+     * @return a sorted {@code Array} of {@code HighScore}
+     */
+    private Array<HighScore> sortHighScores(Array<HighScore> array, int start, int end) {
         if (array == null)
             return null;
 

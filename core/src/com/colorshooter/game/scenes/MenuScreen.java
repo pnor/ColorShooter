@@ -52,11 +52,6 @@ public class MenuScreen extends DisplayScreen{
         table.clear();
     }
 
-    @Override
-    public void dispose() {
-
-    }
-
     public ColorShooter getGame() {
         return COLOR_SHOOTER;
     }

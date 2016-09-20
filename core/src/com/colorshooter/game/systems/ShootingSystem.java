@@ -49,6 +49,13 @@ public class ShootingSystem extends EntitySystem{
         entities = engine.getEntitiesFor(family);
     }
 
+    /**
+     * Generates the {@code Entity} parameter in front of the {@code Entity} that is shooting
+     * @param engine Engine
+     * @param e Entity
+     * @param pos {@code PositionComponent}
+     * @param shoot {@code ShootComponent}
+     */
     public static void shoot(Engine engine, GameEntity e, PositionComponent pos, ShootComponent shoot) {
         if (!pm.has(e)) {
             System.out.println("failed!!!");
@@ -71,6 +78,16 @@ public class ShootingSystem extends EntitySystem{
         engine.addEntity(e);
     }
 
+    /**
+     * Generates the {@code Entity} parameter in front of the {@code Entity}, offset by a specified amount,
+     * that is shooting.
+     * @param offsetX amount to offset x
+     * @param offsetY amount to offset y
+     * @param engine engine
+     * @param e Entity
+     * @param pos {@code PositionComponent}
+     * @param shoot {@code ShootComponent}
+     */
     public static void shootOffset(float offsetX, float offsetY, Engine engine, GameEntity e, PositionComponent pos, ShootComponent shoot) {
         if (!pm.has(e)) {
             System.out.println("failed!!!");

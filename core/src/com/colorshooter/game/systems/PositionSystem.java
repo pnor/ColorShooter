@@ -19,11 +19,22 @@ public class PositionSystem extends EntitySystem{
     public void update(float dt) {
     }
 
+    /**
+     * Sets the value of a {@code PositionComponent}'s origins
+     * @param pos {@code PositionComponent}
+     */
     public static void setOrigins(PositionComponent pos) {
         pos.originX = pos.width / 2;
         pos.originY = pos.height / 2;
     }
 
+    /**
+     * Changes th rotation of a {@code PositionComponent} to look at a point
+     * @param pos {@code PositionComponent}
+     * @param x x-coordinate
+     * @param y y-coordinate
+     * @param col {@code CollisionComponent}
+     */
     public static void lookAt(PositionComponent pos, float x, float y, CollisionComponent col) {
         float direction = (float) Math.atan2(y - (pos.y + pos.originY), x - (pos.x + pos.originX));
         pos.rotation = (float) Math.toDegrees(direction);

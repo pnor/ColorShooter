@@ -37,7 +37,7 @@ public class HowToPlayScreen extends MenuScreen{
 
         param.borderWidth = 0;
         param.size = 20;;
-        Label description = new Label("Fend off against the aliens of the Spectrum Solar System!", new Label.LabelStyle(generator.generateFont(param), Color.WHITE));
+        Label description = new Label("Earn points by fighting enemies and aim for the High Score!", new Label.LabelStyle(generator.generateFont(param), Color.WHITE));
 
         param.color = new Color(0.95f, 0.95f, 1, 1);
         Label movementInfo = new Label("Use WASD for Movement", new Label.LabelStyle(generator.generateFont(param), Color.WHITE));
@@ -48,6 +48,7 @@ public class HowToPlayScreen extends MenuScreen{
         Label colorInfo = new Label("Collecting Color Stars will power up your ship in a unique way", new Label.LabelStyle(generator.generateFont(param), Color.WHITE));
 
         param.color = new Color(1, 0.2f, 0.2f, 1);
+        Label pauseInfo = new Label("Press TAB to pause", new Label.LabelStyle(generator.generateFont(param), Color.WHITE));
         Label escapeInfo = new Label("Press ESCAPE to return to the Main Menu", new Label.LabelStyle(generator.generateFont(param), Color.WHITE));
 
         Image healthImage = new Image(ImageComponent.atlas.findRegion("Life1"));
@@ -85,7 +86,10 @@ public class HowToPlayScreen extends MenuScreen{
 
         table.row();
         table.add();
-        table.add(escapeInfo).padTop(60f);
+        table.add(pauseInfo).padTop(60f);
+        table.row();
+        table.add();
+        table.add(escapeInfo).padTop(30f);
 
         stage.addActor(table);
         generator.dispose();

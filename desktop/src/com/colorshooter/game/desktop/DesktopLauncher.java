@@ -11,7 +11,7 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
-		config.title = "ColorShooter";
+		config.title = "Color Wars";
 		config.addIcon("ColorShooterMacIcon.png", Files.FileType.Internal);
 		config.addIcon("ColorShooter32Icon.png", Files.FileType.Internal);
 		config.addIcon("ColorShooter16Icon.png", Files.FileType.Internal);

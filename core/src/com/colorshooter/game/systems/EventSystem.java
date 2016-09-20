@@ -39,7 +39,6 @@ public class EventSystem extends EntitySystem {
                 event.currentTime += dt;
                 if (event.currentTime >= event.targetTime) {
                     event.currentTime = 0f;
-                    //try {
                         event.event.event((GameEntity) e, getEngine());
 
                     if (!event.repeat)
