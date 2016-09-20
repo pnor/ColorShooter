@@ -86,7 +86,7 @@ public class ShootingSystem extends EntitySystem{
      * @param engine engine
      * @param e Entity
      * @param pos {@code PositionComponent}
-     * @param shoot {@code ShootComponent}
+     * @param shoot {@code ShootComponent} \\
      */
     public static void shootOffset(float offsetX, float offsetY, Engine engine, GameEntity e, PositionComponent pos, ShootComponent shoot) {
         if (!pm.has(e)) {
