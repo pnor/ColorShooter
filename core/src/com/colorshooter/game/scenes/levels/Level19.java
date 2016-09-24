@@ -25,8 +25,7 @@ public class Level19 extends GameScreen {
     @Override
     public void show() {
         super.show();
-        setTimer(new GameTimer());
-        getTimer().setTime(85f);
+        setTimer(new GameTimer(70f));
         setBackground(ImageComponent.backgroundAtlas.findRegion("PinkSpace1"));
 
         setPlayer(generatePlayer(678, 414));
@@ -35,7 +34,7 @@ public class Level19 extends GameScreen {
         GameEntity enemySpawn = generateRandomUFOSpawnPoint(1000,900, 3.5f, false, getEngine());
         GameEntity enemySpawn2 = generateRandomUFOSpawnPoint(0,0, 6f, false,   getEngine());
         em.get(enemySpawn2).currentTime = 1f;
-        GameEntity enemySpawn3 = generateEnemySpawnPoint(0, 900, "EnemyShipBlue", 5f, getEngine());
+        GameEntity enemySpawn3 = generateEnemySpawnPoint(0, 900, "EnemyShipYellow", 5f, getEngine());
         em.get(enemySpawn3).currentTime = 0.6f;
         GameEntity enemySpawn4 = generateEnemySpawnPoint(500, -40, "EnemyShipRed", 5f,  getEngine());
 

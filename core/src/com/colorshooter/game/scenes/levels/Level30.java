@@ -44,31 +44,34 @@ public class Level30 extends GameScreen{
         GameEntity sub1 = generateTurret(1300, 560);
         GameEntity sub2 = generateTurret(1300, 260);
 
-        GameEntity sub3 = generateYellowTurret(1200, 500);
+        GameEntity sub3 = generateTurret(1200, 500);
         GameEntity sub4 = generateTurret(1200, 300);
-        GameEntity sub5 = generateTurret(1240, 700);
+        GameEntity sub5 = generateYellowTurret(1240, 700);
         GameEntity sub6 = generateYellowTurret(1240, 100);
 
-        GameEntity sub7 = generateYellowTurret(850, 510);
-        GameEntity sub8 = generateYellowTurret(850, 290);
+        GameEntity sub7 = generateYellowTurret(1100, 200);
+        GameEntity sub8 = generateYellowTurret(1100, 600);
 
-        GameEntity sub9 = generateBlueTurret(960, 660);
-        shm.get(sub9).isAttacking = true;
-        shm.get(sub9).currentTime = -1f;
-        GameEntity sub10 = generateTurret(1000, 560);
-        GameEntity sub11 = generateBlueTurret(880, 357);
+        GameEntity sub9 = generateYellowTurret(850, 510);
+        GameEntity sub10 = generateYellowTurret(850, 290);
+
+        GameEntity sub11 = generateBlueTurret(960, 660);
         shm.get(sub11).isAttacking = true;
-        shm.get(sub11).currentTime = -1.7f;
-        GameEntity sub12 = generateTurret(1000, 260);
-        GameEntity sub13 = generateBlueTurret(960, 40);
+        shm.get(sub11).currentTime = -1f;
+        GameEntity sub12 = generateTurret(1000, 560);
+        GameEntity sub13 = generateBlueTurret(880, 357);
         shm.get(sub13).isAttacking = true;
-        shm.get(sub13).currentTime = -2.4f;
+        shm.get(sub13).currentTime = -1.7f;
+        GameEntity sub14 = generateTurret(1000, 260);
+        GameEntity sub15 = generateBlueTurret(960, 40);
+        shm.get(sub15).isAttacking = true;
+        shm.get(sub15).currentTime = -2.4f;
 
-        GameEntity sub14 = generateTurret(1100, 450);
-        GameEntity sub15 = generateTurret(1100, 350);
+        GameEntity sub16 = generateTurret(1100, 450);
+        GameEntity sub17 = generateTurret(1100, 350);
 
-        GameEntity sub16 = generateTurret(1100, 800);
-        GameEntity sub17 = generateTurret(1100, 10);
+        GameEntity sub18 = generateTurret(1100, 800);
+        GameEntity sub19 = generateTurret(1100, 10);
 
 
         GameEntity podSpawn = generateEnemySpawnPoint(-100, -100, "PodShip", 30f, getEngine());
@@ -107,6 +110,9 @@ public class Level30 extends GameScreen{
         getEngine().addEntity(sub16);
         getEngine().addEntity(sub17);
 
+        getEngine().addEntity(sub18);
+        getEngine().addEntity(sub19);
+
         getEngine().addEntity(podSpawn);
         getEngine().addEntity(podSpawn2);
 
@@ -125,6 +131,7 @@ public class Level30 extends GameScreen{
         super.render(delta);
         if (!phase2 && ((!boss.getDisposed() && getEngine().getEntitiesFor(Family.all(AIComponent.class).get()).size() <= 3) || (!boss.getDisposed() && hm.get(boss).health < 2000))) {
             phase2 = true;
+            getEngine().addEntity(generateItemSpawnPoint(100, 550, "White",25f, getEngine()));
 
             aim.get(boss).projectileType = '1';
             am.get(boss).animationTime = 0.09f;

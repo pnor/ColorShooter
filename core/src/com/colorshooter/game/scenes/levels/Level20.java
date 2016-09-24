@@ -1,9 +1,11 @@
 package com.colorshooter.game.scenes.levels;
 
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Screen;
 import com.colorshooter.game.ColorShooter;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.GameTimer;
+import com.colorshooter.game.components.AIComponent;
 import com.colorshooter.game.components.ImageComponent;
 import com.colorshooter.game.scenes.GameScreen;
 
@@ -18,6 +20,13 @@ import static com.colorshooter.game.Mappers.pm;
  */
 public class Level20 extends GameScreen{
 
+    private boolean endSpawns;
+    private GameTimer spawnTimer;
+    private GameEntity enemySpawn, enemySpawn2, enemySpawn3, enemySpawn4;
+
+    private GameEntity powerUps, powerUps2, object1, object2, object3, object4;
+    private boolean endLevel;
+
     public Level20(ColorShooter game) {
         super(20, game);
     }
@@ -25,33 +34,42 @@ public class Level20 extends GameScreen{
     @Override
     public void show() {
         super.show();
-        setTimer(new GameTimer());
-        getTimer().setTime(85f);
+        spawnTimer = new GameTimer(45f);
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("GraySpace2"));
 
         setPlayer(generatePlayer(678, 414));
         cm.get(getPlayer()).boundingBox.setOrigin(pm.get(getPlayer()).x + pm.get(getPlayer()).originX, pm.get(getPlayer()).y + pm.get(getPlayer()).originY);
 
-        GameEntity enemySpawn = generateEnemySpawnPoint(500,900, "EnemyShipRed", 8f, getEngine());
-        GameEntity enemySpawn2 = generateEnemySpawnPoint(500, 0, "EnemyShipBlue", 9f, getEngine());
-        em.get(enemySpawn2).currentTime = 8f;
-        GameEntity enemySpawn3 = generateEnemySpawnPoint(1210, 500, "EnemyShipGold", 17f, getEngine());
-        GameEntity enemySpawn4 = generateEnemySpawnPoint(0, 500, "EnemyShipYellow", 14f, getEngine());
-        em.get(enemySpawn4).currentTime = 10f;
+        GameEntity enemy = generateEnemyShipRed(700, 1500);
+        GameEntity enemy2 = generateEnemyShipBlue(-400, 450);
+        GameEntity enemy3 = generateEnemyShipBlue(1900, 450);
+        GameEntity enemy4 = generateEnemyShipBlue(700, -300);
 
-        GameEntity powerUps = generateMovingItemSpawnPoint(300, 450, "Health", 8f,  getEngine());
-        GameEntity powerUps2 = generateMovingRandomPowerUp(220, 330, 12f,  getEngine());
+        enemySpawn = generateEnemySpawnPoint(500,900, "EnemyShipRed", 14f, getEngine());
+        enemySpawn2 = generateEnemySpawnPoint(500, 0, "EnemyShipBlue", 15f, getEngine());
+        em.get(enemySpawn2).currentTime = 4f;
+        enemySpawn3 = generateEnemySpawnPoint(1450, 500, "EnemyShipGold", 21f, getEngine());
+        em.get(enemySpawn3).currentTime = 17f;
+        enemySpawn4 = generateEnemySpawnPoint(0, 500, "EnemyShipYellow", 14f, getEngine());
+
+        powerUps = generateMovingItemSpawnPoint(300, 450, "Health", 8f,  getEngine());
+        powerUps2 = generateMovingRandomPowerUp(220, 330, 12f,  getEngine());
 
         GameEntity colors = generateItemSpawnPoint(608, 414, "Green", 25f, getEngine());
         GameEntity colors2 = generateItemSpawnPoint(708, 414, "Orange", 35f, getEngine());
 
         GameEntity doubleUp = generateItemSpawnPoint(650, 200, "DoubleUp", 20f,  getEngine());
 
-        GameEntity object1 = generateMovingObject(300, 300, ImageComponent.atlas.findRegion("SpaceJunk").getRegionWidth(), ImageComponent.atlas.findRegion("SpaceJunk").getRegionHeight(), ImageComponent.atlas.findRegion("SpaceJunk"), 60f);
-        GameEntity object2 = generateMovingObject(800, 800, ImageComponent.atlas.findRegion("SpaceJunk").getRegionWidth(), ImageComponent.atlas.findRegion("SpaceJunk").getRegionHeight(), ImageComponent.atlas.findRegion("SpaceJunk"), 60f);
-        GameEntity object3 = generateMovingObject(900, 100, ImageComponent.atlas.findRegion("SpaceJunk").getRegionWidth(), ImageComponent.atlas.findRegion("SpaceJunk").getRegionHeight(), ImageComponent.atlas.findRegion("SpaceJunk"), 60f);
-        GameEntity object4 = generateMovingObject(200, 750, ImageComponent.atlas.findRegion("SpaceJunk").getRegionWidth(), ImageComponent.atlas.findRegion("SpaceJunk").getRegionHeight(), ImageComponent.atlas.findRegion("SpaceJunk"), 60f);
+        object1 = generateMovingObject(300, 300, ImageComponent.atlas.findRegion("SpaceJunk").getRegionWidth(), ImageComponent.atlas.findRegion("SpaceJunk").getRegionHeight(), ImageComponent.atlas.findRegion("SpaceJunk"), 60f);
+        object2 = generateMovingObject(800, 800, ImageComponent.atlas.findRegion("SpaceJunk").getRegionWidth(), ImageComponent.atlas.findRegion("SpaceJunk").getRegionHeight(), ImageComponent.atlas.findRegion("SpaceJunk"), 60f);
+        object3 = generateMovingObject(900, 100, ImageComponent.atlas.findRegion("SpaceJunk").getRegionWidth(), ImageComponent.atlas.findRegion("SpaceJunk").getRegionHeight(), ImageComponent.atlas.findRegion("SpaceJunk"), 60f);
+        object4 = generateMovingObject(200, 750, ImageComponent.atlas.findRegion("SpaceJunk").getRegionWidth(), ImageComponent.atlas.findRegion("SpaceJunk").getRegionHeight(), ImageComponent.atlas.findRegion("SpaceJunk"), 60f);
+
+        getEngine().addEntity(enemy);
+        getEngine().addEntity(enemy2);
+        getEngine().addEntity(enemy3);
+        getEngine().addEntity(enemy4);
 
         getEngine().addEntity(powerUps);
         getEngine().addEntity(powerUps2);
@@ -74,6 +92,24 @@ public class Level20 extends GameScreen{
     @Override
     public void render(float delta) {
         super.render(delta);
+        spawnTimer.decreaseTimer(delta);
+
+        if (!endSpawns && spawnTimer.getTime() <= 0) {
+            getEngine().removeEntity(enemySpawn);
+            getEngine().removeEntity(enemySpawn2);
+            getEngine().removeEntity(enemySpawn3);
+            getEngine().removeEntity(enemySpawn4);
+            endSpawns = true;
+        }
+        if (!endLevel && getEngine().getEntitiesFor(Family.all(AIComponent.class).get()).size() <= 6) {
+            getEngine().removeEntity(powerUps);
+            getEngine().removeEntity(powerUps2);
+            getEngine().removeEntity(object1);
+            getEngine().removeEntity(object2);
+            getEngine().removeEntity(object3);
+            getEngine().removeEntity(object4);
+            endLevel = true;
+        }
     }
 
     @Override

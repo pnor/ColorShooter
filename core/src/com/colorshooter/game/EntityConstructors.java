@@ -517,7 +517,7 @@ public class EntityConstructors {
                     anim.animationTime = 0.2f;
 
                     DamageComponent dam = dm.get(e);
-                    dam.damage = 51;
+                    dam.damage = 61;
                     dam.tag = 'e';
 
                     em.get(e).targetTime = 0.025f;
@@ -814,7 +814,7 @@ public class EntityConstructors {
                 anim.animationTime = 0.2f;
 
                 DamageComponent dam = dm.get(e);
-                dam.damage = 85;
+                dam.damage = 91;
                 dam.tag = 'e';
 
                 em.get(e).targetTime = 0.025f;
@@ -890,8 +890,8 @@ public class EntityConstructors {
                 @Override
                 public void event(GameEntity e, Engine engine) {
                     pm.get(e).rotation += 3f;
-                    mm.get(e).speedPerSecond += 70f;
-                    dm.get(e).damage += 4;
+                    mm.get(e).speedPerSecond += mm.get(e).speedPerSecond / 20;
+                    dm.get(e).damage += 6;
                 }
             };
         } else if (temp == 1) {
@@ -899,7 +899,7 @@ public class EntityConstructors {
                 @Override
                 public void event(GameEntity e, Engine engine) {
                     pm.get(e).rotation -= 3f;
-                    mm.get(e).speedPerSecond += 100f;
+                    mm.get(e).speedPerSecond += mm.get(e).speedPerSecond / 20;
                     dm.get(e).damage += 5;
                 }
             };
@@ -908,7 +908,7 @@ public class EntityConstructors {
                 @Override
                 public void event(GameEntity e, Engine engine) {
                     pm.get(e).rotation += 1f;
-                    mm.get(e).speedPerSecond += 70f;
+                    mm.get(e).speedPerSecond += mm.get(e).speedPerSecond / 20;
                     dm.get(e).damage += 3;
                 }
             };
@@ -917,8 +917,8 @@ public class EntityConstructors {
                 @Override
                 public void event(GameEntity e, Engine engine) {
                     pm.get(e).rotation -= 1f;
-                    mm.get(e).speedPerSecond += 60f;
-                    dm.get(e).damage += 4;
+                    mm.get(e).speedPerSecond += mm.get(e).speedPerSecond / 20;
+                    dm.get(e).damage += 5;
                 }
             };
         }
@@ -1683,7 +1683,7 @@ public class EntityConstructors {
         move.speedPerSecond = 10f;
 
         DamageComponent dam = dm.get(laser);
-        dam.damage = 12;
+        dam.damage = 18;
         dam.tag = 'p';
 
         EventComponent ev = em.get(laser);
@@ -3084,7 +3084,7 @@ public class EntityConstructors {
 
         AIComponent AI = aim.get(enemy);
         AI.awarenessRadius = 230f;
-        AI.stopDistance = 235f;
+        AI.stopDistance = 0f;
         AI.AIType = 'a';
         AI.targetTime = 1f;
         AI.targetRotation = position.rotation;
@@ -3406,7 +3406,7 @@ public class EntityConstructors {
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("PoisonWisp2"));
 
         MovementComponent mov = mm.get(enemy);
-        mov.speedPerSecond = 90f;
+        mov.speedPerSecond = 100f;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("PoisonWisp");
@@ -4291,7 +4291,7 @@ public class EntityConstructors {
         anim.animations.get(0).add(ImageComponent.atlas.findRegion("BossWisp2"));
         anim.currentAnimation = 0;
         anim.currentIndex = 0;
-        anim.animationTime = 1f;
+        anim.animationTime = 0.7f;
 
         CollisionComponent collision = cm.get(enemy);
         collision.boundingBox = new Polygon(new float[] {
@@ -4331,7 +4331,7 @@ public class EntityConstructors {
             public void event(GameEntity e, Engine engine) {
                 if (mm.get(e).speedPerSecond == 50f) {
                     PositionComponent pos = pm.get(e);
-                    mm.get(e).speedPerSecond = 170f;
+                    mm.get(e).speedPerSecond = 185f;
 
                     for (int i = 0; i < 12; i ++) {
                         engine.addEntity(generatePoisonWispProjectile(pos.x + pos.originX, pos.y + pos.originY, i * 30));

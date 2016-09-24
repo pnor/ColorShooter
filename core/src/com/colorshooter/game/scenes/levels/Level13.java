@@ -15,6 +15,11 @@ import static com.colorshooter.game.Mappers.*;
  * Created by pnore_000 on 8/25/2016.
  */
 public class Level13 extends GameScreen {
+    private boolean endSpawns;
+    private GameTimer spawnTimer;
+
+    private GameEntity enemySpawn;
+    private GameEntity enemySpawn2;
 
     public Level13(ColorShooter game) {
         super(13, game);
@@ -23,6 +28,7 @@ public class Level13 extends GameScreen {
     @Override
     public void show() {
         super.show();
+        spawnTimer = new GameTimer(60);
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("GraySpace2"));
 
@@ -37,9 +43,9 @@ public class Level13 extends GameScreen {
         GameEntity enemy7 = generateBigWisp(1500,1000);
 
 
-        GameEntity enemySpawn = generateEnemySpawnPoint(1000,900, "PoisonWisp", 25f,  getEngine());
+        enemySpawn = generateEnemySpawnPoint(1000,900, "PoisonWisp", 25f,  getEngine());
         em.get(enemySpawn).currentTime = 24f;
-        GameEntity enemySpawn2 = generateEnemySpawnPoint(0, 0, "GreenUFO", 50f,  getEngine());
+        enemySpawn2 = generateEnemySpawnPoint(0, 0, "GreenUFO", 50f,  getEngine());
         em.get(enemySpawn2).currentTime = 40f;
 
         GameEntity color1 = generateItemSpawnPoint(550, 750, "Blue", 15f,  getEngine());
@@ -72,6 +78,12 @@ public class Level13 extends GameScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
+        spawnTimer.decreaseTimer(delta);
+        if (!endSpawns && spawnTimer.getTime() <= 0) {
+            endSpawns = true;
+            getEngine().removeEntity(enemySpawn);
+            getEngine().removeEntity(enemySpawn2);
+        }
     }
 
     @Override

@@ -26,8 +26,7 @@ public class Level22 extends GameScreen{
     @Override
     public void show() {
         super.show();
-        setTimer(new GameTimer());
-        getTimer().setTime(70f);
+        setTimer(new GameTimer(70f));
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("CubeSpace"));
 
@@ -42,7 +41,7 @@ public class Level22 extends GameScreen{
         GameEntity powerUps2 = generateMovingRandomPowerUp(220, 330, 16f,  getEngine());
 
         GameEntity colors = generateItemSpawnPoint(618, 394, "Red", 25f, getEngine());
-        GameEntity colors2 = generateItemSpawnPoint(738, 434, "Orange", 35f, getEngine());
+        GameEntity colors2 = generateItemSpawnPoint(738, 434, "White", 35f, getEngine());
 
         GameEntity object1 = generateMovingObject(300, 200, 80, 80, ImageComponent.atlas.findRegion("Cube"), 90f);
         GameEntity object2 = generateMovingObject(300, 700, 80, 80, ImageComponent.atlas.findRegion("Cube"), 90f);

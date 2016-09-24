@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -26,10 +25,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.colorshooter.game.ColorShooter;
 import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.GameTimer;
-import com.colorshooter.game.components.AIComponent;
-import com.colorshooter.game.components.ImageComponent;
-import com.colorshooter.game.components.ItemReceivableComponent;
-import com.colorshooter.game.components.PositionComponent;
+import com.colorshooter.game.components.*;
 import com.colorshooter.game.systems.*;
 
 import static com.colorshooter.game.Mappers.*;
@@ -68,7 +64,9 @@ public class GameScreen extends DisplayScreen {
     private Label life;
     private Label lifeCount;
     private Image icon;
+    private Stack healthBarStack;
     private Image healthBar;
+    private Image healthBarBack;
     private Label pointID;
     private Label pointMultiplierLabel;
     private Label pointNum;
@@ -318,10 +316,12 @@ public class GameScreen extends DisplayScreen {
         table.setSize(getStage().getWidth(), getStage().getHeight());
         table.setFillParent(true);
 
-        param.size = 20;
+        param.size = 15;
         healthLabel = new Label("Health : 200 / 200", new Label.LabelStyle(gen.generateFont(param), Color.WHITE));
-        //healthBar = new Image(new TextureAtlas("CSNinePatch.pack").createPatch("barpatch"));
-        //healthBar = new Image(new Texture("GreenBar.png"));
+        healthBar = new Image(skin.getDrawable("HealthBar"));
+        healthBarBack = new Image(skin.getDrawable("HealthBarBack"));
+        healthBarStack = new Stack(healthBarBack, healthBar);
+
         if (level >= 1) {
             levelLabel = new Label("Level:", skin);
             param.size = 20;
@@ -348,7 +348,8 @@ public class GameScreen extends DisplayScreen {
         lifeCount = new Label("-", skin);
         pointID = new Label("Points:", skin);
         pointNum = new Label("0", skin);
-        timeLabel = new Label("-:--", skin);
+        param.size = 20;
+        timeLabel = new Label("-:--", new Label.LabelStyle(gen.generateFont(param), Color.WHITE));
         timeLabel.setColor(Color.ORANGE);
 
         param.size = 30;
@@ -361,25 +362,27 @@ public class GameScreen extends DisplayScreen {
         table.top().left();
         table.padTop(22).padLeft(10);
         table.add(icon).size(65, 65);
-        table.add(healthLabel).size(170f, 30f).padLeft(5);
-        //table.add(healthBar).size(170f, 30f).padLeft(5);
+
+        table.add(healthBarStack).size(240f, 18f).padLeft(5);
+
         if (level >= 1)
-            table.add(levelLabel).padLeft(400);
+            table.add(levelLabel).padLeft(330);
         else
-            table.add(levelLabel).padLeft(400);
+            table.add(levelLabel).padLeft(330);
+
         if (levelNum != null)
             table.add(levelNum).size(20f, 20f).padLeft(10);
         table.add().padLeft(530);
         table.add(life).padLeft(5);
         table.add(lifeCount).padLeft(10);
         table.row();
+
         table.add(pointID).padLeft(5).padBottom(10f).padTop(10f);
         table.add(pointNum).left();
-        //table.add(healthBar);
         if (levelNum == null)
-            table.add(timeLabel).padLeft(400);
+            table.add(timeLabel).padLeft(330);
         else
-            table.add(timeLabel).colspan(2).padLeft(400);
+            table.add(timeLabel).colspan(2).padLeft(330);
         table.row();
         table.add("Combo Multiplier").padTop(710);
         table.row();
@@ -429,8 +432,12 @@ public class GameScreen extends DisplayScreen {
 
             if (lastHealth != hm.get(player).health || lastMax != hm.get(player).maxHealth) {
                 lastHealth = hm.get(player).health;
+                if (lastHealth > hm.get(player).maxHealth)
+                    lastHealth = hm.get(player).maxHealth;
+                else if (lastHealth < 0)
+                    lastHealth = 0;
                 lastMax = hm.get(player).maxHealth;
-                //table.getCell(healthBar).width(healthBar.getWidth() * lastHealth / lastMax);
+
                 if (lastHealth > 0)
                     healthLabel.setText("Health : " + lastHealth + " / " + lastMax);
                 else
@@ -438,7 +445,8 @@ public class GameScreen extends DisplayScreen {
             }
 
             if (!icon.equals(im.get(player).texRegion)) {
-                float w = icon.getWidth(); float h = icon.getHeight();
+                float w = icon.getWidth();
+                float h = icon.getHeight();
                 icon.setDrawable(new TextureRegionDrawable(im.get(player).texRegion));
                 icon.setSize(w, h);
             }
@@ -456,13 +464,48 @@ public class GameScreen extends DisplayScreen {
                 colorHUD(Color.WHITE);
 
             pointNum.setText(Integer.toString(points));
-            if (timer != null)
+            if (timer != null) {
                 timeLabel.setText(timer.toString());
-        }
+                timeLabel.setColor(1, timer.getTime() / timer.getInitialTime(), timer.getTime() / timer.getInitialTime(), 1);
+            }
 
-        healthLabel.toFront();
-        icon.toFront();
+            updateHealthBar(lastHealth, lastMax);
+        }
+        icon.toFront();;
+        healthBarBack.toFront();
     }
+
+    /**
+     * Updates the color and size of the Health Bar.
+     * @param health health
+     * @param max max health
+     */
+    private void updateHealthBar(float health, float max) {
+        healthBar.setWidth(240f * health / max);
+        ColorComponent color = colm.get(player);
+
+        if (color == null || color.color == 'x')
+            healthBar.setColor(Color.GREEN);
+        else if (color.color == 'r')
+            healthBar.setColor(Color.RED);
+        else if (color.color == 'b')
+            healthBar.setColor(new Color(0.1f, 0.1f, 1, 1));
+        else if (color.color == 'g')
+            healthBar.setColor(new Color(0.05f, 0.75f, 0.05f, 1));
+        else if (color.color == 'y')
+            healthBar.setColor(Color.YELLOW);
+        else if (color.color == 'v')
+            healthBar.setColor(Color.PURPLE);
+        else if (color.color == 'p')
+            healthBar.setColor(Color.PINK);
+        else if (color.color == 'o')
+            healthBar.setColor(Color.ORANGE);
+        else if (color.color == 'w')
+            healthBar.setColor(Color.WHITE);
+
+        healthBar.setColor(healthBar.getColor().lerp(new Color(0.7f, 0f, 0f, 1), Math.abs(1f - lastHealth/lastMax) / 2f).clamp());
+    }
+
 
     /**
      * Displays the victory screen shown when the level's win criteria is met.
@@ -499,9 +542,9 @@ public class GameScreen extends DisplayScreen {
         table.row();
         table.add(icon).padBottom(30f);
         table.row();
-        table.add("Lives : " + lives).padBottom(10f);
-        table.row();
         table.add(healthLabel).padBottom(10f);
+        table.row();
+        table.add("Lives : " + lives).padBottom(10f);
         table.row();
         pointNum.setText("" + oldScore);
         table.add(pointNum).padBottom(10f);
@@ -511,16 +554,23 @@ public class GameScreen extends DisplayScreen {
             table.add(bestMultiLabel).padBottom(10f);
             table.row();
             if (bestMultiplier > 3f) {
-                Label bonusText = new Label("Multiplier Bonus! : + 1 Life", skin);
+                Label bonusText = new Label("Multiplier Bonus! : + 1 Life!", skin);
                 bonusText.setColor(Color.CYAN);
                 table.add(bonusText).padBottom(10f);
                 table.row();
             }
             if (!player.getDisposed() && hm.get(player).maxHealth == hm.get(player).health) {
-                Label healthBonusText = new Label("Full Health Bonus! : + 5,000 Points", skin);
+                Label healthBonusText = new Label("Full Health Bonus! : + 5,000 Points!", skin);
                 newScore += 5000;
                 healthBonusText.setColor(Color.CYAN);
                 table.add(healthBonusText).padBottom(10f);
+                table.row();
+            }
+            if (player.getDisposed()) {
+                Label deathBonusText = new Label("Close Call : + 7,700 Points!", skin);
+                newScore += 7700;
+                deathBonusText.setColor(Color.ORANGE);
+                table.add(deathBonusText).padBottom(10f);
                 table.row();
             }
             table.add().padBottom(40f);

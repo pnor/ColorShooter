@@ -15,6 +15,9 @@ import static com.colorshooter.game.Mappers.*;
  * Created by pnore_000 on 8/25/2016.
  */
 public class Level14 extends GameScreen {
+
+    private boolean added;
+
     public Level14(ColorShooter game) {
         super(14, game);
     }
@@ -22,8 +25,7 @@ public class Level14 extends GameScreen {
     @Override
     public void show() {
         super.show();
-        setTimer(new GameTimer());
-        getTimer().setTime(80f);
+        setTimer(new GameTimer(80f));
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("GreenSpace1"));
 
@@ -75,6 +77,11 @@ public class Level14 extends GameScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
+        if (!added && getTimer().getTime() <= 40f) {
+            getEngine().addEntity(generateEnemySpawnPoint(1450, 1000, "PoisonWisp", 8f, getEngine()));
+            getEngine().addEntity(generateEnemySpawnPoint(1450, 500, "PoisonWisp", 10f, getEngine()));
+            added = true;
+        }
     }
 
     @Override

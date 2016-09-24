@@ -24,8 +24,7 @@ public class BonusLevel1 extends GameScreen{
     @Override
     public void show() {
         super.show();
-        setTimer(new GameTimer());
-        getTimer().setTime(20f);
+        setTimer(new GameTimer(20f));
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("Sky"));
 

@@ -18,6 +18,8 @@ import static com.colorshooter.game.Mappers.pm;
  */
 public class Level27 extends GameScreen {
 
+    private boolean added;
+
     public Level27(ColorShooter game) {
         super(27, game);
     }
@@ -25,8 +27,7 @@ public class Level27 extends GameScreen {
     @Override
     public void show() {
         super.show();
-        setTimer(new GameTimer());
-        getTimer().setTime(80f);
+        setTimer(new GameTimer(70f));
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("CubeSpace2"));
 
@@ -93,6 +94,11 @@ public class Level27 extends GameScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
+        if (!added && getTimer().getTime() <= 40f) {
+            getEngine().addEntity(generateEnemySpawnPoint(1450, -100, "PoisonWisp", 8f, getEngine()));
+            getEngine().addEntity(generateEnemySpawnPoint(-100, -100, "PoisonWisp", 9f, getEngine()));
+            added = true;
+        }
     }
 
     @Override

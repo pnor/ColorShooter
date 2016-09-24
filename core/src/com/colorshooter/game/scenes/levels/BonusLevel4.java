@@ -25,8 +25,7 @@ public class BonusLevel4 extends GameScreen {
     @Override
     public void show() {
         super.show();
-        setTimer(new GameTimer());
-        getTimer().setTime(25f);
+        setTimer(new GameTimer(25f));
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("ColorSpace"));
 

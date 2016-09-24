@@ -27,8 +27,7 @@ public class Level26 extends GameScreen{
     @Override
     public void show() {
         super.show();
-        setTimer(new GameTimer());
-        getTimer().setTime(80f);
+        setTimer(new GameTimer(80f));
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("CubeSpace2"));
 

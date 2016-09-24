@@ -27,8 +27,7 @@ public class Level28 extends GameScreen {
     public void show() {
         super.show();
         added = false;
-        setTimer(new GameTimer());
-        getTimer().setTime(80f);
+        setTimer(new GameTimer(80f));
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("CubeSpace3"));
 
@@ -48,7 +47,7 @@ public class Level28 extends GameScreen {
 
         GameEntity colors = generateMovingItemSpawnPoint(618, 294, "Blue", 25f, getEngine());
         GameEntity colors2 = generateMovingItemSpawnPoint(738, 434, "Pink", 32f, getEngine());
-        GameEntity colors3 = generateMovingItemSpawnPoint(618, 694, "Red", 45f, getEngine());
+        GameEntity colors3 = generateMovingItemSpawnPoint(618, 694, "White", 45f, getEngine());
 
 
         getEngine().addEntity(powerUps);

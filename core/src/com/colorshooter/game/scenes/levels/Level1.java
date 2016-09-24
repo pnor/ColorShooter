@@ -22,8 +22,7 @@ public class Level1 extends GameScreen {
     @Override
     public void show() {
         super.show();
-        setTimer(new GameTimer());
-        getTimer().setTime(45f);
+        setTimer(new GameTimer(45f));
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("Space1"));
 

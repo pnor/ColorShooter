@@ -28,9 +28,9 @@ public class Level10 extends GameScreen {
         GameEntity boss = generateBossUFO(100, 900);
 
         GameEntity powerUps = generateItemSpawnPoint(200, 200, "Health", 5f,  getEngine());
-        GameEntity powerUps2 = generateItemSpawnPoint(1000, 600, "SpeedUp", 7f,  getEngine());
+        GameEntity powerUps2 = generateItemSpawnPoint(1200, 600, "SpeedUp", 7f,  getEngine());
         GameEntity powerUps3 = generateItemSpawnPoint(200, 600, "MaxHealth", 9f,  getEngine());
-        GameEntity powerUps4 = generateItemSpawnPoint(1000, 200, "ShootUp", 9f,  getEngine());
+        GameEntity powerUps4 = generateItemSpawnPoint(1200, 200, "ShootUp", 9f,  getEngine());
 
         GameEntity colors = generateRandomColorSpawnPoint(678, 450, 15f,  getEngine());
 

@@ -22,8 +22,7 @@ public class Level9 extends GameScreen{
     @Override
     public void show() {
         super.show();
-        setTimer(new GameTimer());
-        getTimer().setTime(75f);
+        setTimer(new GameTimer(75f));
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("Space1"));
 

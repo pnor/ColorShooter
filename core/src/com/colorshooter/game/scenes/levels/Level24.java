@@ -19,6 +19,8 @@ import static com.colorshooter.game.Mappers.pm;
  */
 public class Level24 extends GameScreen{
 
+    private boolean added;
+
     public Level24(ColorShooter game) {
         super(24, game);
     }
@@ -26,8 +28,7 @@ public class Level24 extends GameScreen{
     @Override
     public void show() {
         super.show();
-        setTimer(new GameTimer());
-        getTimer().setTime(80f);
+        setTimer(new GameTimer(80f));
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("CubeSpace"));
 
@@ -42,7 +43,7 @@ public class Level24 extends GameScreen{
         GameEntity powerUps2 = generateItemSpawnPoint(500, 350, "SpeedUp", 7f,  getEngine());
 
         GameEntity colors = generateItemSpawnPoint(558, 294, "White", 35f, getEngine());
-        em.get(colors).currentTime = 30f;
+        em.get(colors).currentTime = 31f;
         GameEntity colors2 = generateItemSpawnPoint(738, 434, "Yellow", 25f, getEngine());
         GameEntity colors3 = generateItemSpawnPoint(618, 694, "Orange", 55f, getEngine());
 
@@ -72,6 +73,11 @@ public class Level24 extends GameScreen{
     @Override
     public void render(float delta) {
         super.render(delta);
+        if (!added && getTimer().getTime() <= 58f) {
+            getEngine().addEntity(generateEnemySpawnPoint(600, 1000, "Core", 18f, getEngine()));
+            getEngine().addEntity(generateEnemySpawnPoint(600, -100, "GhostUFO", 9f, getEngine()));
+            added = true;
+        }
     }
 
     @Override

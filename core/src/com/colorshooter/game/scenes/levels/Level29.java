@@ -32,8 +32,7 @@ public class Level29 extends GameScreen{
         added2 = false;
         added3 = false;
 
-        setTimer(new GameTimer());
-        getTimer().setTime(120f);
+        setTimer(new GameTimer(120));
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("CubeSpace4"));
 
@@ -53,9 +52,11 @@ public class Level29 extends GameScreen{
         GameEntity powerUps4 = generateItemSpawnPoint(975, 750, "DoubleUp", 10f, getEngine());
         GameEntity powerUps5 = generateItemSpawnPoint(700, 200, "SuperShootUp", 24f, getEngine());
 
-
         GameEntity colors = generateRandomColorSpawnPoint(600, 450, 20f, getEngine());
         GameEntity colors2 = generateItemSpawnPoint(800, 450, "Orange", 55f, getEngine());
+        GameEntity colors3 = generateItemSpawnPoint(400, 525, "White", 55f, getEngine());
+        em.get(colors3).currentTime = 35f;
+
 
         getEngine().addEntity(powerUps);
         getEngine().addEntity(powerUps2);
@@ -70,6 +71,7 @@ public class Level29 extends GameScreen{
 
         getEngine().addEntity(colors);
         getEngine().addEntity(colors2);
+        getEngine().addEntity(colors3);
     }
 
     @Override

@@ -17,6 +17,8 @@ import static com.colorshooter.game.Mappers.*;
  */
 public class Level4 extends GameScreen {
 
+    private boolean added;
+
     public Level4(ColorShooter game) {
         super(4, game);
     }
@@ -24,8 +26,7 @@ public class Level4 extends GameScreen {
     @Override
     public void show() {
         super.show();
-        setTimer(new GameTimer());
-        getTimer().setTime(65f);
+        setTimer(new GameTimer(65f));
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("Space2"));
 
@@ -67,6 +68,11 @@ public class Level4 extends GameScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
+        if (!added && getTimer().getTime() <= 20f) {
+            getEngine().addEntity(generateEnemySpawnPoint(180, 1000, "Wisp", 8f, getEngine()));
+            getEngine().addEntity(generateEnemySpawnPoint(-100, -100, "UFO", 9f, getEngine()));
+            added = true;
+        }
     }
 
     @Override

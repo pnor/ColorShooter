@@ -23,8 +23,7 @@ public class Level12 extends GameScreen {
     @Override
     public void show() {
         super.show();
-        setTimer(new GameTimer());
-        getTimer().setTime(75f);
+        setTimer(new GameTimer(75f));
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("Space3"));
 
@@ -40,7 +39,7 @@ public class Level12 extends GameScreen {
 
         GameEntity color1 = generateItemSpawnPoint(550, 750, "Green", 30f,  getEngine());
         em.get(color1).currentTime = 10f;
-        GameEntity color2 = generateItemSpawnPoint(550, 250, "Purple", 60f,  getEngine());
+        GameEntity color2 = generateItemSpawnPoint(550, 250, "Blue", 60f,  getEngine());
 
         GameEntity powerUps = generateMovingItemSpawnPoint(300, 450, "Health", 7f,  getEngine());
         em.get(powerUps).currentTime = 5f;

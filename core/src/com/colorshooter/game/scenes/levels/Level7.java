@@ -22,8 +22,7 @@ public class Level7 extends GameScreen {
     @Override
     public void show() {
         super.show();
-        setTimer(new GameTimer());
-        getTimer().setTime(70f);
+        setTimer(new GameTimer(65f));
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("Space4"));
 
@@ -47,10 +46,10 @@ public class Level7 extends GameScreen {
 
         GameEntity powerUps = generateMovingItemSpawnPoint(300, 450, "MaxHealth", 10f, getEngine());
         em.get(powerUps).currentTime = 5f;
-        GameEntity powerUps2 = generateMovingItemSpawnPoint(500, 200, "Health", 9f, getEngine());
-        GameEntity powerUps3 = generateMovingItemSpawnPoint(900, 900, "SpeedUp", 9f, getEngine());
-        GameEntity powerUps4 = generateMovingItemSpawnPoint(300, 600, "SuperShootUp", 8f, getEngine());
-        em.get(powerUps4).currentTime = 5.9f;
+        GameEntity powerUps2 = generateMovingItemSpawnPoint(500, 200, "Health", 11f, getEngine());
+        GameEntity powerUps3 = generateMovingItemSpawnPoint(900, 900, "SpeedUp", 12f, getEngine());
+        GameEntity powerUps4 = generateMovingItemSpawnPoint(300, 600, "SuperShootUp", 12f, getEngine());
+        em.get(powerUps4).currentTime = 6.9f;
         GameEntity powerUps5 = generateRandomPowerUp(780, 780, 6.5f, getEngine());
 
         getEngine().addEntity(powerUps);

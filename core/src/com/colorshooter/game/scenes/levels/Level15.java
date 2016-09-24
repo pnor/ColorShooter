@@ -22,19 +22,18 @@ public class Level15 extends GameScreen{
     @Override
     public void show() {
         super.show();
-        setTimer(new GameTimer());
-        getTimer().setTime(80f);
+        setTimer(new GameTimer(80f));
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("YellowSpace"));
 
         setPlayer(generatePlayer(678, 414));
 
         GameEntity enemySpawn = generateRandomUFOSpawnPoint(1000,900, 2f, false, getEngine());
-        GameEntity enemySpawn2 = generateRandomUFOSpawnPoint(0,900, 3f, false,   getEngine());
+        GameEntity enemySpawn2 = generateRandomUFOSpawnPoint(0,1000, 3f, false,   getEngine());
         em.get(enemySpawn2).currentTime = 1f;
-        GameEntity enemySpawn3 = generateRandomUFOSpawnPoint(0, 0,4f, false, getEngine());
+        GameEntity enemySpawn3 = generateRandomUFOSpawnPoint(-100, 0, 4f, false, getEngine());
         em.get(enemySpawn3).currentTime = 3f;
-        GameEntity enemySpawn4 = generateEnemySpawnPoint(500, -40, "FastEnemy", 6f,  getEngine());
+        GameEntity enemySpawn4 = generateEnemySpawnPoint(1500, -40, "FastEnemy", 6f,  getEngine());
 
         GameEntity color1 = generateItemSpawnPoint(750, 550, "Red", 20f,  getEngine());
         em.get(color1).currentTime = 10f;

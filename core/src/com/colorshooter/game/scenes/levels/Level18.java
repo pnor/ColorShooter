@@ -28,7 +28,7 @@ public class Level18 extends GameScreen{
     @Override
     public void show() {
         super.show();
-        spawnTimer = new GameTimer(14f);
+        spawnTimer = new GameTimer(11f);
 
         setBackground(ImageComponent.backgroundAtlas.findRegion("RedSpace2"));
 
