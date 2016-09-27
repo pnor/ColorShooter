@@ -80,7 +80,6 @@ public class GameScreen extends DisplayScreen {
      * If the level is less than 1, then it is a bonus level
      */
     private int level;
-    private static int lastLevel;
     private static int lives = 3;
     private float currentRespawnTime;
     private float endRespawnTime;
@@ -107,6 +106,7 @@ public class GameScreen extends DisplayScreen {
 
     private int lastHealth;
     private int lastMax;
+    private char lastColor;
 
     /**
      * Creates a GameScreen with an adjustable level
@@ -130,7 +130,6 @@ public class GameScreen extends DisplayScreen {
     @Override
     public void show() {
         screenState = 0;
-        lastLevel = level;
         pointMultiplier = 1.0f;
         oldScore = points;
 
@@ -316,11 +315,12 @@ public class GameScreen extends DisplayScreen {
         table.setSize(getStage().getWidth(), getStage().getHeight());
         table.setFillParent(true);
 
-        param.size = 15;
-        healthLabel = new Label("Health : 200 / 200", new Label.LabelStyle(gen.generateFont(param), Color.WHITE));
+        param.size = 13;
+        healthLabel = new Label("200 / 200", new Label.LabelStyle(gen.generateFont(param), Color.WHITE));
         healthBar = new Image(skin.getDrawable("HealthBar"));
-        healthBarBack = new Image(skin.getDrawable("HealthBarBack"));
-        healthBarStack = new Stack(healthBarBack, healthBar);
+        healthBar.setColor(Color.GREEN);
+        healthBarBack = new Image();//skin.getDrawable("HealthBarBack"));
+        healthBarStack = new Stack(healthBar, healthBarBack);
 
         if (level >= 1) {
             levelLabel = new Label("Level:", skin);
@@ -358,17 +358,19 @@ public class GameScreen extends DisplayScreen {
         param.size = 20;
         objectiveLabel = new Label("Defeat All Enemies!", new Label.LabelStyle(gen.generateFont(param), Color.WHITE));
 
-        //  BACKUP!!!
+        // Adding to Table
+        table.setFillParent(true);
         table.top().left();
         table.padTop(22).padLeft(10);
         table.add(icon).size(65, 65);
 
-        table.add(healthBarStack).size(240f, 18f).padLeft(5);
+        table.add(healthBarStack).size(240f, 18f).left().padLeft(5);
+        table.add(healthLabel).padLeft(5f);
 
         if (level >= 1)
-            table.add(levelLabel).padLeft(330);
+            table.add(levelLabel).padLeft(280);//330);   //290
         else
-            table.add(levelLabel).padLeft(330);
+            table.add(levelLabel).padLeft(280);//330);
 
         if (levelNum != null)
             table.add(levelNum).size(20f, 20f).padLeft(10);
@@ -379,10 +381,11 @@ public class GameScreen extends DisplayScreen {
 
         table.add(pointID).padLeft(5).padBottom(10f).padTop(10f);
         table.add(pointNum).left();
+        table.add();
         if (levelNum == null)
-            table.add(timeLabel).padLeft(330);
+            table.add(timeLabel).padLeft(280);//330);
         else
-            table.add(timeLabel).colspan(2).padLeft(330);
+            table.add(timeLabel).colspan(2).padLeft(280);
         table.row();
         table.add("Combo Multiplier").padTop(710);
         table.row();
@@ -438,10 +441,15 @@ public class GameScreen extends DisplayScreen {
                     lastHealth = 0;
                 lastMax = hm.get(player).maxHealth;
 
-                if (lastHealth > 0)
-                    healthLabel.setText("Health : " + lastHealth + " / " + lastMax);
+                if (lastHealth > 0) {
+                    healthLabel.setText("" + lastHealth + " / " + lastMax);
+                    if (lastHealth < 10)
+                        healthLabel.setText("  " + healthLabel.getText());
+                    else if (lastHealth < 100)
+                        healthLabel.setText(" " + healthLabel.getText());
+                }
                 else
-                    healthLabel.setText("Health : " + 0 + " / " + lastMax);
+                    healthLabel.setText("  " + 0 + " / " + lastMax);
             }
 
             if (!icon.equals(im.get(player).texRegion)) {
@@ -468,10 +476,9 @@ public class GameScreen extends DisplayScreen {
                 timeLabel.setText(timer.toString());
                 timeLabel.setColor(1, timer.getTime() / timer.getInitialTime(), timer.getTime() / timer.getInitialTime(), 1);
             }
-
             updateHealthBar(lastHealth, lastMax);
         }
-        icon.toFront();;
+        icon.toFront();
         healthBarBack.toFront();
     }
 
@@ -483,27 +490,70 @@ public class GameScreen extends DisplayScreen {
     private void updateHealthBar(float health, float max) {
         healthBar.setWidth(240f * health / max);
         ColorComponent color = colm.get(player);
+        Color target = new Color();
 
-        if (color == null || color.color == 'x')
-            healthBar.setColor(Color.GREEN);
-        else if (color.color == 'r')
-            healthBar.setColor(Color.RED);
-        else if (color.color == 'b')
-            healthBar.setColor(new Color(0.1f, 0.1f, 1, 1));
-        else if (color.color == 'g')
-            healthBar.setColor(new Color(0.05f, 0.75f, 0.05f, 1));
-        else if (color.color == 'y')
-            healthBar.setColor(Color.YELLOW);
-        else if (color.color == 'v')
-            healthBar.setColor(Color.PURPLE);
-        else if (color.color == 'p')
-            healthBar.setColor(Color.PINK);
-        else if (color.color == 'o')
-            healthBar.setColor(Color.ORANGE);
-        else if (color.color == 'w')
-            healthBar.setColor(Color.WHITE);
+        if (health / max <= 0.01) {
+            table.removeActor(healthBarStack);
+            return;
+        }
 
-        healthBar.setColor(healthBar.getColor().lerp(new Color(0.7f, 0f, 0f, 1), Math.abs(1f - lastHealth/lastMax) / 2f).clamp());
+        //check+update color
+        if (lastColor != colm.get(player).color) {
+
+            lastColor = colm.get(player).color;
+
+            if (color == null || color.color == 'x')
+                healthBar.setColor(Color.GREEN);
+            else if (color.color == 'r')
+                healthBar.setColor(new Color(1, 0.2f, 0.2f, 1));
+            else if (color.color == 'b')
+                healthBar.setColor(new Color(0.2f, 0.2f, 1, 1));
+            else if (color.color == 'g')
+                healthBar.setColor(new Color(0.15f, 1f, 0.15f, 1));
+            else if (color.color == 'y')
+                healthBar.setColor(Color.YELLOW);
+            else if (color.color == 'v')
+                healthBar.setColor(Color.PURPLE);
+            else if (color.color == 'p')
+                healthBar.setColor(Color.PINK);
+            else if (color.color == 'o')
+                healthBar.setColor(Color.ORANGE);
+            else if (color.color == 'w')
+                healthBar.setColor(Color.WHITE);
+        }
+
+        //gradual transitioning
+        if (fm.get(player).isFrozen || poim.get(player).isPoisoned) {
+            if (poim.get(player).isPoisoned)
+                healthBar.setColor(healthBar.getColor().lerp(0.4f, 0.5f, 0f, 1f, 0.035f));
+            else if (fm.get(player).isFrozen)
+                healthBar.setColor(healthBar.getColor().lerp(0.75f, 0.75f, 1f, 1f, 0.12f));
+        } else {
+            if (health / max <= 0.4f) {
+                healthBar.setColor(healthBar.getColor().lerp(0.75f, 0f, 0f, 1f, 0.025f));
+            } else {
+                if (color == null || color.color == 'x')
+                    target = Color.GREEN;
+                else if (color.color == 'r')
+                    target = new Color(1, 0.3f, 0.3f, 1);
+                else if (color.color == 'b')
+                    target = new Color(0.2f, 0.2f, 1, 1);
+                else if (color.color == 'g')
+                    target = new Color(0.15f, 1f, 0.15f, 1);
+                else if (color.color == 'y')
+                    target = Color.YELLOW;
+                else if (color.color == 'v')
+                    target = Color.PURPLE;
+                else if (color.color == 'p')
+                    target = Color.PINK;
+                else if (color.color == 'o')
+                    target = Color.ORANGE;
+                else if (color.color == 'w')
+                    target = Color.WHITE;
+
+                healthBar.setColor(healthBar.getColor().lerp(target, 0.045f));
+            }
+        }
     }
 
 
@@ -526,7 +576,7 @@ public class GameScreen extends DisplayScreen {
             table.add(healthLabel).padBottom(10f);
         } else {
             icon = new Image(ImageComponent.atlas.findRegion("GhostPlayerShip"));
-            healthLabel.setText("Health : 0 / " + lastMax);
+            healthLabel.setText("0 / " + lastMax);
             healthLabel.setColor(Color.RED);
         }
         param.size = 18;

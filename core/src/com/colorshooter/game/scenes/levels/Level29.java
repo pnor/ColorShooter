@@ -52,10 +52,10 @@ public class Level29 extends GameScreen{
         GameEntity powerUps4 = generateItemSpawnPoint(975, 750, "DoubleUp", 10f, getEngine());
         GameEntity powerUps5 = generateItemSpawnPoint(700, 200, "SuperShootUp", 24f, getEngine());
 
-        GameEntity colors = generateRandomColorSpawnPoint(600, 450, 20f, getEngine());
+        GameEntity colors = generateRandomColorSpawnPoint(600, 450, 16f, getEngine());
         GameEntity colors2 = generateItemSpawnPoint(800, 450, "Orange", 55f, getEngine());
-        GameEntity colors3 = generateItemSpawnPoint(400, 525, "White", 55f, getEngine());
-        em.get(colors3).currentTime = 35f;
+        GameEntity colors3 = generateItemSpawnPoint(400, 525, "White", 65f, getEngine());
+        em.get(colors3).currentTime = 10f;
 
 
         getEngine().addEntity(powerUps);

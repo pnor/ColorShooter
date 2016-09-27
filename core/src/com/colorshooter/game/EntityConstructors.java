@@ -4312,8 +4312,8 @@ public class EntityConstructors {
 
         HealthComponent health = hm.get(enemy);
         health.isAlive = true;
-        health.maxHealth = 2700;
-        health.health = 2700;
+        health.maxHealth = 2500;
+        health.health = 2500;
         health.invinciblityDuration = 0.2f;
         health.tag = 'e';
         health.deathAction = 2;

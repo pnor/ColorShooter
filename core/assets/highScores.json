@@ -19,7 +19,8 @@
 }
 {
 	class: com.colorshooter.game.HighScore
-	lastLevel: 0
+	name: ABC
+	lastLevel: 30
 }
 {
 	class: com.colorshooter.game.HighScore

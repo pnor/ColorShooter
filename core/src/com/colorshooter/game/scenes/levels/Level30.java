@@ -136,8 +136,8 @@ public class Level30 extends GameScreen{
             aim.get(boss).projectileType = '1';
             am.get(boss).animationTime = 0.09f;
             EventComponent ev = em.get(boss);
-            ev.currentTime = 4f;
-            ev.targetTime = 4f;
+            ev.currentTime = 3.5f;
+            ev.targetTime = 3.5f;
             ev.event = new GameEvent() {
                 @Override
                 public void event(GameEntity e, Engine engine) {
