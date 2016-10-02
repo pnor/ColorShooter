@@ -37,7 +37,7 @@ public class HowToPlayScreen extends MenuScreen{
 
         param.borderWidth = 0;
         param.size = 20;;
-        Label description = new Label("Earn points by fighting enemies and aim for the High Score!", new Label.LabelStyle(generator.generateFont(param), Color.WHITE));
+        Label description = new Label("Earn points by killing enemies and aim for the High Score!", new Label.LabelStyle(generator.generateFont(param), Color.WHITE));
 
         param.color = new Color(0.95f, 0.95f, 1, 1);
         Label movementInfo = new Label("Use WASD for Movement", new Label.LabelStyle(generator.generateFont(param), Color.WHITE));

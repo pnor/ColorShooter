@@ -37,7 +37,7 @@ public class ColorShooter extends Game {
 		}
 
 		//screen moving with dpad
-
+		/*
 		if (Gdx.input.isKeyJustPressed(Input.Keys.DPAD_LEFT)) {
 			setScreen(new MainMenu(this));
 		}
@@ -54,7 +54,7 @@ public class ColorShooter extends Game {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
 			setScreen(new HighScoreMenu(this));
 		}
-
+		*/
 
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

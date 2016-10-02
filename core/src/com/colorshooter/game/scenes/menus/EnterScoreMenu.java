@@ -60,12 +60,15 @@ public class EnterScoreMenu extends MenuScreen {
 
         highScores = getHighScores();
 
-        param.size = 25;
+        param.size = 45;
         Label title = new Label("New High Score!", new Label.LabelStyle(generator.generateFont(param), Color.WHITE));
-        param.size = 20;
+        param.size = 35;
+        param.shadowColor = Color.DARK_GRAY;
+        param.shadowOffsetX = 9;
+        param.shadowOffsetY = 9;
         playerPointLabel = new Label("" + playerPoints, new Label.LabelStyle(generator.generateFont(param), Color.WHITE));
         playerPointLabel.setColor(Color.YELLOW);
-        nameText = new TextField("ABC", skin);
+        nameText = new TextField("", skin);
         confirm = new TextButton("Confirm", skin, "toggle");
 
         ChangeListener changeListener = new ChangeListener() {
@@ -78,7 +81,7 @@ public class EnterScoreMenu extends MenuScreen {
 
                         highScores.add(new HighScore(nameText.getText(), playerPoints, lastLevel));
                         sortHighScores(highScores, 0, highScores.size - 1);
-                        highScores.truncate(10);;
+                        highScores.truncate(10);
 
                         score = json.prettyPrint(highScores);
 
