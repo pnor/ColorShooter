@@ -1,12 +1,6 @@
 [
 {
 	class: com.colorshooter.game.HighScore
-	name: ABC
-	score: 793501
-	lastLevel: 26
-}
-{
-	class: com.colorshooter.game.HighScore
 	lastLevel: 0
 }
 {
@@ -19,8 +13,11 @@
 }
 {
 	class: com.colorshooter.game.HighScore
-	name: ABC
-	lastLevel: 30
+	lastLevel: 0
+}
+{
+	class: com.colorshooter.game.HighScore
+	lastLevel: 0
 }
 {
 	class: com.colorshooter.game.HighScore
