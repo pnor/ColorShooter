@@ -88,7 +88,7 @@ public abstract class DisplayScreen implements Screen, Disposable{
     public Array<HighScore> getHighScores() {
         Array<HighScore> returnArray;
 
-        FileHandle fileHandle = Gdx.files.local("highScores.json");
+        FileHandle fileHandle = Gdx.files.local("ColorWarsHighScores.json");
         if (!fileHandle.exists())
             return new Array<HighScore>();
 

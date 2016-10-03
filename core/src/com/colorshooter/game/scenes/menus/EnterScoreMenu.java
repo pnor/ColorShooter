@@ -85,7 +85,7 @@ public class EnterScoreMenu extends MenuScreen {
 
                         score = json.prettyPrint(highScores);
 
-                        FileHandle fileHandle = Gdx.files.local("highScores.json");
+                        FileHandle fileHandle = Gdx.files.local("ColorWarsHighScores.json");
                         fileHandle.writeString(score, false);
 
                         GameScreen.setPoints(0);
