@@ -37,7 +37,6 @@ public class Level30 extends GameScreen{
         setBackground(ImageComponent.backgroundAtlas.findRegion("TurretSpace"));
 
         setPlayer(generatePlayer(28, 414));
-        //colm.get(getPlayer()).color = 'w';
 
         boss = generateBossTurret(1300, 360);
         shm.get(boss).isAttacking = true;
