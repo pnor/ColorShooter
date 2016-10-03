@@ -38,7 +38,7 @@ public class Level17 extends GameScreen{
         GameEntity enemySpawn4 = generateEnemySpawnPoint(0, 900, "EnemyShipYellow", 20f, getEngine());
         em.get(enemySpawn4).currentTime = 10f;
 
-        GameEntity powerUps = generateMovingItemSpawnPoint(300, 450, "Health", 10f,  getEngine());
+        GameEntity powerUps = generateMovingItemSpawnPoint(300, 450, "Health", 11f,  getEngine());
         GameEntity powerUps2 = generateMovingRandomPowerUp(220, 330, 6f,  getEngine());
 
         GameEntity doubleUp = generateItemSpawnPoint(520, 330, "DoubleUp", 15f,  getEngine());

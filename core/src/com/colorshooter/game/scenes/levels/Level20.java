@@ -53,7 +53,7 @@ public class Level20 extends GameScreen{
         em.get(enemySpawn3).currentTime = 17f;
         enemySpawn4 = generateEnemySpawnPoint(0, 500, "EnemyShipYellow", 14f, getEngine());
 
-        powerUps = generateMovingItemSpawnPoint(300, 450, "Health", 8f,  getEngine());
+        powerUps = generateMovingItemSpawnPoint(300, 450, "Health", 11f,  getEngine());
         powerUps2 = generateMovingRandomPowerUp(220, 330, 12f,  getEngine());
 
         GameEntity colors = generateItemSpawnPoint(608, 414, "Green", 25f, getEngine());

@@ -42,7 +42,7 @@ public class Level19 extends GameScreen {
         em.get(color1).currentTime = 28f;
         GameEntity color2 = generateItemSpawnPoint(450, 250, "Orange", 20f,  getEngine());
 
-        GameEntity powerUps = generateMovingItemSpawnPoint(300, 450, "MaxHealth", 6f,  getEngine());
+        GameEntity powerUps = generateMovingItemSpawnPoint(300, 450, "MaxHealth", 10f,  getEngine());
 
         getEngine().addEntity(powerUps);
         getEngine().addEntity(color1);

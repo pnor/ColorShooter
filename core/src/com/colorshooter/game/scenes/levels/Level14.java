@@ -43,7 +43,7 @@ public class Level14 extends GameScreen {
         em.get(color1).currentTime = 10f;
         GameEntity color2 = generateItemSpawnPoint(550, 250, "Red", 60f,  getEngine());
 
-        GameEntity powerUps = generateMovingItemSpawnPoint(300, 450, "Health", 4f,  getEngine());
+        GameEntity powerUps = generateMovingItemSpawnPoint(300, 450, "Health", 7f,  getEngine());
         em.get(powerUps).currentTime = 5f;
         GameEntity powerUps2 = generateMovingItemSpawnPoint(300, 450, "SuperShootUp", 4f,  getEngine());
 

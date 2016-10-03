@@ -27,7 +27,7 @@ public class Level16 extends GameScreen{
 
         GameEntity boss = generateBossWisp(900, 800);
 
-        GameEntity powerUps = generateItemSpawnPoint(200, 200, "Health", 6f,  getEngine());
+        GameEntity powerUps = generateItemSpawnPoint(200, 200, "Health", 9f,  getEngine());
         GameEntity powerUps2 = generateItemSpawnPoint(1100, 700, "MaxHealth", 12f,  getEngine());
         GameEntity powerUps3 = generateItemSpawnPoint(200, 700, "ShootUp", 9.2f,  getEngine());
         GameEntity powerUps4 = generateItemSpawnPoint(1100, 200, "ShootUp", 9f,  getEngine());

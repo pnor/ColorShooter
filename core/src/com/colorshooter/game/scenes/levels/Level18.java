@@ -40,7 +40,7 @@ public class Level18 extends GameScreen{
         em.get(color1).currentTime = 10f;
         GameEntity color2 = generateItemSpawnPoint(550, 250, "Red", 30f,  getEngine());
 
-        GameEntity powerUps = generateItemSpawnPoint(200, 700, "Health", 6f,  getEngine());
+        GameEntity powerUps = generateItemSpawnPoint(200, 700, "Health", 10f,  getEngine());
         GameEntity powerUps2 = generateRandomPowerUp(1100, 200, 7f,  getEngine());
 
         GameEntity doubleUp = generateItemSpawnPoint(650, 450, "DoubleUp", 15f,  getEngine());

@@ -41,7 +41,7 @@ public class Level15 extends GameScreen{
 
         GameEntity powerUps = generateMovingItemSpawnPoint(300, 450, "MaxHealth", 12f,  getEngine());
         em.get(powerUps).currentTime = 5f;
-        GameEntity powerUps2 = generateMovingItemSpawnPoint(300, 450, "Health", 10f,  getEngine());
+        GameEntity powerUps2 = generateMovingItemSpawnPoint(300, 450, "Health", 12f,  getEngine());
         GameEntity powerUps3 = generateRandomPowerUp(220, 330, 9f,  getEngine());
 
         GameEntity object1 = generateFloatingShock(300, 300, 100, 100, 450f, 2);

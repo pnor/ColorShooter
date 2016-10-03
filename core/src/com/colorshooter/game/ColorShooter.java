@@ -73,7 +73,7 @@ public class ColorShooter extends Game {
 			} else {
 				getScreen().show();
 				((GameScreen) getScreen()).reset();
-				GameScreen.incrementPoints(-1 * MathUtils.clamp(GameScreen.getPoints() / 4, 0, 80000));
+				GameScreen.incrementPoints(-1 * MathUtils.clamp(GameScreen.getPoints() / 4, 0, 50000));
 				hm.get(((GameScreen) getScreen()).getPlayer()).invincible = true;
 			}
 		} else {

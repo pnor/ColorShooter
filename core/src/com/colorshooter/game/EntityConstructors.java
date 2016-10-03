@@ -2037,7 +2037,6 @@ public class EntityConstructors {
         laser.add(new MovementComponent());
         laser.add(new EventComponent());
         laser.add(new AnimationComponent());
-        laser.add(new DamageComponent());
 
         ImageComponent img = im.get(laser);
         img.texRegion = ImageComponent.atlas.findRegion("Fire1");
@@ -2060,10 +2059,6 @@ public class EntityConstructors {
         anim.currentIndex = 0;
         anim.animationTime = 0.2f;
 
-        DamageComponent dam = dm.get(laser);
-        dam.damage = 10;
-        dam.tag = 'p';
-
         MovementComponent move = mm.get(laser);
         move.speedPerSecond = 500f;
 
@@ -2077,6 +2072,7 @@ public class EntityConstructors {
                 e.remove(CollisionComponent.class);
                 e.remove(MovementComponent.class);
                 e.add(new LifetimeComponent());
+                e.add(new DamageComponent());
 
                 im.get(e).texRegion = ImageComponent.atlas.findRegion("DeathExplosion");
 
@@ -2098,7 +2094,7 @@ public class EntityConstructors {
                 anim.animationTime = 0.2f;
 
                 DamageComponent dam = dm.get(e);
-                dam.damage = 18;
+                dam.damage = 38;
                 dam.tag = 'p';
 
                 em.get(e).targetTime = 0.1f;
@@ -2234,7 +2230,7 @@ public class EntityConstructors {
         anim.animationTime = 0.2f;
 
         DamageComponent dam = dm.get(laser);
-        dam.damage = 13;
+        dam.damage = 18;
         if (hurtsPlayer == 0)
             dam.tag = 'e';
         else if (hurtsPlayer == 1)
@@ -2295,7 +2291,7 @@ public class EntityConstructors {
         move.speedPerSecond = 300f;
 
         DamageComponent dam = dm.get(laser);
-        dam.damage = 15;
+        dam.damage = 25;
         if (hurtsPlayer == 0)
             dam.tag = 'e';
         else if (hurtsPlayer == 1)
@@ -2335,7 +2331,7 @@ public class EntityConstructors {
         move.speedPerSecond = 20;
 
         DamageComponent dam = dm.get(laser);
-        dam.damage = 35;
+        dam.damage = 40;
         if (hurtsPlayer == 0)
             dam.tag = 'e';
         else if (hurtsPlayer == 1)
@@ -3715,7 +3711,7 @@ public class EntityConstructors {
         health.maxHealth = 80;
         health.health = 80;
 
-        shm.get(enemy).attackDelay = 0.45f;
+        shm.get(enemy).attackDelay = 0.4f;
 
         bm.get(enemy).bounceDuration = 4f;
 
@@ -4342,6 +4338,7 @@ public class EntityConstructors {
 
                 } else {
                     mm.get(e).speedPerSecond = 50f;
+                    em.get(e).targetTime = ((float) Math.random() * 5) + 3f;
                 }
             }
         };
@@ -4750,7 +4747,7 @@ public class EntityConstructors {
         item.event = new GameEvent() {
             @Override
             public void event(GameEntity e, Engine engine) {
-                hm.get(e).health += hm.get(e).maxHealth / 2;
+                hm.get(e).health += 70;
             }
         };
 
