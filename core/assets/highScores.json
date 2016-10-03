@@ -1,42 +1,62 @@
 [
 {
 	class: com.colorshooter.game.HighScore
+	name: "---"
+	score: 0
 	lastLevel: 0
 }
 {
 	class: com.colorshooter.game.HighScore
+	name: "---"
+	score: 0
 	lastLevel: 0
 }
 {
 	class: com.colorshooter.game.HighScore
+	name: "---"
+	score: 0
 	lastLevel: 0
 }
 {
 	class: com.colorshooter.game.HighScore
+	name: "---"
+	score: 0
 	lastLevel: 0
 }
 {
 	class: com.colorshooter.game.HighScore
+	name: "---"
+	score: 0
 	lastLevel: 0
 }
 {
 	class: com.colorshooter.game.HighScore
+	name: "---"
+	score: 0
 	lastLevel: 0
 }
 {
 	class: com.colorshooter.game.HighScore
+	name: "---"
+	score: 0
 	lastLevel: 0
 }
 {
 	class: com.colorshooter.game.HighScore
+	name: "---"
+	score: 0
 	lastLevel: 0
 }
 {
 	class: com.colorshooter.game.HighScore
+	name: "---"
+	score: 0
 	lastLevel: 0
 }
 {
 	class: com.colorshooter.game.HighScore
+	name: "---"
+	score: 0
 	lastLevel: 0
 }
 ]

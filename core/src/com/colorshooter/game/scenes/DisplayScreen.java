@@ -18,7 +18,7 @@ import com.colorshooter.game.HighScore;
 /**
  * @author pnore_000
  */
-public class DisplayScreen implements Screen, Disposable{
+public abstract class DisplayScreen implements Screen, Disposable{
 
     protected final ColorShooter COLOR_SHOOTER;
     protected static Stage stage;

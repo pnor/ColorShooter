@@ -11,6 +11,7 @@ import com.colorshooter.game.GameEntity;
 import com.colorshooter.game.GameEvent;
 import com.colorshooter.game.components.*;
 import com.colorshooter.game.scenes.GameScreen;
+import com.colorshooter.game.scenes.menus.CongratsMenu;
 import com.colorshooter.game.scenes.menus.EnterScoreMenu;
 
 import static com.colorshooter.game.EntityConstructors.*;
@@ -179,7 +180,7 @@ public class Level30 extends GameScreen{
 
     @Override
     public Screen getNextLevel() {
-        return new EnterScoreMenu(getLevel(), getGame());
+        return new CongratsMenu(getGame());
     }
 
 }

@@ -19,7 +19,7 @@ import com.colorshooter.game.HighScore;
 /**
  * Created by pnore_000 on 8/28/2016.
  */
-public class MenuScreen extends DisplayScreen{
+public abstract class MenuScreen extends DisplayScreen{
 
     protected Table table;
 

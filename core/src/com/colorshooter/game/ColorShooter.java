@@ -39,7 +39,7 @@ public class ColorShooter extends Game {
 		//screen moving with dpad
 		/*
 		if (Gdx.input.isKeyJustPressed(Input.Keys.DPAD_LEFT)) {
-			setScreen(new MainMenu(this));
+			setScreen(new CongratsMenu(this));
 		}
 
 		if (Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT)) {

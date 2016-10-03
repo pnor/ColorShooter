@@ -35,7 +35,7 @@ import static com.colorshooter.game.Mappers.*;
 /**
  * Created by pnore_000 on 7/4/2016.
  */
-public class GameScreen extends DisplayScreen {
+public abstract class GameScreen extends DisplayScreen {
 
     private Engine engine;
 

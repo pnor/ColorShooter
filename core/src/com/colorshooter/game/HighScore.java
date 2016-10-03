@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.JsonValue;
 /**
  * @author pnore_000
  */
-public class HighScore implements Comparable{
+public class HighScore implements Comparable {
     private String name;
     private int score;
     private int lastLevel;

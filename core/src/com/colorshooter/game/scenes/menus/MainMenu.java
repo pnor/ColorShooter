@@ -1,6 +1,7 @@
 package com.colorshooter.game.scenes.menus;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -90,5 +91,14 @@ public class MainMenu extends MenuScreen implements Screen{
         stage.addActor(table);
 
         gen.dispose();
+    }
+
+    @Override
+    public void render(float delta) {
+        super.render(delta);
+        if (Gdx.input.isKeyPressed(Input.Keys.C) && Gdx.input.isKeyPressed(Input.Keys.O)
+                && Gdx.input.isKeyPressed(Input.Keys.L) && Gdx.input.isKeyPressed(Input.Keys.R)) {
+            getGame().setScreen(new LevelChooseMenu(getGame()));
+        }
     }
 }
