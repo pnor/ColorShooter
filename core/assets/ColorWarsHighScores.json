@@ -1,0 +1,62 @@
+[
+{
+	class: com.colorshooter.game.HighScore
+	name: WHITE
+	score: 900000
+	lastLevel: 0
+}
+{
+	class: com.colorshooter.game.HighScore
+	name: PURPLE
+	score: 500000
+	lastLevel: 0
+}
+{
+	class: com.colorshooter.game.HighScore
+	name: what
+	score: 376606
+	lastLevel: 20
+}
+{
+	class: com.colorshooter.game.HighScore
+	name: PINK
+	score: 250000
+	lastLevel: 0
+}
+{
+	class: com.colorshooter.game.HighScore
+	name: RED
+	score: 100000
+	lastLevel: 0
+}
+{
+	class: com.colorshooter.game.HighScore
+	name: BLUE
+	score: 50000
+	lastLevel: 0
+}
+{
+	class: com.colorshooter.game.HighScore
+	name: GREEN
+	score: 10000
+	lastLevel: 0
+}
+{
+	class: com.colorshooter.game.HighScore
+	name: YELLOW
+	score: 5000
+	lastLevel: 0
+}
+{
+	class: com.colorshooter.game.HighScore
+	name: um
+	score: 3563
+	lastLevel: 2
+}
+{
+	class: com.colorshooter.game.HighScore
+	name: ORANGE
+	score: 100
+	lastLevel: 0
+}
+]
