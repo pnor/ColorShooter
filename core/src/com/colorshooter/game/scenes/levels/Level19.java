@@ -29,7 +29,6 @@ public class Level19 extends GameScreen {
         setBackground(ImageComponent.backgroundAtlas.findRegion("PinkSpace1"));
 
         setPlayer(generatePlayer(678, 414));
-        cm.get(getPlayer()).boundingBox.setOrigin(pm.get(getPlayer()).x + pm.get(getPlayer()).originX, pm.get(getPlayer()).y + pm.get(getPlayer()).originY);
 
         GameEntity enemySpawn = generateRandomUFOSpawnPoint(1000,900, 3.5f, false, getEngine());
         GameEntity enemySpawn2 = generateRandomUFOSpawnPoint(0,0, 6f, false,   getEngine());

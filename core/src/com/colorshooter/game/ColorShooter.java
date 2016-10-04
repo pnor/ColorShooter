@@ -77,7 +77,7 @@ public class ColorShooter extends Game {
 				hm.get(((GameScreen) getScreen()).getPlayer()).invincible = true;
 			}
 		} else {
-			getScreen().render(Gdx.graphics.getDeltaTime());
+			getScreen().render(MathUtils.clamp(Gdx.graphics.getDeltaTime(), 0f, 1f));
 		}
 	}
 

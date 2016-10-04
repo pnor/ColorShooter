@@ -82,15 +82,29 @@ public abstract class DisplayScreen implements Screen, Disposable{
     }
 
     /**
-     * Gets an {@code Array} of {@code HighScore} objects from the file highScores.json
+     * Gets an {@code Array} of {@code HighScore} objects from the file ColorWarHighScores.json.
+     * If the file does not exist returns a default set of {@code HighScore}s.
      * @return An {@code Array} of {@code HighScore}
      */
     public Array<HighScore> getHighScores() {
         Array<HighScore> returnArray;
 
         FileHandle fileHandle = Gdx.files.local("ColorWarsHighScores.json");
-        if (!fileHandle.exists())
-            return new Array<HighScore>();
+        if (!fileHandle.exists()) {
+            Array<HighScore> def = new Array<HighScore>(new HighScore[] {
+                    new HighScore("WHITE", 900000, 0),
+                    new HighScore("PURPLE", 500000, 0),
+                    new HighScore("PINK", 250000, 0),
+                    new HighScore("RED", 100000, 0),
+                    new HighScore("BLUE", 50000, 0),
+                    new HighScore("GREEN", 10000, 0),
+                    new HighScore("YELLOW", 5000, 0),
+                    new HighScore("ORANGE", 100, 0),
+                    new HighScore("BLACK", 10, 0),
+                    new HighScore("GRAY", 1, 0)
+            });
+            return def;
+        }
 
         Json json = new Json();
         String jsonScores = fileHandle.readString();

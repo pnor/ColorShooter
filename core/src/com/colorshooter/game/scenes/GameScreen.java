@@ -95,6 +95,8 @@ public abstract class GameScreen extends DisplayScreen {
     private float currentMultiTime;
     private float endMultiTime;
 
+    private boolean noDamage = true;
+
     private float currentVictoryTime;
     private float victoryEndTime = 3f;
 
@@ -222,6 +224,10 @@ public abstract class GameScreen extends DisplayScreen {
                     lives += 1;
                 if (!player.getDisposed() && hm.get(player).maxHealth == hm.get(player).health)
                     points += 5000;
+                if (player.getDisposed())
+                    points += 7700;
+                if (noDamage)
+                    points += 10000;
                 COLOR_SHOOTER.setScreen(getNextLevel());
                 return;
             }
@@ -370,9 +376,9 @@ public abstract class GameScreen extends DisplayScreen {
         table.add(healthLabel).padLeft(5f);
 
         if (level >= 1)
-            table.add(levelLabel).padLeft(280);//330);   //290
+            table.add(levelLabel).padLeft(280);
         else
-            table.add(levelLabel).padLeft(280);//330);
+            table.add(levelLabel).padLeft(280);
 
         if (levelNum != null)
             table.add(levelNum).size(20f, 20f).padLeft(10);
@@ -385,7 +391,7 @@ public abstract class GameScreen extends DisplayScreen {
         table.add(pointNum).left();
         table.add();
         if (levelNum == null)
-            table.add(timeLabel).padLeft(280);//330);
+            table.add(timeLabel).padLeft(280);
         else
             table.add(timeLabel).colspan(2).padLeft(280);
         table.row();
@@ -395,33 +401,6 @@ public abstract class GameScreen extends DisplayScreen {
         table.add();
         table.add(objectiveLabel).colspan(5).right();
 
-        /*
-        table.add().fillX().expandY();
-        table.add(healthBar);
-
-
-        /* EXPERIMENTAL
-        table.center().setFillParent(true);
-        table.top().left();
-        table.pad(12);
-        table.add(icon);
-        table.add(healthLabel).padLeft(10);
-        table.add(levelLabel).padLeft(400);
-        table.add(levelNum);
-        table.add().padLeft(520);
-        table.add(life).padLeft(5);
-        table.add(lifeCount).padLeft(10);
-        table.row();
-        table.add().fillX().expandY();
-        table.add(healthBar);
-        table.add(timeLabel).padLeft(450).padBottom(700f);
-        table.row();
-        table.add(pointID).padLeft(5);
-        table.add(pointNum).padLeft(30);
-        /*
-        table.add().fillX().expandY();
-        table.add(healthBar);
-        */
         stage.addActor(table);
         gen.dispose();
     }
@@ -436,6 +415,10 @@ public abstract class GameScreen extends DisplayScreen {
         if (!player.getDisposed()) {
 
             if (lastHealth != hm.get(player).health || lastMax != hm.get(player).maxHealth) {
+                //for no damage bonus
+                if (noDamage && !(hm.get(player).health >= lastHealth))
+                    noDamage = false;
+
                 lastHealth = hm.get(player).health;
                 if (lastHealth > hm.get(player).maxHealth)
                     lastHealth = hm.get(player).maxHealth;
@@ -507,7 +490,7 @@ public abstract class GameScreen extends DisplayScreen {
             if (color == null || color.color == 'x')
                 healthBar.setColor(Color.GREEN);
             else if (color.color == 'r')
-                healthBar.setColor(new Color(1, 0.2f, 0.2f, 1));
+                healthBar.setColor(new Color(1, 0.1f, 0.1f, 1));
             else if (color.color == 'b')
                 healthBar.setColor(new Color(0.2f, 0.2f, 1, 1));
             else if (color.color == 'g')
@@ -585,7 +568,7 @@ public abstract class GameScreen extends DisplayScreen {
         param.borderWidth = 0;
         healthLabel.setStyle(new Label.LabelStyle(gen.generateFont(param), Color.WHITE));
 
-        Label bestMultiLabel = new Label("Best Score Multiplier : " + bestMultiplier, skin);
+        Label bestMultiLabel = new Label("Best Score Multiplier : x" + bestMultiplier, skin);
         bestMultiLabel.setColor(1.25f  - (bestMultiplier / 4), 1f, 1.25f - (bestMultiplier / 4), 1f);
 
         table.clearChildren();
@@ -606,16 +589,23 @@ public abstract class GameScreen extends DisplayScreen {
             table.add(bestMultiLabel).padBottom(10f);
             table.row();
             if (bestMultiplier > 3f) {
-                Label bonusText = new Label("Multiplier Bonus! : + 1 Life!", skin);
+                Label bonusText = new Label("Multiplier Bonus : + 1 Life!", skin);
                 bonusText.setColor(Color.CYAN);
                 table.add(bonusText).padBottom(10f);
                 table.row();
             }
             if (!player.getDisposed() && hm.get(player).maxHealth == hm.get(player).health) {
-                Label healthBonusText = new Label("Full Health Bonus! : + 5,000 Points!", skin);
+                Label healthBonusText = new Label("Full Health Bonus : +5,000 Points!", skin);
                 newScore += 5000;
                 healthBonusText.setColor(Color.CYAN);
                 table.add(healthBonusText).padBottom(10f);
+                table.row();
+            }
+            if (noDamage) {
+                Label noDamageBonusText = new Label("No Damage : + 10,000 Points!", skin);
+                newScore += 10000;
+                noDamageBonusText.setColor(Color.GOLD);
+                table.add(noDamageBonusText).padBottom(10f);
                 table.row();
             }
             if (player.getDisposed()) {

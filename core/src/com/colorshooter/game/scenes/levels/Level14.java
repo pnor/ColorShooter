@@ -32,7 +32,7 @@ public class Level14 extends GameScreen {
         setPlayer(generatePlayer(678, 414));
 
         GameEntity enemySpawn = generateEnemySpawnPoint(1000,900, "PoisonWisp", 6f,  getEngine());
-        em.get(enemySpawn).currentTime = 64f;
+        em.get(enemySpawn).currentTime = 4f;
         GameEntity enemySpawn2 = generateEnemySpawnPoint(0,900, "GreenUFO", 10f,  getEngine());
         em.get(enemySpawn2).currentTime = 6f;
         GameEntity enemySpawn3 = generateEnemySpawnPoint(0, 0, "PoisonWisp", 8f,  getEngine());

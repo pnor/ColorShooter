@@ -3680,7 +3680,7 @@ public class EntityConstructors {
         GameEntity enemy = generateGenericShip(x, y);
 
         MovementComponent mov = mm.get(enemy);
-        mov.speedPerSecond = 330f;
+        mov.speedPerSecond = 300f;
 
         ImageComponent img = im.get(enemy);
         img.texRegion = ImageComponent.atlas.findRegion("EnemyShipThunder");
@@ -3711,7 +3711,7 @@ public class EntityConstructors {
         health.maxHealth = 80;
         health.health = 80;
 
-        shm.get(enemy).attackDelay = 0.4f;
+        shm.get(enemy).attackDelay = 0.43f;
 
         bm.get(enemy).bounceDuration = 4f;
 
@@ -4308,14 +4308,14 @@ public class EntityConstructors {
 
         HealthComponent health = hm.get(enemy);
         health.isAlive = true;
-        health.maxHealth = 2500;
-        health.health = 2500;
+        health.maxHealth = 2000;
+        health.health = 2000;
         health.invinciblityDuration = 0.2f;
         health.tag = 'e';
         health.deathAction = 2;
 
         DamageComponent dam = dm.get(enemy);
-        dam.damage = 40;
+        dam.damage = 45;
         dam.tag = 'p';
 
         EventComponent eve = em.get(enemy);
@@ -4325,7 +4325,7 @@ public class EntityConstructors {
         eve.event = new GameEvent() {
             @Override
             public void event(GameEntity e, Engine engine) {
-                if (mm.get(e).speedPerSecond == 50f) {
+                if (mm.get(e).speedPerSecond >= 29f && mm.get(e).speedPerSecond <= 81f) {
                     PositionComponent pos = pm.get(e);
                     mm.get(e).speedPerSecond = 185f;
 
@@ -4337,8 +4337,8 @@ public class EntityConstructors {
                     engine.addEntity(generatePoisonWisp(pos.x + pos.originX - 10, pos.y + pos.originY + 20));
 
                 } else {
-                    mm.get(e).speedPerSecond = 50f;
-                    em.get(e).targetTime = ((float) Math.random() * 5) + 3f;
+                    mm.get(e).speedPerSecond = ((float) Math.random() * 50) + 30f;
+                    em.get(e).targetTime = ((float) Math.random() * 7) + 1.5f;
                 }
             }
         };

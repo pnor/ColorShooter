@@ -71,7 +71,7 @@ public class HighScoreMenu extends MenuScreen{
         for (int i = 0; i < scores.size; i++) {
             j = (i + 1) * 3 - 1;
             scoreLabels[j - 2] = new Label(scores.get(i).getName(), skin);
-            scoreLabels[j - 1] = new Label(String.format("%,8d%n", scores.get(i).getScore()), skin);
+            scoreLabels[j - 1] = new Label(String.format("%,8d%n", scores.get(i).getScore()).trim(), skin);
             scoreLabels[j] = new Label("" + scores.get(i).getLastLevel(), skin);
 
             c = new Color(1, 1f - ((10 - i) / 10f), 0, 1);
@@ -84,6 +84,7 @@ public class HighScoreMenu extends MenuScreen{
             table.add(scoreLabels[j]).height(50f);
             table.row();
         }
+        table.debug();
 
         stage.addActor(table);
         generator.dispose();

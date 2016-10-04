@@ -31,9 +31,9 @@ public class Level17 extends GameScreen{
         setPlayer(generatePlayer(678, 414));
         cm.get(getPlayer()).boundingBox.setOrigin(pm.get(getPlayer()).x + pm.get(getPlayer()).originX, pm.get(getPlayer()).y + pm.get(getPlayer()).originY);
 
-        GameEntity enemySpawn = generateEnemySpawnPoint(1000,900, "EnemyShipRed", 9f, getEngine());
+        GameEntity enemySpawn = generateEnemySpawnPoint(1000,900, "EnemyShipRed", 10f, getEngine());
         GameEntity enemySpawn2 = generateEnemySpawnPoint(0, 0, "EnemyShipRed", 11f, getEngine());
-        em.get(enemySpawn2).currentTime = 6f;
+        em.get(enemySpawn2).currentTime = 3f;
         GameEntity enemySpawn3 = generateEnemySpawnPoint(1000, 0, "EnemyShipYellow", 16f, getEngine());
         GameEntity enemySpawn4 = generateEnemySpawnPoint(0, 900, "EnemyShipYellow", 20f, getEngine());
         em.get(enemySpawn4).currentTime = 10f;
