@@ -84,7 +84,6 @@ public class HighScoreMenu extends MenuScreen{
             table.add(scoreLabels[j]).height(50f);
             table.row();
         }
-        table.debug();
 
         stage.addActor(table);
         generator.dispose();
