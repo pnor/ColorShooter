@@ -24,6 +24,8 @@ import static com.colorshooter.game.Mappers.*;
  */
 public class EntityConstructors {
 
+    private EntityConstructors() {}
+
     /*
     PLAYER -----------------------------------------------------------------
     --------------------------------------------------------------------------------
@@ -3269,7 +3271,7 @@ public class EntityConstructors {
         bm.get(enemy).bounceDuration = 5f;
 
         enemy.add(new PointsComponent());
-        pom.get(enemy).points = 250;
+        pom.get(enemy).points = 400;
 
         return enemy;
     }
@@ -3341,7 +3343,7 @@ public class EntityConstructors {
             }
         };
 
-        pom.get(enemy).points = 830;
+        pom.get(enemy).points = 2000;
 
         return enemy;
     }
@@ -3582,7 +3584,7 @@ public class EntityConstructors {
         DamageComponent dam = dm.get(enemy);
         dam.damage = 45;
 
-        pom.get(enemy).points = 1200;
+        pom.get(enemy).points = 3500;
 
         return enemy;
     }
@@ -4083,7 +4085,7 @@ public class EntityConstructors {
         };
 
         enemy.add(new PointsComponent());
-        pom.get(enemy).points = 5500;
+        pom.get(enemy).points = 10000;
 
         return enemy;
     }
@@ -4151,7 +4153,7 @@ public class EntityConstructors {
         bm.get(enemy).bounceDuration = 2f;
 
         enemy.add(new PointsComponent());
-        pom.get(enemy).points = 1000;
+        pom.get(enemy).points = 10;
 
         return enemy;
     }
